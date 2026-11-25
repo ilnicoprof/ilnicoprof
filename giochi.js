@@ -3,6 +3,7 @@
    {titolo:"…", tipo:"minigioco" oppure "eureka", materia:"aritmetica", classe:"1ª",
     capitolo:"Le frazioni", descr:"…", link:"…"}
    capitolo: titolo esatto del capitolo, così il gioco compare anche dentro la sua scheda
+   (per più capitoli: capitolo:["…", "…"])
    Un gioco senza materia è "generale": si vede sempre, con qualsiasi filtro.
 */
 const GIOCHI = [
@@ -11,7 +12,11 @@ const GIOCHI = [
    link:"eureka-solo.html"},
   {titolo:"L'aula chiusa", tipo:"escape", materia:"aritmetica", classe:"1ª", capitolo:"Insiemi, tabelle e grafici",
    descr:"Escape room: sistema i numeri nel diagramma di Venn, completa la tabella e aggiusta l'istogramma per aprire la porta.",
-   link:"escape-insiemi.html"}
+   link:"escape-insiemi.html"},
+  {titolo:"Il drone sotto zero", tipo:"escape", materia:"algebra", classe:"3ª",
+   capitolo:["I numeri relativi", "Le operazioni con i numeri relativi"],
+   descr:"Escape room: sistema gli oggetti sopra e sotto il livello del mare, guida il drone fino allo scrigno e collega le operazioni ai risultati.",
+   link:"escape-relativi.html"}
 ];
 
 /* I giochi del prof: i giochi più grandi, con il link diretto

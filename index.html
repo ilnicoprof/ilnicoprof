@@ -289,12 +289,12 @@ function disegnaGiochi(){
   const res = GIOCHI
     .filter(g=>!g.materia || !stato.materia || g.materia===stato.materia)
     .filter(g=>!g.materia || stato.classe==="tutte" || g.classe===stato.classe)
-    .filter(g=>!q || norm(g.titolo+" "+g.descr+" "+(g.capitolo||"")+" "+(MATERIE[g.materia]?.nome||"")).includes(q))
+    .filter(g=>!q || norm(g.titolo+" "+g.descr+" "+[].concat(g.capitolo||[]).join(" ")+" "+(MATERIE[g.materia]?.nome||"")).includes(q))
     .sort((a,b)=>!!a.materia - !!b.materia);
   $("#giochi").innerHTML = res.length ? res.map(g => {
     const m = MATERIE[g.materia] || {nome:"Tutte le materie", colore:"giallo"}, t = tipoGioco(g);
     const link = g.link + (g.link==="eureka-solo.html" && stato.materia ? "#"+stato.materia : "");
-    const meta = [m.nome, g.classe, g.capitolo && esc(g.capitolo)].filter(Boolean).join(" · ");
+    const meta = [m.nome, g.classe, ...[].concat(g.capitolo||[]).map(esc)].filter(Boolean).join(" · ");
     return `<a class="gioco" href="${encodeURI(link)}"${giocoTarget(g)}>
       <div class="top"><span class="ico c-${m.colore}">${t.icona}</span><span class="tipo">${t.nome}</span></div>
       <b>${esc(g.titolo)}</b><p>${esc(g.descr)}</p>
@@ -334,7 +334,7 @@ function apri(id){
     if(b.sempre && !presi.some(f => /^slide/i.test(f.nome))) presi.push({nome:"Slide", presto:true});
     return blocco(b.titolo, b.icona, presi);
   });
-  const giochi = GIOCHI.filter(g => g.materia===c.materia && g.capitolo===c.titolo);
+  const giochi = GIOCHI.filter(g => g.materia===c.materia && [].concat(g.capitolo||[]).includes(c.titolo));
   /* Eureka solitario compare da solo nei capitoli che hanno frasi con lo stesso argomento */
   const frasiCap = (typeof FRASI !== "undefined" ? FRASI : []).filter(f => f.materia===c.materia && f.argomento===c.titolo).length;
   if(frasiCap) giochi.unshift({titolo:"Eureka solitario", tipo:"minigioco", sotto:`${frasiCap} frasi da indovinare`,
