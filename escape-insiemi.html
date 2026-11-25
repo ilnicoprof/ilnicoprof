@@ -115,6 +115,8 @@ h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker
 /* enigma 1: Venn */
 .venn{position:relative;width:100%;aspect-ratio:100/74;max-width:620px;justify-self:center;border:2px solid var(--ink);border-radius:12px;background:var(--paper);touch-action:none}
 .venn svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.venn.balla svg{animation:balla .5s ease 3}
+@keyframes balla{25%{transform:rotate(-3deg) scale(1.03)}75%{transform:rotate(3deg) scale(1.03)}}
 .venn .cA{fill:color-mix(in srgb,var(--azzurro) 45%,transparent);stroke:var(--azzurro-ink)}
 .venn .cB{fill:color-mix(in srgb,var(--rosa) 45%,transparent);stroke:var(--rosa-ink)}
 :root[data-theme="dark"] .venn .cA,:root[data-theme="dark"] .venn .cB{stroke:var(--ink)}
@@ -176,6 +178,13 @@ tfoot td{font-weight:800}
 .libero b{font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--ok)}
 .libero p{margin:0;font-weight:700}
 
+.suoni{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+#segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
+#segreto b{font-family:var(--f-display);font-size:1.1rem}
+@keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
 @keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 .scuoti{animation:scuoti .3s ease 2}
 @media (max-width:480px){
@@ -197,6 +206,7 @@ tfoot td{font-weight:800}
     <p class="storia">La porta dell'aula si è chiusa a chiave! Il lucchetto ha un codice di 3 cifre. Risolvi i tre enigmi: ognuno ti dà una cifra. Trascina i pezzi con il dito o col mouse, oppure tocca un pezzo e poi il posto dove vuoi metterlo.</p>
     <div class="barra">
       <span class="pill" id="tempo">Tempo 00:00</span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
       <div class="indizi" id="indizi" aria-label="Cifre trovate"></div>
     </div>
   </header>
@@ -253,7 +263,7 @@ let scelto = null;
 function seleziona(el, posa){
   if(scelto && scelto.el === el){ deseleziona(); return; }
   deseleziona();
-  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli");
+  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli"); suona("prendi");
   annuncia(`Hai preso ${el.textContent}. Ora tocca dove vuoi metterlo.`);
 }
 function deseleziona(){ if(scelto) scelto.el.classList.remove("scelto"); scelto = null; document.body.classList.remove("scegli"); }
@@ -270,7 +280,7 @@ function pezzo(el, posa){
         if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
         deseleziona();
         ombra = el.cloneNode(true); ombra.classList.add("ombra"); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
-        document.body.append(ombra); el.classList.add("sollevato");
+        document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
       }
       ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
       const z = zonaSotto(ev.clientX, ev.clientY);
@@ -307,16 +317,67 @@ setInterval(() => { $("#tempo").textContent = "Tempo " + mmss(S.inizio ? (S.fine
 
 /* ===== suoni ===== */
 let audio;
+let suoniOn = true; try { suoniOn = localStorage.getItem("nicoprof:suoni") !== "no"; } catch {}
+/* [frequenza, ritardo, durata, forma, volume] */
+const SUONI = {
+  si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25,"sawtooth",.07]], bip:[[880,0,.06,"triangle",.05]],
+  prendi:[[520,0,.05,"triangle",.08],[780,.04,.06,"triangle",.08]],
+  posa:[[300,0,.07,"triangle",.13],[200,.05,.09,"triangle",.11]],
+  sonar:[[1200,0,.08,"sine"],[900,.12,.3,"sine"]],
+  blub:[[300,0,.08,"sine",.12],[420,.1,.08,"sine",.12],[560,.2,.1,"sine",.12]],
+  segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
+};
 function suona(tipo){
+  if(!suoniOn || !SUONI[tipo]) return;
   try {
     audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-    const note = {si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25]], porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.4]]}[tipo];
-    note.forEach(([fr,da,dur]) => { const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime+da;
-      o.type = tipo==="no" ? "sawtooth" : "triangle"; o.frequency.value = fr;
-      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(tipo==="no"?.07:.16,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
-      o.connect(g).connect(audio.destination); o.start(t); o.stop(t+dur+.02); });
+    SUONI[tipo].forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
   } catch {}
 }
+function aggiornaSuoni(){ const b = document.querySelector("#suoni"); if(b){ b.textContent = "Suoni: " + (suoniOn ? "sì" : "no"); b.setAttribute("aria-pressed", suoniOn); } }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#suoni")) return;
+  suoniOn = !suoniOn; try { localStorage.setItem("nicoprof:suoni", suoniOn ? "si" : "no"); } catch {}
+  aggiornaSuoni(); suona("bip");
+});
+
+/* ===== coriandoli per la vittoria ===== */
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--viola)", "var(--errore)"];
+  for(let i = 0; i < 90; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.8 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4500);
+  }
+}
+
+/* ===== segreti nascosti ===== */
+const trovati = new Set();
+function segreto(id, testo){
+  if(trovati.has(id)) return;
+  trovati.add(id); suona("segreto");
+  let t = document.querySelector("#segreto");
+  if(!t){ t = document.createElement("div"); t.id = "segreto"; t.setAttribute("role", "status"); document.body.append(t); }
+  t.innerHTML = `<b>Segreto trovato! (${trovati.size} di ${SEGRETI})</b><span>${testo}</span>`;
+  t.hidden = false; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  clearTimeout(segreto.timer); segreto.timer = setTimeout(() => { t.hidden = true; }, 6500);
+}
+let digitate = "";
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea") || e.key.length !== 1) return;
+  digitate = (digitate + e.key.toLowerCase()).slice(-12);
+  PAROLE_SEGRETE.forEach(([parola, azione]) => { if(digitate.endsWith(parola)) azione(); });
+});
+const fraseSegreti = () => trovati.size === SEGRETI ? "Hai scoperto anche tutti i segreti nascosti!" : `Segreti nascosti trovati: ${trovati.size} su ${SEGRETI}. Gioca di nuovo per scoprirli tutti!`;
 
 /* ===== parti comuni ===== */
 function testa(i, titolo){
@@ -367,7 +428,7 @@ function posa1(el, zona, x, y){
     r = inA && inB ? "AB" : inA ? "A" : inB ? "B" : "U";
   }
   if(!["A","AB","B","U","banco"].includes(r)) return;
-  S.venn[n] = r; S.sbagliati1.delete(n);
+  S.venn[n] = r; S.sbagliati1.delete(n); suona("posa");
   disegna1();
 }
 function controlla1(){
@@ -421,7 +482,7 @@ function posa2(el, zona){
     S.slot[a] = t;
     if(da >= 0) S.slot[da] = prima; /* scambia i due numeri */
   } else return;
-  S.sbagliati2.clear();
+  S.sbagliati2.clear(); suona("posa");
   disegna2();
 }
 function controlla2(){
@@ -476,7 +537,8 @@ function disegna3(){
 function alza(i, h){
   h = Math.max(0, Math.min(MAXY, h));
   if(h === S.altezze[i]) return;
-  S.altezze[i] = h; S.sbagliati3.delete(i);
+  S.altezze[i] = h; S.sbagliati3.delete(i); suona("bip");
+  if(S.altezze.every(a => a === MAXY)) segreto("palizzata", "Tutte le colonne al massimo: sembra una palizzata! Ma un istogramma deve raccontare i dati veri, non quelli che vorremmo.");
   const col = document.querySelector(`.colonna[data-c="${i}"]`);
   col.classList.remove("sbagliata"); col.setAttribute("aria-valuenow", h);
   const bar = col.querySelector(".barra-g"); bar.style.height = h/MAXY*100 + "%"; bar.querySelector(".val").textContent = h;
@@ -494,7 +556,7 @@ function controlla3(){
 function disegna4(){
   const sez = $("#e4"), pronto = S.risolto.every(Boolean);
   if(S.libero){
-    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato insiemi, intersezione, tabelle delle frequenze e istogrammi.</p><button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato insiemi, intersezione, tabelle delle frequenze e istogrammi.</p><p>${fraseSegreti()}</p><button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
     $("#ricomincia").addEventListener("click", () => location.reload());
     return;
   }
@@ -511,8 +573,8 @@ function disegna4(){
     b.parentElement.querySelector("output").textContent = S.rotelle[i];
   }));
   $("#apri")?.addEventListener("click", () => {
-    if(S.rotelle.every((v,i) => v === CODICE[i])){ S.libero = true; S.fine = Date.now(); suona("porta"); disegna4(); annuncia("Complimenti, hai superato tutte le prove!"); $("#e4").scrollIntoView({behavior:"smooth", block:"center"}); }
-    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ S.libero = true; S.fine = Date.now(); suona("porta"); disegna4(); coriandoli(); annuncia("Complimenti, hai superato tutte le prove!"); $("#e4").scrollIntoView({behavior:"smooth", block:"center"}); }
+    else { if(S.rotelle.join("") === "123") segreto("123", "1-2-3? È il codice che tutti provano per primo... ed è proprio per questo che nessuno lo usa!"); suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
   });
 }
 
@@ -533,7 +595,14 @@ document.addEventListener("click", e => {
   const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
   [disegna1, disegna2, disegna3][i]();
 });
+/* segreti: scrivere "venn" sulla tastiera, tutte le colonne al massimo, provare 1-2-3 sul lucchetto */
+const SEGRETI = 3;
+const PAROLE_SEGRETE = [["venn", () => {
+  const v = $(".venn"); if(v){ v.classList.remove("balla"); void v.offsetWidth; v.classList.add("balla"); }
+  segreto("venn", "Ciao da John Venn! È il matematico inglese che nel 1880 inventò questi diagrammi.");
+}]];
 tutto();
+aggiornaSuoni();
 </script>
 </body>
 </html>
