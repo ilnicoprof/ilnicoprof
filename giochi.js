@@ -15,7 +15,7 @@ const GIOCHI = [
    link:"escape-insiemi.html"},
   {titolo:"Il drone sotto zero", tipo:"escape", materia:"algebra", classe:"3ª",
    capitolo:["I numeri relativi", "Le operazioni con i numeri relativi"],
-   descr:"Escape room: sistema gli oggetti sopra e sotto il livello del mare, guida il drone fino allo scrigno e collega le operazioni ai risultati.",
+   descr:"Escape room: sistema gli oggetti ai piani del palazzo, guida il drone sopra i tetti fino al pacco e collega le operazioni ai risultati.",
    link:"escape-relativi.html"}
 ];
 
