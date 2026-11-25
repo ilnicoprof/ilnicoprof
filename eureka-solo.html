@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Eureka solitario</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti del nicoprof; al centro una lavagna con le tessere della frase, sotto la tastiera e il pulsante EUREKA! */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300;
+  --verde:#8EDDB4; --verde-ink:#0B4A2C;
+  --azzurro:#9FD0FF; --azzurro-ink:#0D3B6E;
+  --viola:#C9B8FF; --viola-ink:#35207A;
+  --lavagna:#24533F; --lavagna-scura:#1A3F30; --cornice:#A0703F; --gesso:#F4F7F2;
+  --tessera:#E4EEF9; --tessera-ink:#1E2A44; --nuova:#FFE066;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --lampada-off:#C9D5E6;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C; --azzurro:#86BEF5; --viola:#B3A0F5;
+  --lavagna:#1C4433; --lavagna-scura:#133126; --cornice:#7A5530; --gesso:#E6ECE4;
+  --tessera:#3A4A66; --tessera-ink:#EEF2FA; --nuova:#E8C24F;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --lampada-off:#3A4763;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C; --azzurro:#86BEF5; --viola:#B3A0F5;
+  --lavagna:#1C4433; --lavagna-scura:#133126; --cornice:#7A5530; --gesso:#E6ECE4;
+  --tessera:#3A4A66; --tessera-ink:#EEF2FA; --nuova:#E8C24F;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --lampada-off:#3A4763;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:860px;margin:0 auto;padding-block:20px 48px;display:grid;gap:18px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna:hover{background:var(--pill)}
+.torna:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.torna svg{width:16px;height:16px}
+
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header svg{width:50px;height:50px;flex:none}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.regole{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+.regole b{color:var(--ink);font-weight:400}
+.cassa{display:inline-flex;align-items:baseline;gap:6px;font-weight:800;padding:4px 12px;border-radius:999px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);font-variant-numeric:tabular-nums}
+.cassa b{font-family:var(--f-display);font-size:1.25rem}
+.dx{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tasto .prezzo{position:absolute;top:-8px;right:-6px;font-family:var(--f-body);font-size:.62rem;font-weight:800;padding:1px 4px;border-radius:999px;background:var(--giallo);color:var(--giallo-ink);border:1.5px solid var(--ink);line-height:1.2}
+.tasto.chiusa{background:var(--pill);color:var(--ink-soft);border-style:dashed;box-shadow:none}
+.tasto.chiusa:hover{background:var(--pill)}
+@keyframes scuoti{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.tasto.scuoti{animation:scuoti .3s ease 2}
+.stelle{font-size:2rem;letter-spacing:4px;color:var(--giallo);-webkit-text-stroke:1px var(--ink)}
+.stelle .spenta{color:var(--lampada-off)}
+
+.scelta{display:grid;gap:10px;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px}
+.materie{display:flex;gap:8px;flex-wrap:wrap}
+.chip{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:6px 13px;border-radius:999px;border:2px solid var(--ink);background:var(--card);color:var(--ink)}
+.chip[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--card);outline:0}
+.chip[aria-pressed="true"]::before{content:"✓ "}
+.chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+.c-verde{background:var(--verde);color:var(--verde-ink)}
+.c-azzurro{background:var(--azzurro);color:var(--azzurro-ink)}
+.c-viola{background:var(--viola);color:var(--viola-ink)}
+.c-tutte{background:var(--ink);color:var(--paper)}
+.riga{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.riga label{font-weight:700;font-size:.92rem;color:var(--ink-soft)}
+select{font:inherit;font-weight:700;flex:1 1 220px;min-width:0;max-width:100%;padding:9px 12px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink)}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink);text-align:center}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+
+.gioco{display:grid;gap:14px}
+.wrap>*,.gioco>*,.scelta>*{min-width:0}
+.info{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.argomento{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--f-hand);font-size:1.25rem;min-width:0}
+.tag{font-family:var(--f-body);font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px}
+.lampade{display:flex;gap:2px;align-items:center}
+.lampade svg{width:30px;height:30px}
+.lampade .on path.vetro{fill:var(--giallo)}
+.lampade .off path.vetro{fill:var(--lampada-off)}
+.lampade .off{opacity:.7}
+
+.lavagna{background:var(--lavagna);background-image:radial-gradient(ellipse at 30% 20%,color-mix(in srgb,var(--gesso) 7%,transparent),transparent 60%);
+  border:8px solid var(--cornice);border-radius:14px;box-shadow:inset 0 0 0 2px var(--lavagna-scura),4px 5px 0 var(--ink);
+  padding:22px 14px;min-height:150px;overflow:hidden;display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:12px calc(var(--s,40px)*.55)}
+.parola{display:inline-flex;gap:4px}
+.t{width:var(--s,40px);height:calc(var(--s,40px)*1.18);display:grid;place-items:center;border-radius:7px;background:var(--tessera);color:var(--tessera-ink);
+  font-family:var(--f-display);font-weight:800;font-size:calc(var(--s,40px)*.66);line-height:1;box-shadow:0 3px 0 var(--lavagna-scura)}
+.t.vista{background:var(--card)}
+.t.nuova{animation:gira .45s ease both}
+.t.persa{background:var(--errore-bg);color:var(--errore)}
+.t.segno{width:auto;min-width:calc(var(--s,40px)*.35);background:transparent;box-shadow:none;color:var(--gesso)}
+@keyframes gira{0%{transform:rotateX(90deg);background:var(--nuova)}60%{background:var(--nuova)}100%{transform:none}}
+
+.stato{min-height:1.6em;margin:0;text-align:center;font-weight:800;font-size:1.05rem}
+.stato.si{color:var(--ok)} .stato.no{color:var(--errore)}
+
+.tastiera{display:grid;gap:10px;padding-top:6px;justify-items:center}
+.fila{display:flex;gap:5px;justify-content:center;width:100%}
+.tasto{all:unset;position:relative;cursor:pointer;flex:0 1 46px;min-width:0;height:48px;display:grid;place-items:center;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:1.25rem;box-shadow:0 3px 0 var(--ink)}
+.tasto:hover:not(:disabled){background:var(--pill)}
+.tasto:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.tasto:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tasto:disabled{cursor:default;box-shadow:none;transform:translateY(3px)}
+.tasto.si{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+.tasto.no{background:var(--pill);color:var(--ink-soft);border-color:var(--line);text-decoration:line-through}
+
+.azioni{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.eureka{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:800;font-size:1.6rem;letter-spacing:.03em;
+  padding:8px 28px;border-radius:16px;border:3px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink)}
+.eureka svg{width:28px;height:28px}
+.eureka:hover{transform:translateY(-2px) rotate(-1deg);box-shadow:5px 6px 0 var(--ink)}
+.eureka:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.eureka:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.soluzione{display:flex;gap:8px;flex-wrap:wrap;background:var(--card);border:2px dashed var(--ink);border-radius:14px;padding:12px}
+.soluzione label{flex-basis:100%;font-family:var(--f-hand);font-size:1.2rem}
+.soluzione input{flex:1 1 260px;min-width:0;font:inherit;font-weight:700;text-transform:uppercase;padding:10px 12px;border-radius:12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink)}
+
+.fine{display:grid;gap:10px;justify-items:center;text-align:center;background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:16px;box-shadow:4px 4px 0 var(--ink)}
+.fine b{font-family:var(--f-display);font-size:1.7rem;line-height:1.1}
+.fine p{margin:0;color:var(--ink-soft);font-weight:700}
+
+.punti{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.punti span{font-weight:700;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:1.5px solid var(--line);font-variant-numeric:tabular-nums}
+.punti b{font-family:var(--f-display);font-size:1.05rem}
+.suoni{all:unset;cursor:pointer;font-weight:700;font-size:.92rem;padding:5px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--card)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.vuoto{text-align:center;font-family:var(--f-hand);font-size:1.4rem;color:var(--gesso)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (max-width:480px){
+  .fila{gap:3px} .tasto{height:44px;font-size:1.1rem;border-radius:8px}
+  .lavagna{border-width:6px;padding:16px 8px}
+  .eureka{font-size:1.4rem;padding:8px 22px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-giochi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>il nicoprof</a>
+
+  <header>
+    <svg viewBox="0 0 50 50" aria-hidden="true"><path d="M25 5a14 14 0 00-8.2 25.4c1.4 1 2.2 2.6 2.2 4.3V37h12v-2.3c0-1.7.8-3.3 2.2-4.3A14 14 0 0025 5z" fill="var(--giallo)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/><path d="M19 41h12M21 45h8" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/><path d="M21 22l4 6 4-6" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <h1>eureka <span class="hl">solitario</span></h1>
+  </header>
+  <ul class="regole">
+    <li><b>5 lampadine</b>: ogni errore ne spegne una.</li>
+    <li><b>Consonanti gratis</b>: +15 punti per ogni lettera che scopri.</li>
+    <li><b>Le vocali si comprano</b>: costano 25 punti, guadagnali prima con le consonanti.</li>
+    <li><b>EUREKA!</b> Scrivi la frase quando vuoi: se è giusta vinci +50 punti.</li>
+    <li><b>Stelle</b>: fino a 3, in base alle lampadine rimaste.</li>
+  </ul>
+
+  <section class="scelta" aria-label="Scegli cosa ripassare">
+    <div class="materie" id="materie" role="group" aria-label="Materia"></div>
+    <div class="riga">
+      <label for="argomento">Argomento</label>
+      <select id="argomento"></select>
+      <button class="btn blu" id="nuova" type="button">Nuova frase</button>
+    </div>
+  </section>
+
+  <section class="gioco" aria-label="Partita">
+    <div class="info">
+      <div class="argomento" id="dove"></div>
+      <div class="dx">
+        <span class="cassa" id="cassa">Punti <b id="punti-frase">0</b></span>
+        <div class="lampade" id="lampade" role="img"></div>
+      </div>
+    </div>
+    <div class="lavagna" id="lavagna" aria-hidden="true"></div>
+    <p class="sr" id="frase-sr" aria-live="polite"></p>
+    <p class="stato" id="stato" aria-live="polite"></p>
+
+    <div id="gioca">
+      <div class="tastiera" id="tastiera" role="group" aria-label="Lettere"></div>
+    </div>
+    <div class="azioni" id="azioni">
+      <button class="eureka" id="eureka" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0012 3z"/></svg>EUREKA!</button>
+    </div>
+    <form class="soluzione" id="soluzione" hidden>
+      <label for="risposta">Scrivi tutta la frase:</label>
+      <input id="risposta" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <button class="btn blu" type="submit">Controlla</button>
+      <button class="btn" type="button" id="annulla">Annulla</button>
+    </form>
+    <div class="fine" id="fine" hidden>
+      <div class="stelle" id="stelle" hidden></div>
+      <b id="fine-t"></b>
+      <p id="fine-p"></p>
+      <button class="btn blu" id="prossima" type="button">Prossima frase</button>
+    </div>
+
+    <div class="punti">
+      <span>Punti totali <b id="p-punti">0</b></span>
+      <span>Frasi indovinate <b id="p-ok">0</b></span>
+      <span>Di fila <b id="p-fila">0</b></span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
+    </div>
+  </section>
+</div>
+
+<script src="frasi.js"></script>
+<script>
+const MATERIE = {
+  aritmetica:{nome:"Aritmetica", colore:"giallo"},
+  geometria:{nome:"Geometria", colore:"azzurro"},
+  algebra:{nome:"Algebra", colore:"viola"},
+  scienze:{nome:"Scienze", colore:"verde"}
+};
+const LAMPADE = 5;
+/* stesse regole del solitario di Eureka online */
+const VOCALI = "AEIOU", COSTO_VOCALE = 25, PUNTI_CONSONANTE = 15, BONUS_EUREKA = 50;
+const FILE = ["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
+const elenco = typeof FRASI !== "undefined" ? FRASI : [];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const base = ch => ch.normalize("NFD").replace(/[̀-ͯ]/g,"").toUpperCase();
+const lettera = ch => /^[A-Z]$/.test(base(ch));
+const slug = s => base(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const soloLettere = s => base(s).replace(/[^A-Z0-9]/g,"");
+const leggi = (k, d) => { try { const v = localStorage.getItem("eureka-solo:"+k); return v === null ? d : JSON.parse(v); } catch { return d; } };
+const salva = (k, v) => { try { localStorage.setItem("eureka-solo:"+k, JSON.stringify(v)); } catch {} };
+
+const scelta = {materia: leggi("materia","tutte"), argomento: leggi("argomento","")};
+const conti = {punti: leggi("punti",0), ok: leggi("ok",0), fila: leggi("fila",0)};
+let suoni = leggi("suoni", true);
+let partita = null;
+const usate = new Set();
+
+/* argomenti nell'ordine in cui compaiono nel file delle frasi */
+function argomenti(materia){
+  const lista = [];
+  elenco.forEach(f => {
+    if(materia !== "tutte" && f.materia !== materia) return;
+    let a = lista.find(x => x.materia === f.materia && x.nome === f.argomento);
+    a ? a.n++ : lista.push({materia:f.materia, nome:f.argomento, n:1});
+  });
+  return lista;
+}
+
+/* da un indirizzo come eureka-solo.html#geometria-i-triangoli */
+function daIndirizzo(){
+  const h = location.hash.slice(1); if(!h) return;
+  if(MATERIE[h]){ scelta.materia = h; scelta.argomento = ""; return; }
+  const a = argomenti("tutte").find(a => slug(a.materia+"-"+a.nome) === h);
+  if(a){ scelta.materia = a.materia; scelta.argomento = a.nome; }
+}
+
+function disegnaScelta(){
+  $("#materie").innerHTML = [["tutte",{nome:"Tutte", colore:"tutte"}], ...Object.entries(MATERIE)].map(([k,m]) =>
+    `<button class="chip c-${m.colore}" type="button" data-k="${k}" aria-pressed="${scelta.materia===k}">${m.nome}</button>`).join("");
+  const lista = argomenti(scelta.materia);
+  if(scelta.argomento && !lista.some(a => a.nome === scelta.argomento)) scelta.argomento = "";
+  const tot = lista.reduce((s,a) => s+a.n, 0);
+  const opz = a => `<option value="${esc(a.materia+"|"+a.nome)}"${a.nome===scelta.argomento ? " selected" : ""}>${esc(a.nome)} (${a.n})</option>`;
+  let html = `<option value="">Tutti gli argomenti (${tot} frasi)</option>`;
+  if(scelta.materia === "tutte"){
+    html += Object.entries(MATERIE).map(([k,m]) => {
+      const gr = lista.filter(a => a.materia === k);
+      return gr.length ? `<optgroup label="${m.nome}">${gr.map(opz).join("")}</optgroup>` : "";
+    }).join("");
+  } else html += lista.map(opz).join("");
+  $("#argomento").innerHTML = html;
+}
+
+function pesca(){
+  const pool = elenco.map((f,i) => [f,i]).filter(([f]) =>
+    (scelta.materia === "tutte" || f.materia === scelta.materia) && (!scelta.argomento || f.argomento === scelta.argomento));
+  if(!pool.length) return null;
+  let libere = pool.filter(([,i]) => !usate.has(i));
+  if(!libere.length){ pool.forEach(([,i]) => usate.delete(i)); libere = pool; }
+  const [f,i] = libere[Math.floor(Math.random()*libere.length)];
+  usate.add(i);
+  return f;
+}
+
+function nuovaPartita(){
+  const f = pesca();
+  partita = f ? {f, scoperte:new Set(), provate:new Set(), lampade:LAMPADE, punti:0, finita:false, nuove:new Set()} : null;
+  $("#soluzione").hidden = true; $("#fine").hidden = true;
+  $("#gioca").hidden = false; $("#azioni").hidden = false;
+  stato("", "");
+  disegna();
+}
+
+function coperte(){
+  return [...partita.f.frase].filter(ch => lettera(ch) && !partita.scoperte.has(base(ch))).length;
+}
+
+function disegna(){
+  const lav = $("#lavagna");
+  if(!partita){
+    lav.innerHTML = `<div class="vuoto">${elenco.length ? "Nessuna frase per questa scelta." : "Le frasi non sono ancora state caricate."}</div>`;
+    $("#dove").innerHTML = ""; $("#lampade").innerHTML = "";
+    $("#tastiera").innerHTML = ""; $("#azioni").hidden = true;
+    aggiornaPunti(); return;
+  }
+  const {f} = partita, m = MATERIE[f.materia];
+  $("#dove").innerHTML = `<span class="tag c-${m.colore}">${m.nome}</span> ${esc(f.argomento)}`;
+  const parole = f.frase.split(/\s+/).filter(Boolean);
+  lav.innerHTML = parole.map(p => `<span class="parola">${[...p].map(ch => {
+    if(!lettera(ch)) return `<span class="t segno">${esc(ch)}</span>`;
+    const b = base(ch), vista = partita.scoperte.has(b) || partita.finita;
+    const cls = vista ? (partita.scoperte.has(b) ? "vista" : "persa") : "";
+    return `<span class="t ${cls}${partita.nuove.has(b) ? " nuova" : ""}">${vista ? esc(ch) : ""}</span>`;
+  }).join("")}</span>`).join("");
+  partita.nuove.clear();
+  misura(parole);
+  $("#frase-sr").textContent = "Frase: " + parole.map(p => [...p].map(ch =>
+    !lettera(ch) ? ch : (partita.scoperte.has(base(ch)) || partita.finita ? ch : "_")).join(" ")).join(", ");
+  $("#lampade").innerHTML = Array.from({length:LAMPADE}, (_,i) =>
+    `<svg class="${i < partita.lampade ? "on" : "off"}" viewBox="0 0 24 24" aria-hidden="true"><path class="vetro" d="M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0012 3z" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.5 18.5h5M10.5 21h3" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"/></svg>`).join("");
+  $("#lampade").setAttribute("aria-label", `${partita.lampade} lampadine accese su ${LAMPADE}`);
+  $("#tastiera").innerHTML = FILE.map(r => `<div class="fila">${[...r].map(l => {
+    const usata = partita.provate.has(l), vocale = VOCALI.includes(l);
+    const chiusa = vocale && !usata && partita.punti < COSTO_VOCALE;
+    const c = usata ? (partita.scoperte.has(l) ? " si" : " no") : (chiusa ? " chiusa" : "");
+    const etichetta = vocale && !usata ? `Vocale ${l}, costa ${COSTO_VOCALE} punti` : `Lettera ${l}`;
+    return `<button class="tasto${c}" type="button" data-l="${l}"${usata || partita.finita ? " disabled" : ""}${chiusa ? ' aria-disabled="true"' : ""} aria-label="${etichetta}">${l}${vocale && !usata ? `<span class="prezzo" aria-hidden="true">${COSTO_VOCALE}</span>` : ""}</button>`;
+  }).join("")}</div>`).join("");
+  $("#punti-frase").textContent = partita.punti;
+  aggiornaPunti();
+}
+
+/* tessere più piccole se la parola più lunga non ci sta */
+function misura(parole){
+  const lav = $("#lavagna");
+  const larga = Math.max(8, ...parole.map(p => [...p].reduce((n,ch) => n + (lettera(ch) ? 1 : .45), 0)));
+  lav.style.setProperty("--s", "14px"); /* prima piccole, così la lavagna non si allarga e si misura giusta */
+  const spazio = lav.clientWidth - parseFloat(getComputedStyle(lav).paddingLeft)*2 - 16;
+  const s = Math.max(14, Math.min(46, Math.floor((spazio + 4) / larga - 4)));
+  lav.style.setProperty("--s", s + "px");
+}
+addEventListener("resize", () => partita && misura(partita.f.frase.split(/\s+/)));
+
+function stato(testo, tipo){ const s = $("#stato"); s.textContent = testo; s.className = "stato " + tipo; }
+
+function prova(l){
+  if(!partita || partita.finita || partita.provate.has(l)) return;
+  const vocale = VOCALI.includes(l);
+  if(vocale){
+    if(partita.punti < COSTO_VOCALE){
+      const t = document.querySelector(`.tasto[data-l="${l}"]`);
+      if(t){ t.classList.remove("scuoti"); void t.offsetWidth; t.classList.add("scuoti"); }
+      stato(`Per comprare la ${l} servono ${COSTO_VOCALE} punti. Prima indovina qualche consonante!`, "no");
+      return;
+    }
+    partita.punti -= COSTO_VOCALE;
+  }
+  partita.provate.add(l);
+  const quante = [...partita.f.frase].filter(ch => lettera(ch) && base(ch) === l).length;
+  const comprata = vocale ? `Hai comprato la ${l} (-${COSTO_VOCALE}). ` : "";
+  if(quante){
+    partita.scoperte.add(l); partita.nuove.add(l);
+    if(!vocale) partita.punti += quante * PUNTI_CONSONANTE;
+    suona("si");
+    stato(`${comprata}Sì! La ${l} c'è ${quante === 1 ? "una volta" : quante + " volte"}${vocale ? "" : `: +${quante * PUNTI_CONSONANTE} punti`}.`, "si");
+    disegna();
+    if(!coperte()) vinci(false);
+  } else {
+    partita.lampade--;
+    suona("no");
+    stato(`${comprata}La ${l} non c'è. ${partita.lampade ? "Si spegne una lampadina." : ""}`, "no");
+    disegna();
+    if(!partita.lampade) perdi();
+  }
+}
+
+function controlla(testo){
+  if(!partita || partita.finita) return;
+  if(soloLettere(testo) === soloLettere(partita.f.frase)){
+    vinci(true);
+  } else {
+    partita.lampade--;
+    suona("no");
+    $("#soluzione").hidden = true; $("#azioni").hidden = false; $("#gioca").hidden = false;
+    stato(partita.lampade ? `Non è la frase giusta. Ti ${partita.lampade === 1 ? "resta 1 lampadina" : "restano " + partita.lampade + " lampadine"}.` : "", "no");
+    disegna();
+    if(!partita.lampade) perdi();
+  }
+}
+
+function vinci(conEureka){
+  const lettere = partita.punti, bonus = conEureka ? BONUS_EUREKA : 0, punti = lettere + bonus;
+  partita.punti = punti;
+  partita.finita = true;
+  [...partita.f.frase].forEach(ch => { if(lettera(ch) && !partita.scoperte.has(base(ch))){ partita.scoperte.add(base(ch)); partita.nuove.add(base(ch)); } });
+  conti.punti += punti; conti.ok++; conti.fila++;
+  /* 5 lampadine = 3 stelle, 3-4 = 2 stelle, 1-2 = 1 stella */
+  const stelle = partita.lampade === LAMPADE ? 3 : partita.lampade >= 3 ? 2 : 1;
+  suona("eureka");
+  stato("", "");
+  mostraFine(conEureka ? "EUREKA! Frase indovinata!" : "Hai scoperto tutta la frase!",
+    `Lettere ${lettere} punti${conEureka ? ` + EUREKA ${BONUS_EUREKA}` : ""} = ${punti} punti`, stelle);
+}
+function perdi(){
+  partita.finita = true; conti.fila = 0;
+  stato("", "");
+  mostraFine("Le lampadine sono finite!", "Ecco la frase: le lettere che mancavano sono in rosso.", 0);
+}
+function mostraFine(t, p, stelle){
+  const st = $("#stelle");
+  st.hidden = !stelle;
+  st.innerHTML = [1,2,3].map(i => `<span${i > stelle ? ' class="spenta"' : ""}>★</span>`).join("");
+  st.setAttribute("aria-label", `${stelle} stelle su 3`); st.setAttribute("role", "img");
+  salva("punti", conti.punti); salva("ok", conti.ok); salva("fila", conti.fila);
+  $("#gioca").hidden = true; $("#azioni").hidden = true; $("#soluzione").hidden = true;
+  $("#fine-t").textContent = t; $("#fine-p").textContent = p; $("#fine").hidden = false;
+  disegna();
+  $("#prossima").focus({preventScroll:true});
+}
+function aggiornaPunti(){
+  $("#p-punti").textContent = conti.punti; $("#p-ok").textContent = conti.ok; $("#p-fila").textContent = conti.fila;
+  $("#suoni").textContent = "Suoni: " + (suoni ? "sì" : "no"); $("#suoni").setAttribute("aria-pressed", suoni);
+}
+
+/* suoni semplici, partono solo dopo un tocco */
+let audio;
+function suona(tipo){
+  if(!suoni) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    const note = {si:[[660,0,.12],[880,.09,.16]], no:[[180,0,.28]], eureka:[[523,0,.14],[659,.12,.14],[784,.24,.14],[1047,.36,.32]]}[tipo];
+    note.forEach(([fr, da, dur]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = tipo === "no" ? "sawtooth" : "triangle"; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(tipo === "no" ? .08 : .18, t+.02); g.gain.exponentialRampToValueAtTime(.0001, t+dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t+dur+.02);
+    });
+  } catch {}
+}
+
+$("#materie").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if(!b) return;
+  scelta.materia = b.dataset.k; scelta.argomento = "";
+  salva("materia", scelta.materia); salva("argomento", "");
+  disegnaScelta(); nuovaPartita();
+});
+$("#argomento").addEventListener("change", e => {
+  const [mat, ...nome] = e.target.value.split("|");
+  scelta.argomento = nome.join("|");
+  if(mat && scelta.materia === "tutte") scelta.materia = mat;
+  salva("materia", scelta.materia); salva("argomento", scelta.argomento);
+  disegnaScelta(); nuovaPartita();
+});
+$("#nuova").addEventListener("click", nuovaPartita);
+$("#prossima").addEventListener("click", nuovaPartita);
+$("#tastiera").addEventListener("click", e => { const b = e.target.closest(".tasto"); if(b) prova(b.dataset.l); });
+$("#eureka").addEventListener("click", () => {
+  $("#azioni").hidden = true; $("#gioca").hidden = true; $("#soluzione").hidden = false;
+  $("#risposta").value = ""; $("#risposta").focus();
+});
+$("#annulla").addEventListener("click", () => { $("#soluzione").hidden = true; $("#azioni").hidden = false; $("#gioca").hidden = false; });
+$("#soluzione").addEventListener("submit", e => { e.preventDefault(); const v = $("#risposta").value; if(soloLettere(v)) controlla(v); });
+$("#suoni").addEventListener("click", () => { suoni = !suoni; salva("suoni", suoni); aggiornaPunti(); });
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,select,textarea")) return;
+  const l = e.key.length === 1 ? base(e.key) : "";
+  if(/^[A-Z]$/.test(l) && !$("#gioca").hidden){ e.preventDefault(); prova(l); }
+});
+addEventListener("hashchange", () => { daIndirizzo(); disegnaScelta(); nuovaPartita(); });
+
+daIndirizzo();
+disegnaScelta();
+nuovaPartita();
+</script>
+</body>
+</html>

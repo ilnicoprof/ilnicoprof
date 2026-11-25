@@ -1,0 +1,195 @@
+/* Generato da aggiorna_materiali.py: non modificare a mano */
+const CAPITOLI = [
+ {
+  "materia": "aritmetica",
+  "classe": "1ª",
+  "titolo": "Insiemi, tabelle e grafici",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1329,
+    "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 67,
+    "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 3407,
+    "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 462,
+    "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 297,
+    "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 97,
+    "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "aritmetica",
+  "classe": "1ª",
+  "titolo": "Numeri naturali e decimali",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1437,
+    "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 51,
+    "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 3845,
+    "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 663,
+    "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 353,
+    "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 86,
+    "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "algebra",
+  "classe": "3ª",
+  "titolo": "I numeri relativi",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1248,
+    "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 48,
+    "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 3014,
+    "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 574,
+    "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 399,
+    "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 96,
+    "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "algebra",
+  "classe": "3ª",
+  "titolo": "Le operazioni con i numeri relativi",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1217,
+    "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 49,
+    "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 3708,
+    "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Slides.pdf"
+   },
+   {
+    "nome": "Esercitazione",
+    "formato": "Word",
+    "kb": 11,
+    "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Esercitazione.docx"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 498,
+    "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 222,
+    "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 80,
+    "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercitazione semplificata",
+    "formato": "Word",
+    "kb": 10,
+    "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Esercitazione semplificata.docx"
+   }
+  ]
+ }
+];

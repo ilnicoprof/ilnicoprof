@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="it">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>il nicoprof</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: un foglio di quaderno a quadretti; materie come etichette incollate, capitoli come bigliettini da aprire in una scheda grande */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066; --veil:rgba(20,27,43,.45);
+  --giallo:#FFD966; --giallo-ink:#5A4300;
+  --verde:#8EDDB4; --verde-ink:#0B4A2C;
+  --azzurro:#9FD0FF; --azzurro-ink:#0D3B6E;
+  --viola:#C9B8FF; --viola-ink:#35207A;
+  --incl-icon:#0B4A2C;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12; --veil:rgba(0,0,0,.6);
+  --giallo:#E8C24F; --verde:#6FCB9C; --azzurro:#86BEF5; --viola:#B3A0F5; --incl-icon:#6FCB9C;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12; --veil:rgba(0,0,0,.6);
+  --giallo:#E8C24F; --verde:#6FCB9C; --azzurro:#86BEF5; --viola:#B3A0F5; --incl-icon:#6FCB9C;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.55;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:1080px;margin:0 auto;padding-block:28px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header{display:grid;gap:10px;padding-block:24px 8px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo svg{width:52px;height:52px;flex:none}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.4rem,7vw,3.6rem);line-height:1;margin:0;letter-spacing:-.01em}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.sub{font-family:var(--f-hand);font-size:1.35rem;color:var(--ink-soft);margin:0;max-width:36ch}
+
+.search{position:relative;max-width:520px;margin-top:10px}
+.search input{width:100%;font:inherit;font-size:1.05rem;padding:14px 16px 14px 46px;border-radius:14px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.search input:focus{outline:3px solid var(--accent);outline-offset:2px}
+.search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--ink-soft)}
+
+h2{font-family:var(--f-display);font-weight:700;font-size:1.6rem;margin:0;text-wrap:balance}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:36px 0 14px}
+.sec-head .note{font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+
+.materie{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
+.materia{all:unset;cursor:pointer;display:grid;gap:6px;padding:16px 14px 14px;border-radius:6px 6px 18px 6px;
+  border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);transition:transform .15s ease,box-shadow .15s ease;position:relative}
+.materia:nth-child(odd){transform:rotate(-1.2deg)}
+.materia:nth-child(even){transform:rotate(1deg)}
+.materia:hover{transform:rotate(0) translateY(-3px);box-shadow:6px 7px 0 var(--ink)}
+.materia:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.materia[aria-pressed="true"]{transform:rotate(0) translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.materia[aria-pressed="true"]::after{content:"✓";position:absolute;top:8px;right:10px;font-weight:800;font-size:1.1rem}
+.materia svg{width:34px;height:34px}
+.materia b{font-family:var(--f-display);font-size:1.2rem;font-weight:700;line-height:1.1}
+.materia small{font-size:.85rem;font-weight:600;opacity:.85}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+.c-verde{background:var(--verde);color:var(--verde-ink)}
+.c-azzurro{background:var(--azzurro);color:var(--azzurro-ink)}
+.c-viola{background:var(--viola);color:var(--viola-ink)}
+
+.classi{display:flex;gap:8px;flex-wrap:wrap}
+.chip{all:unset;cursor:pointer;font-weight:700;font-size:.95rem;padding:7px 14px;border-radius:999px;border:2px solid var(--ink);background:var(--card);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.gruppo{display:grid;gap:12px;margin-top:26px}
+.gruppo-t{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--f-display);font-weight:700;font-size:1.3rem;margin:0}
+.gruppo-t .n{font-family:var(--f-hand);font-weight:400;font-size:1.1rem;color:var(--ink-soft)}
+.tag{font-family:var(--f-body);font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px}
+
+.lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.cap{all:unset;box-sizing:border-box;cursor:pointer;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:14px 16px;
+  display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center;min-width:0;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease}
+.cap:hover{border-color:var(--ink);transform:translateY(-2px);box-shadow:3px 3px 0 var(--ink)}
+.cap:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cap .num{grid-row:span 2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:1.2rem;border:2px solid var(--ink)}
+.cap b{font-family:var(--f-display);font-weight:700;font-size:1.1rem;line-height:1.2;text-wrap:balance;min-width:0}
+.cap small{font-size:.82rem;color:var(--ink-soft);font-weight:600}
+
+.giochi{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.gioco{display:grid;gap:8px;align-content:start;text-decoration:none;color:var(--ink);background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:16px;box-shadow:4px 4px 0 var(--ink);transition:transform .15s ease,box-shadow .15s ease;min-width:0}
+.gioco:hover{transform:translateY(-3px);box-shadow:6px 7px 0 var(--ink)}
+.gioco:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.gioco .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.gioco .ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;border:2px solid var(--ink)}
+.gioco .ico svg{width:26px;height:26px}
+.gioco .tipo{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:999px;border:1.5px solid var(--ink)}
+.gioco b{font-family:var(--f-display);font-weight:700;font-size:1.25rem;line-height:1.15}
+.gioco p{margin:0;color:var(--ink-soft);font-size:.95rem}
+.gioco .meta{font-size:.82rem;font-weight:700;color:var(--ink-soft)}
+.gioco .vai{font-weight:800;color:var(--accent);display:flex;align-items:center;gap:6px}
+.gioco .vai svg{width:18px;height:18px;flex:none}
+.giochi.prof{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.giochi.prof .gioco{background:var(--giallo);color:var(--giallo-ink);padding:20px;border-radius:20px 20px 28px 20px}
+.giochi.prof .gioco p,.giochi.prof .gioco .meta,.giochi.prof .gioco .vai{color:var(--giallo-ink)}
+.giochi.prof .gioco b{font-size:1.5rem}
+.giochi.prof .gioco .ico{background:var(--card);color:var(--ink)}
+.vuoto{text-align:center;padding:36px 16px;font-family:var(--f-hand);font-size:1.4rem;color:var(--ink-soft)}
+footer{margin-top:48px;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft);text-align:center}
+
+dialog{width:min(680px,calc(100% - 24px));max-height:calc(100% - 32px);padding:0;border:2px solid var(--ink);border-radius:18px;
+  background:var(--card);color:var(--ink);box-shadow:6px 6px 0 var(--ink);overflow:auto}
+dialog::backdrop{background:var(--veil)}
+.d-head{position:sticky;top:0;z-index:1;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;padding:18px 20px 14px;background:var(--card);border-bottom:2px dashed var(--line)}
+.d-head .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-family:var(--f-hand);font-size:1.1rem;color:var(--ink-soft)}
+.d-head h2{font-size:1.75rem;line-height:1.15;margin-top:4px}
+.chiudi{all:unset;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;border:2px solid var(--ink);background:var(--card)}
+.chiudi:hover{background:var(--pill)}
+.chiudi:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.chiudi svg{width:18px;height:18px}
+.d-body{padding:16px 20px 22px;display:grid;gap:18px}
+.blocco{display:grid;gap:8px}
+.blocco h3{margin:0;font-family:var(--f-hand);font-weight:400;font-size:1.3rem;display:flex;align-items:center;gap:8px}
+.blocco h3 svg{width:20px;height:20px}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
+.file{display:grid;grid-template-columns:auto 1fr;gap:0 10px;align-items:center;text-decoration:none;color:var(--ink);background:var(--pill);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.file:hover{border-color:var(--ink)}
+.file:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.file .ico{grid-row:span 2;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--card);border:1.5px solid var(--line);color:var(--accent)}
+.file .ico svg{width:17px;height:17px}
+.file b{font-weight:700;font-size:.98rem;line-height:1.2}
+.file small{font-size:.8rem;color:var(--ink-soft);font-weight:600;font-variant-numeric:tabular-nums}
+.file.presto{background:transparent;border-style:dashed;color:var(--ink-soft);cursor:default}
+.file.presto:hover{border-color:var(--line)}
+.file.presto .ico{color:var(--ink-soft);background:transparent;border-style:dashed}
+.incl{border:2px dashed var(--verde);border-radius:14px;padding:12px;background:color-mix(in srgb,var(--verde) 12%,transparent)}
+.incl .file{background:var(--card);border-color:color-mix(in srgb,var(--verde) 70%,var(--line))}
+.incl .file .ico{color:var(--incl-icon);border-color:color-mix(in srgb,var(--verde) 70%,var(--line))}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:12px;font-weight:600;font-size:.95rem;max-width:calc(100% - 32px);z-index:5}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.materia,.materia:nth-child(n){transform:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="logo">
+      <svg viewBox="0 0 52 52" aria-hidden="true"><rect x="3" y="5" width="40" height="44" rx="6" fill="var(--giallo)" stroke="var(--ink)" stroke-width="2.5"/><path d="M11 16h22M11 24h22M11 32h14" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/><path d="M35 41l10-22 4 2-10 22-5 2z" fill="var(--viola)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/></svg>
+      <h1>il <span class="hl">nicoprof</span></h1>
+    </div>
+    <p class="sub">Appunti, mappe e slide di ogni capitolo. Scegli la materia e la tua classe!</p>
+    <label class="search" for="cerca">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input id="cerca" type="search" placeholder="Cerca: frazioni, triangoli, equazioni…" aria-label="Cerca un capitolo">
+    </label>
+  </header>
+
+  <section aria-labelledby="t-materie">
+    <div class="sec-head"><h2 id="t-materie">Le materie</h2><span class="note">tocca una materia per filtrare</span></div>
+    <div class="materie" id="materie"></div>
+  </section>
+
+  <section aria-labelledby="t-capitoli">
+    <div class="sec-head">
+      <h2 id="t-capitoli">Capitoli</h2>
+      <div class="classi" id="classi" role="group" aria-label="Filtra per classe"></div>
+    </div>
+    <div id="elenco" aria-live="polite"></div>
+  </section>
+
+  <section aria-labelledby="t-giochi">
+    <div class="sec-head"><h2 id="t-giochi">Giochi di ripasso</h2><span class="note">ripassa giocando</span></div>
+    <div class="giochi" id="giochi"></div>
+  </section>
+
+  <section aria-labelledby="t-prof">
+    <div class="sec-head"><h2 id="t-prof">I giochi del prof</h2><span class="note">le sfide più grandi</span></div>
+    <div class="giochi prof" id="giochi-prof"></div>
+  </section>
+
+  <footer>il nicoprof · materiali per la scuola media</footer>
+</div>
+
+<dialog id="dettaglio" aria-labelledby="d-titolo">
+  <div class="d-head">
+    <div><div class="meta" id="d-meta"></div><h2 id="d-titolo"></h2></div>
+    <button class="chiudi" id="chiudi" aria-label="Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="d-body" id="d-corpo"></div>
+  <div class="toast" id="toast-d" hidden></div>
+</dialog>
+<div class="toast" id="toast" hidden></div>
+
+<script src="materiali.js"></script>
+<script src="giochi.js"></script>
+<script src="frasi.js"></script>
+<script>
+/* true finché il sito è solo un'anteprima: i link ai file non funzionano ancora */
+const ANTEPRIMA = false;
+
+const MATERIE = {
+  aritmetica: {nome:"Aritmetica", colore:"giallo", icona:'<path d="M7 4v6M4 7h6M14 7h6M4.5 14.5l5 5M9.5 14.5l-5 5M14 17h6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><circle cx="17" cy="14" r="1.3" fill="currentColor"/><circle cx="17" cy="20" r="1.3" fill="currentColor"/>'},
+  geometria:  {nome:"Geometria",  colore:"azzurro",icona:'<path d="M4 20V5l15 15z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" fill="none"/><path d="M4 15h5v5" stroke="currentColor" stroke-width="2" fill="none"/>'},
+  algebra:    {nome:"Algebra",    colore:"viola",  icona:'<text x="2" y="19" font-family="Georgia,serif" font-style="italic" font-size="19" fill="currentColor">x</text><text x="13" y="11" font-family="Georgia,serif" font-size="11" fill="currentColor">2</text>'},
+  scienze:    {nome:"Scienze",    colore:"verde",  icona:'<path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 001.3 2h12.4a1.5 1.5 0 001.3-2L14 9V3M7 15h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'}
+};
+const CLASSI = ["1ª","2ª","3ª"];
+const svg = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const IC = {
+  libro: svg('<path d="M3 5h7a3 3 0 013 3v12a2 2 0 00-2-2H3zM21 5h-7a3 3 0 00-1 .2V20a2 2 0 012-2h6z"/>'),
+  lavagna: svg('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20l4-4 4 4"/>'),
+  matita: svg('<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>'),
+  cuore: svg('<path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z"/>'),
+  dl: svg('<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>'),
+  gioco: svg('<rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v3M5.5 12.5h3"/><circle cx="16" cy="11.5" r=".8" fill="currentColor"/><circle cx="18" cy="13.5" r=".8" fill="currentColor"/>'),
+  lampadina: svg('<path d="M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0012 3z"/>'),
+  freccia: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+  lucchetto: svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3M12 15v2"/>')
+};
+const TIPI_GIOCO = {
+  minigioco: {nome:"Minigioco", icona:IC.gioco, esterno:false},
+  escape:    {nome:"Escape room", icona:IC.lucchetto, esterno:false},
+  eureka:    {nome:"Eureka", icona:IC.lampadina, esterno:true}
+};
+const tipoGioco = g => TIPI_GIOCO[g.tipo] || {nome:"Link", icona:IC.freccia, esterno:true};
+const giocoTarget = g => tipoGioco(g).esterno ? ' target="_blank" rel="noopener"' : "";
+/* in quale blocco va ogni tipo di file */
+const BLOCCHI = [
+  {titolo:"Per studiare", icona:IC.libro, prende:n => /^(appunti|mappa|slide)/i.test(n), sempre:true},
+  {titolo:"Esercitazioni", icona:IC.matita, prende:() => true}
+];
+
+const stato = {materia:null, classe:"tutte", q:""};
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+const peso = kb => kb >= 1024 ? (kb/1024).toLocaleString("it-IT",{maximumFractionDigits:1})+" MB" : kb+" KB";
+
+CAPITOLI.forEach(c => {
+  c.numero = CAPITOLI.filter(x => x.materia===c.materia && x.classe===c.classe).indexOf(c) + 1;
+  c.id = norm(`${c.materia}-${c.classe[0]}-${c.titolo}`).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+});
+
+function disegnaMaterie(){
+  $("#materie").innerHTML = Object.entries(MATERIE).map(([k,m])=>{
+    const n = CAPITOLI.filter(x=>x.materia===k).length;
+    return `<button class="materia c-${m.colore}" data-k="${k}" aria-pressed="${stato.materia===k}">
+      <svg viewBox="0 0 24 24" aria-hidden="true">${m.icona}</svg><b>${m.nome}</b><small>${n ? `${n} ${n===1?"capitolo":"capitoli"}` : "in arrivo"}</small></button>`;
+  }).join("");
+}
+function disegnaClassi(){
+  $("#classi").innerHTML = ["tutte",...CLASSI].map(c=>
+    `<button class="chip" data-c="${c}" aria-pressed="${stato.classe===c}">${c==="tutte"?"Tutte le classi":"Classe "+c}</button>`).join("");
+}
+function disegnaElenco(){
+  const q = norm(stato.q.trim());
+  const res = CAPITOLI
+    .filter(c=>!stato.materia || c.materia===stato.materia)
+    .filter(c=>stato.classe==="tutte" || c.classe===stato.classe)
+    .filter(c=>!q || norm(c.titolo+" "+MATERIE[c.materia].nome).includes(q));
+  if(!res.length){ $("#elenco").innerHTML = `<div class="vuoto">Nessun capitolo trovato… prova un'altra parola o un'altra classe!</div>`; return; }
+  const gruppi = [];
+  res.forEach(c => {
+    const g = gruppi.find(g => g.materia===c.materia && g.classe===c.classe);
+    g ? g.capitoli.push(c) : gruppi.push({materia:c.materia, classe:c.classe, capitoli:[c]});
+  });
+  $("#elenco").innerHTML = gruppi.map(g => {
+    const m = MATERIE[g.materia];
+    return `<div class="gruppo"><h3 class="gruppo-t"><span class="tag c-${m.colore}">${m.nome}</span> ${g.classe} media <span class="n">${g.capitoli.length} ${g.capitoli.length===1?"capitolo":"capitoli"}</span></h3>
+      <div class="lista">${g.capitoli.map(c => `<button class="cap" data-id="${c.id}">
+        <span class="num c-${m.colore}">${c.numero}</span><b>${esc(c.titolo)}</b>
+        <small>${c.file.length} materiali${c.inclusione.length ? ` · ${c.inclusione.length} per l'inclusione` : ""}</small>
+      </button>`).join("")}</div></div>`;
+  }).join("");
+}
+function disegnaGiochi(){
+  const q = norm(stato.q.trim());
+  /* i giochi senza materia sono generali: si vedono sempre e vanno per primi */
+  const res = GIOCHI
+    .filter(g=>!g.materia || !stato.materia || g.materia===stato.materia)
+    .filter(g=>!g.materia || stato.classe==="tutte" || g.classe===stato.classe)
+    .filter(g=>!q || norm(g.titolo+" "+g.descr+" "+(g.capitolo||"")+" "+(MATERIE[g.materia]?.nome||"")).includes(q))
+    .sort((a,b)=>!!a.materia - !!b.materia);
+  $("#giochi").innerHTML = res.length ? res.map(g => {
+    const m = MATERIE[g.materia] || {nome:"Tutte le materie", colore:"giallo"}, t = tipoGioco(g);
+    const link = g.link + (g.link==="eureka-solo.html" && stato.materia ? "#"+stato.materia : "");
+    const meta = [m.nome, g.classe, g.capitolo && esc(g.capitolo)].filter(Boolean).join(" · ");
+    return `<a class="gioco" href="${encodeURI(link)}"${giocoTarget(g)}>
+      <div class="top"><span class="ico c-${m.colore}">${t.icona}</span><span class="tipo">${t.nome}</span></div>
+      <b>${esc(g.titolo)}</b><p>${esc(g.descr)}</p>
+      <span class="meta">${meta}</span>
+      <span class="vai">${t.esterno ? "Apri" : "Gioca"} ${IC.freccia}</span></a>`;
+  }).join("") : `<div class="vuoto" style="grid-column:1/-1">${GIOCHI.length ? "Nessun gioco per questa scelta… per ora!" : "Presto qui troverai i giochi per ripassare!"}</div>`;
+}
+function disegnaGiochiProf(){
+  const q = norm(stato.q.trim());
+  const res = GIOCHI_PROF.filter(g=>!q || norm(g.titolo+" "+(g.descr||"")).includes(q));
+  $("#giochi-prof").innerHTML = res.length ? res.map(g => {
+    const m = MATERIE[g.materia];
+    const meta = [m?.nome, g.classe].filter(Boolean).join(" · ");
+    return `<a class="gioco" href="${encodeURI(g.link)}" target="_blank" rel="noopener">
+      <div class="top"><span class="ico">${IC.gioco}</span></div>
+      <b>${esc(g.titolo)}</b>${g.descr ? `<p>${esc(g.descr)}</p>` : ""}
+      ${meta ? `<span class="meta">${meta}</span>` : ""}
+      <span class="vai">Gioca ${IC.freccia}</span></a>`;
+  }).join("") : `<div class="vuoto" style="grid-column:1/-1">${GIOCHI_PROF.length ? "Nessun gioco trovato con questa ricerca." : "Qui arriveranno i giochi più grandi del prof!"}</div>`;
+}
+function tutto(){disegnaMaterie();disegnaClassi();disegnaElenco();disegnaGiochi();disegnaGiochiProf()}
+
+const fileLink = (f, ico) => `<a class="file" href="${encodeURI(f.link)}" download target="_blank" rel="noopener">
+  <span class="ico">${ico}</span><b>${esc(f.nome)}</b><small>${f.formato} · ${peso(f.kb)}</small></a>`;
+const presto = f => `<span class="file presto"><span class="ico">${IC.lavagna}</span><b>${esc(f.nome)}</b><small>In arrivo</small></span>`;
+const blocco = (titolo, icona, files, cls="") => files.length ? `<section class="blocco ${cls}"><h3>${icona} ${titolo}</h3><div class="files">${files.map(f=>f.presto ? presto(f) : fileLink(f, IC.dl)).join("")}</div></section>` : "";
+
+const dlg = $("#dettaglio");
+function apri(id){
+  const c = CAPITOLI.find(x => x.id===id); if(!c) return;
+  const m = MATERIE[c.materia];
+  $("#d-meta").innerHTML = `<span class="tag c-${m.colore}">${m.nome}</span> ${c.classe} media · capitolo ${c.numero}`;
+  $("#d-titolo").textContent = c.titolo;
+  const resto = [...c.file];
+  const parti = BLOCCHI.map(b => {
+    const presi = resto.filter(f => b.prende(f.nome)); presi.forEach(f => resto.splice(resto.indexOf(f),1));
+    if(b.sempre && !presi.some(f => /^slide/i.test(f.nome))) presi.push({nome:"Slide", presto:true});
+    return blocco(b.titolo, b.icona, presi);
+  });
+  const giochi = GIOCHI.filter(g => g.materia===c.materia && g.capitolo===c.titolo);
+  /* Eureka solitario compare da solo nei capitoli che hanno frasi con lo stesso argomento */
+  const frasiCap = (typeof FRASI !== "undefined" ? FRASI : []).filter(f => f.materia===c.materia && f.argomento===c.titolo).length;
+  if(frasiCap) giochi.unshift({titolo:"Eureka solitario", tipo:"minigioco", sotto:`${frasiCap} frasi da indovinare`,
+    link:"eureka-solo.html#" + norm(c.materia+"-"+c.titolo).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")});
+  const bloccoGiochi = giochi.length ? `<section class="blocco"><h3>${IC.gioco} Gioca e ripassa</h3><div class="files">${giochi.map(g => {
+    const t = tipoGioco(g);
+    return `<a class="file gioco-link" href="${encodeURI(g.link)}"${giocoTarget(g)}><span class="ico">${t.icona}</span><b>${esc(g.titolo)}</b><small>${esc(g.sotto || t.nome)}</small></a>`;
+  }).join("")}</div></section>` : "";
+  $("#d-corpo").innerHTML = parti.join("") + bloccoGiochi + blocco("Per l'inclusione", IC.cuore, c.inclusione, "incl");
+  if(!dlg.open) dlg.showModal();
+  dlg.scrollTop = 0;
+  if(location.hash !== "#"+id) location.hash = id;
+}
+function chiudi(){ if(dlg.open) dlg.close(); }
+dlg.addEventListener("close", () => { if(location.hash) location.hash = ""; });
+dlg.addEventListener("click", e => { if(e.target === dlg) chiudi(); });
+$("#chiudi").addEventListener("click", chiudi);
+window.addEventListener("hashchange", () => { const id = location.hash.slice(1); id ? apri(id) : chiudi(); });
+
+$("#materie").addEventListener("click",e=>{const b=e.target.closest(".materia");if(!b)return;stato.materia=stato.materia===b.dataset.k?null:b.dataset.k;tutto()});
+$("#classi").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;stato.classe=b.dataset.c;tutto()});
+$("#cerca").addEventListener("input",e=>{stato.q=e.target.value;disegnaElenco();disegnaGiochi();disegnaGiochiProf()});
+$("#elenco").addEventListener("click",e=>{const b=e.target.closest(".cap");if(b)apri(b.dataset.id)});
+
+let tt;
+$("#d-corpo").addEventListener("click",e=>{
+  const a=e.target.closest(".file"); if(!a)return;
+  const giocoVuoto = a.classList.contains("gioco-link") && a.getAttribute("href")==="#";
+  if(a.classList.contains("gioco-link") && !giocoVuoto) return;
+  if(!ANTEPRIMA && !giocoVuoto) return;
+  e.preventDefault(); avvisa("#toast-d", giocoVuoto ? "Il link a questa attività non è ancora stato inserito" : "Anteprima: il file si scaricherà quando il sito sarà online");
+});
+$("#giochi").addEventListener("click",e=>{
+  const a=e.target.closest(".gioco"); if(!a||a.getAttribute("href")!=="#")return;
+  e.preventDefault(); avvisa("#toast", "Il link a questa attività non è ancora stato inserito");
+});
+function avvisa(sel, testo){ const t=$(sel); t.textContent=testo; t.hidden=false; clearTimeout(tt); tt=setTimeout(()=>t.hidden=true,3000); }
+tutto();
+if(location.hash.length > 1) apri(location.hash.slice(1));
+</script>
+
+</html>
