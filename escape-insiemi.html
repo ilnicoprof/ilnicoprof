@@ -185,6 +185,19 @@ tfoot td{font-weight:800}
 #segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
 #segreto b{font-family:var(--f-display);font-size:1.1rem}
 @keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+/* la porta che si apre */
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
 @keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 .scuoti{animation:scuoti .3s ease 2}
 @media (max-width:480px){
@@ -326,6 +339,10 @@ const SUONI = {
   sonar:[[1200,0,.08,"sine"],[900,.12,.3,"sine"]],
   blub:[[300,0,.08,"sine",.12],[420,.1,.08,"sine",.12],[560,.2,.1,"sine",.12]],
   segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[140,0,.5,"sawtooth",.035],[155,.25,.6,"sawtooth",.03]],
+  splash:[[760,0,.05,"sine",.12],[380,.04,.12,"sine",.12],[190,.1,.18,"sine",.1]],
   porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
 };
 function suona(tipo){
@@ -560,22 +577,42 @@ function disegna4(){
     $("#ricomincia").addEventListener("click", () => location.reload());
     return;
   }
-  sez.innerHTML = `<div class="porta${pronto ? "" : " chiuso"}">
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
     <h2 id="t4">La porta dell'aula</h2>
-    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre">${S.rotelle.map((v,i) => `<div class="rotella">
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
       <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
       <output aria-label="Cifra ${i+1}">${v}</output>
       <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
     ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
-    <p class="esito" id="esito3"></p></div>`;
+    <p class="esito" id="esito3"></p></div></div>`;
   sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
     const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
     b.parentElement.querySelector("output").textContent = S.rotelle[i];
   }));
   $("#apri")?.addEventListener("click", () => {
-    if(S.rotelle.every((v,i) => v === CODICE[i])){ S.libero = true; S.fine = Date.now(); suona("porta"); disegna4(); coriandoli(); annuncia("Complimenti, hai superato tutte le prove!"); $("#e4").scrollIntoView({behavior:"smooth", block:"center"}); }
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
     else { if(S.rotelle.join("") === "123") segreto("123", "1-2-3? È il codice che tutti provano per primo... ed è proprio per questo che nessuno lo usa!"); suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
   });
+}
+
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
 }
 
 function disegnaIndizi(){

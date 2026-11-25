@@ -183,6 +183,27 @@ td.op{font-family:var(--f-display);font-weight:700;font-size:1.15rem;white-space
 #segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
 #segreto b{font-family:var(--f-display);font-size:1.1rem}
 @keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+/* la porta che si apre */
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
+/* il mare che si muove */
+.onde{position:absolute;left:52px;right:0;top:calc(8.5 * var(--passo) - 9px);height:10px;overflow:hidden;pointer-events:none}
+.onde svg{display:block;width:200%;height:100%;animation:onde 3.5s linear infinite}
+@keyframes onde{to{transform:translateX(-50%)}}
+.elica{transform-box:fill-box;transform-origin:center;animation:elica .14s linear infinite}
+@keyframes elica{50%{transform:scaleX(.15)}}
+.bolla{position:absolute;width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(255,255,255,.95);background:rgba(255,255,255,.25);pointer-events:none}
+.goccia{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--mare);border:1.5px solid #FFFFFF;pointer-events:none}
 @keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 .scuoti{animation:scuoti .3s ease 2}
 @media (max-width:480px){
@@ -222,7 +243,7 @@ const SVG = {
   boa:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7V2" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="14" r="7" fill="var(--rosso)" stroke="var(--ink)" stroke-width="1.8"/><path d="M5.5 14h13" stroke="#FFFFFF" stroke-width="3"/></svg>',
   pesce:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 12l6-4.5v9z" fill="var(--giallo)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/><ellipse cx="10" cy="12" rx="7.5" ry="5" fill="var(--giallo)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="6.5" cy="11" r="1.2" fill="var(--ink)"/></svg>',
   granchio:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 13L4 9M17 13l3-4M8 17l-3 3M16 17l3 3" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"/><circle cx="3.5" cy="7.5" r="2.3" fill="var(--rosso)" stroke="var(--ink)" stroke-width="1.5"/><circle cx="20.5" cy="7.5" r="2.3" fill="var(--rosso)" stroke="var(--ink)" stroke-width="1.5"/><ellipse cx="12" cy="15" rx="6.5" ry="4.5" fill="var(--rosso)" stroke="var(--ink)" stroke-width="1.8"/></svg>',
-  drone:'<svg viewBox="0 0 60 40" aria-hidden="true"><path d="M6 9h18M36 9h18" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><path d="M15 9v8M45 9v8" stroke="var(--ink)" stroke-width="2.5"/><rect x="12" y="15" width="36" height="16" rx="6" fill="var(--grigio)" stroke="var(--ink)" stroke-width="2.5"/><circle cx="30" cy="23" r="4.5" fill="var(--accent)" stroke="var(--ink)" stroke-width="2"/><path d="M22 31l-3 6M38 31l3 6" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/></svg>',
+  drone:'<svg viewBox="0 0 60 40" aria-hidden="true"><path class="elica" d="M6 9h18" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><path class="elica" d="M36 9h18" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><path d="M15 9v8M45 9v8" stroke="var(--ink)" stroke-width="2.5"/><rect x="12" y="15" width="36" height="16" rx="6" fill="var(--grigio)" stroke="var(--ink)" stroke-width="2.5"/><circle cx="30" cy="23" r="4.5" fill="var(--accent)" stroke="var(--ink)" stroke-width="2"/><path d="M22 31l-3 6M38 31l3 6" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/></svg>',
   scrigno:'<svg viewBox="0 0 40 34" aria-hidden="true"><path d="M4 14c0-12 32-12 32 0z" fill="var(--legno)" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round"/><rect x="4" y="14" width="32" height="17" rx="2" fill="var(--legno)" stroke="var(--ink)" stroke-width="2.2"/><rect x="17" y="12" width="6" height="8" rx="1" fill="var(--giallo)" stroke="var(--ink)" stroke-width="1.8"/></svg>'
 };
 
@@ -353,6 +374,10 @@ const SUONI = {
   sonar:[[1200,0,.08,"sine"],[900,.12,.3,"sine"]],
   blub:[[300,0,.08,"sine",.12],[420,.1,.08,"sine",.12],[560,.2,.1,"sine",.12]],
   segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[140,0,.5,"sawtooth",.035],[155,.25,.6,"sawtooth",.03]],
+  splash:[[760,0,.05,"sine",.12],[380,.04,.12,"sine",.12],[190,.1,.18,"sine",.1]],
   porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
 };
 function suona(tipo){
@@ -420,7 +445,7 @@ function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textConte
 /* l'altimetro: sfondo con cielo, mare, righe e numeri */
 const yQuota = q => `calc((${MAXQ - q} + .5) * var(--passo))`;
 function sfondoScena(){
-  let h = `<div class="cielo"></div><div class="acqua"></div><div class="sabbia"></div>`;
+  let h = `<div class="cielo"></div><div class="acqua"></div><div class="sabbia"></div><div class="onde" aria-hidden="true"><svg viewBox="0 0 200 10" preserveAspectRatio="none"><path d="M0 6Q12.5 0 25 6T50 6T75 6T100 6T125 6T150 6T175 6T200 6V10H0z" fill="var(--mare)"/></svg></div>`;
   for(let q = MAXQ; q >= -MAXQ; q--){
     h += `<div class="riga${q===0 ? " zero" : ""}" style="top:${yQuota(q)}"></div><div class="num${q===0 ? " zero" : ""}" style="top:${yQuota(q)}">${fmt(q)}</div>`;
   }
@@ -522,7 +547,9 @@ function disegna2(){
 function vola(q){
   q = Math.max(-MAXQ, Math.min(MAXQ, q));
   if(q === S.drone) return;
+  const prima = S.drone;
   S.drone = q; suona("bip");
+  if((prima > 0) !== (q > 0)) schizzi();
   if(q === MAXQ) segreto("nuvole", "Il drone ha toccato le nuvole a +8 metri: da quassù si vede tutta la scuola!");
   const d = $("#drone"), t = $("#quota");
   d.style.top = yQuota(q); t.style.top = yQuota(q); t.textContent = fmt(q) + " m";
@@ -547,6 +574,40 @@ function sonar(){
     disegna2();
     esito(1, "Batteria scarica! Il drone è tornato alla base con un nuovo registro di volo. Fai i calcoli prima di attivare il sonar.", "no");
   }, 500);
+}
+
+/* ===== il mare: bollicine sott'acqua e schizzi quando il drone attraversa lo zero ===== */
+const fermo = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+function misureScena(){
+  const scena = $("#scena2"); if(!scena) return null;
+  const passo = scena.clientHeight / (2*MAXQ + 1);
+  return {scena, passo, x: 52 + (scena.clientWidth - 52) * .35, y: q => (MAXQ - q + .5) * passo};
+}
+setInterval(() => {
+  if(fermo() || !S.risolto[0] || S.drone >= 0 || document.hidden) return;
+  const m = misureScena(); if(!m) return;
+  const b = document.createElement("span"); b.className = "bolla";
+  const y0 = m.y(S.drone) - 12, dist = y0 - m.y(0) + 4;
+  b.style.left = (m.x + Math.random()*28 - 14) + "px"; b.style.top = y0 + "px";
+  m.scena.append(b);
+  b.animate([{transform:"translate(-50%,0) scale(.6)", opacity:.95},
+             {transform:`translate(calc(-50% + ${Math.random()*16 - 8}px), -${dist}px) scale(1.15)`, opacity:.15}],
+            {duration: Math.max(500, dist * 9), easing:"ease-in"}).onfinish = () => b.remove();
+}, 320);
+function schizzi(){
+  suona("splash");
+  if(fermo()) return;
+  const m = misureScena(); if(!m) return;
+  for(let i = 0; i < 12; i++){
+    const g = document.createElement("span"); g.className = "goccia";
+    g.style.left = m.x + "px"; g.style.top = m.y(0) + "px";
+    m.scena.append(g);
+    const dx = (Math.random() - .5) * 90, su = 25 + Math.random() * 45;
+    g.animate([{transform:"translate(-50%,-50%) scale(1)"},
+               {transform:`translate(calc(-50% + ${dx*.6}px), calc(-50% - ${su}px)) scale(1)`, offset:.45},
+               {transform:`translate(calc(-50% + ${dx}px), -50%) scale(.4)`, opacity:0}],
+              {duration: 650 + Math.random()*250, easing:"ease-out"}).onfinish = () => g.remove();
+  }
 }
 
 /* ===== enigma 3: il pannello delle operazioni ===== */
@@ -601,22 +662,42 @@ function disegna4(){
     $("#ricomincia").addEventListener("click", () => location.reload());
     return;
   }
-  sez.innerHTML = `<div class="porta${pronto ? "" : " chiuso"}">
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
     <h2 id="t4">La porta del laboratorio</h2>
-    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre">${S.rotelle.map((v,i) => `<div class="rotella">
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
       <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
       <output aria-label="Cifra ${i+1}">${v}</output>
       <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
     ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
-    <p class="esito" id="esito3"></p></div>`;
+    <p class="esito" id="esito3"></p></div></div>`;
   sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
     const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
     b.parentElement.querySelector("output").textContent = S.rotelle[i];
   }));
   $("#apri")?.addEventListener("click", () => {
-    if(S.rotelle.every((v,i) => v === CODICE[i])){ S.libero = true; S.fine = Date.now(); suona("porta"); disegna4(); coriandoli(); annuncia("Complimenti, hai superato tutte le prove!"); $("#e4").scrollIntoView({behavior:"smooth", block:"center"}); }
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
     else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
   });
+}
+
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
 }
 
 function disegnaIndizi(){
