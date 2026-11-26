@@ -16,7 +16,10 @@ const GIOCHI = [
   {titolo:"Il drone sotto zero", tipo:"escape", materia:"algebra", classe:"3ª",
    capitolo:["I numeri relativi", "Le operazioni con i numeri relativi"],
    descr:"Escape room: sistema gli oggetti ai piani del palazzo, guida il drone sopra i tetti fino al pacco e collega le operazioni ai risultati.",
-   link:"escape-relativi.html"}
+   link:"escape-relativi.html"},
+  {titolo:"Il laboratorio sigillato", tipo:"escape", materia:"scienze", classe:"2ª", capitolo:"Dentro la materia",
+   descr:"Escape room: costruisci un atomo, rimetti a posto la tavola periodica caduta e riconosci i legami chimici per uscire dal laboratorio.",
+   link:"escape-chimica.html"}
 ];
 
 /* I giochi del prof: i giochi più grandi, con il link diretto

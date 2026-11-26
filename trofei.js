@@ -5,7 +5,8 @@
    Per aggiungere un trofeo: una riga in TROFEI (id uguale a quello passato da OggettoSegreto.apri nella escape room). */
 const TROFEI = [
   {id:"insiemi", nome:"Gli anelli di Venn", gioco:"L'aula chiusa", link:"escape-insiemi.html", argomento:"Insiemi, tabelle e grafici"},
-  {id:"relativi", nome:"Il drone d'oro", gioco:"Il drone sotto zero", link:"escape-relativi.html", argomento:"Numeri relativi"}
+  {id:"relativi", nome:"Il drone d'oro", gioco:"Il drone sotto zero", link:"escape-relativi.html", argomento:"Numeri relativi"},
+  {id:"materia", nome:"L'atomo d'oro", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"Atomi, tavola periodica e legami"}
 ];
 
 const Trofei = (() => {
@@ -74,6 +75,12 @@ function svgTrofeo(id, colori){
                <rect x="20" y="36" width="60" height="26" rx="10" fill="${oro}" stroke="${linea}" stroke-width="3.5"/>
                <circle cx="50" cy="49" r="7" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
                <path d="M40 62l-5 12M60 62l5 12" stroke="${linea}" stroke-width="4" stroke-linecap="round"/>`,
+    materia: `<g fill="none" stroke-linecap="round">
+               <ellipse cx="50" cy="40" rx="31" ry="11" stroke="${linea}" stroke-width="9"/><ellipse cx="50" cy="40" rx="31" ry="11" stroke="${oro}" stroke-width="4.5"/>
+               <ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(60 50 40)" stroke="${linea}" stroke-width="9"/><ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(60 50 40)" stroke="${oro}" stroke-width="4.5"/>
+               <ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(-60 50 40)" stroke="${linea}" stroke-width="9"/><ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(-60 50 40)" stroke="${oroScuro}" stroke-width="4.5"/></g>
+               <circle cx="50" cy="40" r="7.5" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
+               <path d="M50 67v7" stroke="${linea}" stroke-width="4"/>`,
     gran: `<path d="M30 14h40v18a20 20 0 0 1-40 0z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
            <path d="M30 20H18a10 10 0 0 0 12 16M70 20h12a10 10 0 0 1-12 16" fill="none" stroke="${linea}" stroke-width="4"/>
            <path d="M46 51h8v14h-8z" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>

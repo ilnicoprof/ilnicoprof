@@ -291,7 +291,9 @@ async function creaImmagine(){
   x.fillText(`${presi} ${presi === 1 ? "trofeo" : "trofei"} su ${TROFEI.length} · salvata il ${new Date().toLocaleDateString("it-IT")}`, 70, 262);
   /* i trofei */
   for(let i = 0; i < lista.length; i++){
-    const t = lista[i], cx = x0 + (i % col) * (cw + gx), cy = 310 + Math.floor(i / col) * (ch + 36);
+    /* l'ultimo trofeo, se resta da solo nella sua riga, va al centro */
+    const daSolo = i === lista.length - 1 && i % col === 0;
+    const t = lista[i], cx = daSolo ? (W - cw) / 2 : x0 + (i % col) * (cw + gx), cy = 310 + Math.floor(i / col) * (ch + 36);
     x.fillStyle = "rgba(0,0,0,.15)"; rett(x, cx + 6, cy + 8, cw, ch, 22); x.fill();
     x.fillStyle = t.preso ? "#FFFFFF" : "#F1F5FB"; rett(x, cx, cy, cw, ch, 22); x.fill();
     x.lineWidth = 4; x.strokeStyle = "#1E2A44"; rett(x, cx, cy, cw, ch, 22); x.stroke();

@@ -191,5 +191,50 @@ const CAPITOLI = [
     "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Esercitazione semplificata.docx"
    }
   ]
+ },
+ {
+  "materia": "scienze",
+  "classe": "2ª",
+  "titolo": "Dentro la materia",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1507,
+    "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 54,
+    "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 3014,
+    "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 945,
+    "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 544,
+    "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 109,
+    "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Scheda visuale.pdf"
+   }
+  ]
  }
 ];
