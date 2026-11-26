@@ -42,6 +42,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 97,
     "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 297,
+    "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 153,
+    "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -87,6 +99,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 86,
     "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 337,
+    "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 155,
+    "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -132,6 +156,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 84,
     "link": "materiali/GEOMETRIA/1 - I primi elementi della geometria/I primi elementi della geometria - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 305,
+    "link": "materiali/GEOMETRIA/1 - I primi elementi della geometria/I primi elementi della geometria - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 170,
+    "link": "materiali/GEOMETRIA/1 - I primi elementi della geometria/I primi elementi della geometria - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -177,6 +213,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 96,
     "link": "materiali/GEOMETRIA/1 - I segmenti/I segmenti - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 334,
+    "link": "materiali/GEOMETRIA/1 - I segmenti/I segmenti - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 162,
+    "link": "materiali/GEOMETRIA/1 - I segmenti/I segmenti - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -216,6 +264,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 96,
     "link": "materiali/GEOMETRIA/3 - Circonferenza e cerchio/Circonferenza e cerchio - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 235,
+    "link": "materiali/GEOMETRIA/3 - Circonferenza e cerchio/Circonferenza e cerchio - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 148,
+    "link": "materiali/GEOMETRIA/3 - Circonferenza e cerchio/Circonferenza e cerchio - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -255,6 +315,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 93,
     "link": "materiali/GEOMETRIA/3 - I solidi e i poliedri/I solidi e i poliedri - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 265,
+    "link": "materiali/GEOMETRIA/3 - I solidi e i poliedri/I solidi e i poliedri - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 161,
+    "link": "materiali/GEOMETRIA/3 - I solidi e i poliedri/I solidi e i poliedri - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -300,6 +372,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 96,
     "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 208,
+    "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 154,
+    "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -353,6 +437,18 @@ const CAPITOLI = [
     "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Scheda visuale.pdf"
    },
    {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 311,
+    "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 150,
+    "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Esercizi PEI semplificata.pdf"
+   },
+   {
     "nome": "Esercitazione semplificata",
     "formato": "Word",
     "kb": 10,
@@ -402,6 +498,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 112,
     "link": "materiali/SCIENZE/1 - Metodo, grandezze e misure/Metodo, grandezze e misure - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 270,
+    "link": "materiali/SCIENZE/1 - Metodo, grandezze e misure/Metodo, grandezze e misure - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 161,
+    "link": "materiali/SCIENZE/1 - Metodo, grandezze e misure/Metodo, grandezze e misure - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -447,6 +555,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 302,
     "link": "materiali/SCIENZE/1 - Gli stati di aggregazione della materia/Gli stati di aggregazione della materia - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 374,
+    "link": "materiali/SCIENZE/1 - Gli stati di aggregazione della materia/Gli stati di aggregazione della materia - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 183,
+    "link": "materiali/SCIENZE/1 - Gli stati di aggregazione della materia/Gli stati di aggregazione della materia - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -492,6 +612,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 109,
     "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 288,
+    "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 163,
+    "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -537,6 +669,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 123,
     "link": "materiali/SCIENZE/2 - La materia si trasforma/La materia si trasforma - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 346,
+    "link": "materiali/SCIENZE/2 - La materia si trasforma/La materia si trasforma - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 160,
+    "link": "materiali/SCIENZE/2 - La materia si trasforma/La materia si trasforma - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -582,6 +726,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 193,
     "link": "materiali/SCIENZE/3 - Genetica e DNA/Genetica e DNA - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 287,
+    "link": "materiali/SCIENZE/3 - Genetica e DNA/Genetica e DNA - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 152,
+    "link": "materiali/SCIENZE/3 - Genetica e DNA/Genetica e DNA - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -627,6 +783,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 126,
     "link": "materiali/SCIENZE/3 - Apparato riproduttore/Apparato riproduttore - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 275,
+    "link": "materiali/SCIENZE/3 - Apparato riproduttore/Apparato riproduttore - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 154,
+    "link": "materiali/SCIENZE/3 - Apparato riproduttore/Apparato riproduttore - Esercizi PEI semplificata.pdf"
    }
   ]
  },
@@ -672,6 +840,18 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 108,
     "link": "materiali/SCIENZE/3 - Sistema nervoso/Sistema nervoso - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 302,
+    "link": "materiali/SCIENZE/3 - Sistema nervoso/Sistema nervoso - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificata",
+    "formato": "PDF",
+    "kb": 151,
+    "link": "materiali/SCIENZE/3 - Sistema nervoso/Sistema nervoso - Esercizi PEI semplificata.pdf"
    }
   ]
  }

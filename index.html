@@ -232,7 +232,7 @@ dialog::backdrop{background:var(--veil)}
 <div class="toast" id="toast" hidden></div>
 
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
-<script src="materiali.js?v=114ebebe"></script>
+<script src="materiali.js?v=631bae6d"></script>
 <script src="giochi.js?v=a7c23684"></script>
 <script src="frasi.js?v=abf57d0f"></script>
 <script src="trofei.js?v=d8cbd57e"></script>
@@ -414,9 +414,10 @@ function apri(id){
     const t = tipoGioco(g);
     return `<a class="file gioco-link" href="${encodeURI(g.link)}"${giocoTarget(g)}><span class="ico">${t.icona}</span><b>${esc(g.titolo)}</b><small>${esc(g.sotto || t.nome)}</small></a>`;
   }).join("")}</div></section>` : "";
-  /* nell'inclusione c'è sempre il riquadro "Esercizi": finché il file non c'è, resta "In arrivo" */
+  /* nell'inclusione ci sono sempre i due riquadri degli esercizi: finché il file non c'è, restano "In arrivo" */
   const incl = [...c.inclusione];
-  if(!incl.some(f => /^esercizi/i.test(f.nome))) incl.push({nome:"Esercizi", presto:true});
+  for(const nome of ["Esercizi PEI", "Esercizi PEI semplificata"])
+    if(!incl.some(f => f.nome === nome)) incl.push({nome, presto:true});
   $("#d-corpo").innerHTML = parti.join("") + bloccoGiochi + blocco("Per l'inclusione", IC.cuore, incl, "incl");
   if(!dlg.open) dlg.showModal();
   dlg.scrollTop = 0;
