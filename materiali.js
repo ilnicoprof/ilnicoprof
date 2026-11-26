@@ -28,13 +28,13 @@ const CAPITOLI = [
    {
     "nome": "Scheda PEI",
     "formato": "PDF",
-    "kb": 462,
+    "kb": 379,
     "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Scheda PEI.pdf"
    },
    {
     "nome": "Scheda PEI semplificata",
     "formato": "PDF",
-    "kb": 297,
+    "kb": 610,
     "link": "materiali/ARITMETICA/1 - Insiemi, tabelle e grafici/Insiemi, tabelle e grafici - Scheda PEI semplificata.pdf"
    },
    {
@@ -73,13 +73,13 @@ const CAPITOLI = [
    {
     "nome": "Scheda PEI",
     "formato": "PDF",
-    "kb": 663,
+    "kb": 361,
     "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Scheda PEI.pdf"
    },
    {
     "nome": "Scheda PEI semplificata",
     "formato": "PDF",
-    "kb": 353,
+    "kb": 539,
     "link": "materiali/ARITMETICA/1 - Numeri naturali e decimali/Numeri naturali e decimali - Scheda PEI semplificata.pdf"
    },
    {
@@ -118,13 +118,13 @@ const CAPITOLI = [
    {
     "nome": "Scheda PEI",
     "formato": "PDF",
-    "kb": 574,
+    "kb": 256,
     "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Scheda PEI.pdf"
    },
    {
     "nome": "Scheda PEI semplificata",
     "formato": "PDF",
-    "kb": 399,
+    "kb": 682,
     "link": "materiali/ALGEBRA/3 - I numeri relativi/I numeri relativi - Scheda PEI semplificata.pdf"
    },
    {
@@ -169,13 +169,13 @@ const CAPITOLI = [
    {
     "nome": "Scheda PEI",
     "formato": "PDF",
-    "kb": 498,
+    "kb": 350,
     "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Scheda PEI.pdf"
    },
    {
     "nome": "Scheda PEI semplificata",
     "formato": "PDF",
-    "kb": 222,
+    "kb": 567,
     "link": "materiali/ALGEBRA/3 - Le operazioni con i numeri relativi/Le operazioni con i numeri relativi - Scheda PEI semplificata.pdf"
    },
    {
@@ -220,13 +220,13 @@ const CAPITOLI = [
    {
     "nome": "Scheda PEI",
     "formato": "PDF",
-    "kb": 945,
+    "kb": 370,
     "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Scheda PEI.pdf"
    },
    {
     "nome": "Scheda PEI semplificata",
     "formato": "PDF",
-    "kb": 544,
+    "kb": 669,
     "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Scheda PEI semplificata.pdf"
    },
    {
