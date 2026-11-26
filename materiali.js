@@ -194,6 +194,96 @@ const CAPITOLI = [
  },
  {
   "materia": "scienze",
+  "classe": "1ª",
+  "titolo": "Metodo, grandezze e misure",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1374,
+    "link": "materiali/SCIENZE/1 - Metodo, grandezze e misure/Metodo, grandezze e misure - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 58,
+    "link": "materiali/SCIENZE/1 - Metodo, grandezze e misure/Metodo, grandezze e misure - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 2920,
+    "link": "materiali/SCIENZE/1 - Metodo, grandezze e misure/Metodo, grandezze e misure - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 308,
+    "link": "materiali/SCIENZE/1 - Metodo, grandezze e misure/Metodo, grandezze e misure - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 692,
+    "link": "materiali/SCIENZE/1 - Metodo, grandezze e misure/Metodo, grandezze e misure - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 112,
+    "link": "materiali/SCIENZE/1 - Metodo, grandezze e misure/Metodo, grandezze e misure - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "scienze",
+  "classe": "1ª",
+  "titolo": "Gli stati di aggregazione della materia",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1195,
+    "link": "materiali/SCIENZE/1 - Gli stati di aggregazione della materia/Gli stati di aggregazione della materia - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 80,
+    "link": "materiali/SCIENZE/1 - Gli stati di aggregazione della materia/Gli stati di aggregazione della materia - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 2888,
+    "link": "materiali/SCIENZE/1 - Gli stati di aggregazione della materia/Gli stati di aggregazione della materia - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 428,
+    "link": "materiali/SCIENZE/1 - Gli stati di aggregazione della materia/Gli stati di aggregazione della materia - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 569,
+    "link": "materiali/SCIENZE/1 - Gli stati di aggregazione della materia/Gli stati di aggregazione della materia - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 302,
+    "link": "materiali/SCIENZE/1 - Gli stati di aggregazione della materia/Gli stati di aggregazione della materia - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "scienze",
   "classe": "2ª",
   "titolo": "Dentro la materia",
   "file": [
@@ -279,6 +369,141 @@ const CAPITOLI = [
     "formato": "PDF",
     "kb": 123,
     "link": "materiali/SCIENZE/2 - La materia si trasforma/La materia si trasforma - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "scienze",
+  "classe": "3ª",
+  "titolo": "Genetica e DNA",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1732,
+    "link": "materiali/SCIENZE/3 - Genetica e DNA/Genetica e DNA - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 64,
+    "link": "materiali/SCIENZE/3 - Genetica e DNA/Genetica e DNA - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 2150,
+    "link": "materiali/SCIENZE/3 - Genetica e DNA/Genetica e DNA - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 340,
+    "link": "materiali/SCIENZE/3 - Genetica e DNA/Genetica e DNA - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 550,
+    "link": "materiali/SCIENZE/3 - Genetica e DNA/Genetica e DNA - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 193,
+    "link": "materiali/SCIENZE/3 - Genetica e DNA/Genetica e DNA - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "scienze",
+  "classe": "3ª",
+  "titolo": "Apparato riproduttore",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1545,
+    "link": "materiali/SCIENZE/3 - Apparato riproduttore/Apparato riproduttore - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 53,
+    "link": "materiali/SCIENZE/3 - Apparato riproduttore/Apparato riproduttore - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 3414,
+    "link": "materiali/SCIENZE/3 - Apparato riproduttore/Apparato riproduttore - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 314,
+    "link": "materiali/SCIENZE/3 - Apparato riproduttore/Apparato riproduttore - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 646,
+    "link": "materiali/SCIENZE/3 - Apparato riproduttore/Apparato riproduttore - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 126,
+    "link": "materiali/SCIENZE/3 - Apparato riproduttore/Apparato riproduttore - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "scienze",
+  "classe": "3ª",
+  "titolo": "Sistema nervoso",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1360,
+    "link": "materiali/SCIENZE/3 - Sistema nervoso/Sistema nervoso - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 50,
+    "link": "materiali/SCIENZE/3 - Sistema nervoso/Sistema nervoso - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 3152,
+    "link": "materiali/SCIENZE/3 - Sistema nervoso/Sistema nervoso - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 349,
+    "link": "materiali/SCIENZE/3 - Sistema nervoso/Sistema nervoso - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 651,
+    "link": "materiali/SCIENZE/3 - Sistema nervoso/Sistema nervoso - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 108,
+    "link": "materiali/SCIENZE/3 - Sistema nervoso/Sistema nervoso - Scheda visuale.pdf"
    }
   ]
  }
