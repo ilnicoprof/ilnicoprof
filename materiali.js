@@ -91,6 +91,174 @@ const CAPITOLI = [
   ]
  },
  {
+  "materia": "geometria",
+  "classe": "1ª",
+  "titolo": "I primi elementi della geometria",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1329,
+    "link": "materiali/GEOMETRIA/1 - I primi elementi della geometria/I primi elementi della geometria - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 52,
+    "link": "materiali/GEOMETRIA/1 - I primi elementi della geometria/I primi elementi della geometria - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 3145,
+    "link": "materiali/GEOMETRIA/1 - I primi elementi della geometria/I primi elementi della geometria - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 299,
+    "link": "materiali/GEOMETRIA/1 - I primi elementi della geometria/I primi elementi della geometria - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 593,
+    "link": "materiali/GEOMETRIA/1 - I primi elementi della geometria/I primi elementi della geometria - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 84,
+    "link": "materiali/GEOMETRIA/1 - I primi elementi della geometria/I primi elementi della geometria - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "geometria",
+  "classe": "1ª",
+  "titolo": "I segmenti",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 25456,
+    "link": "materiali/GEOMETRIA/1 - I segmenti/I segmenti - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 51,
+    "link": "materiali/GEOMETRIA/1 - I segmenti/I segmenti - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 3371,
+    "link": "materiali/GEOMETRIA/1 - I segmenti/I segmenti - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 366,
+    "link": "materiali/GEOMETRIA/1 - I segmenti/I segmenti - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 612,
+    "link": "materiali/GEOMETRIA/1 - I segmenti/I segmenti - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 96,
+    "link": "materiali/GEOMETRIA/1 - I segmenti/I segmenti - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "geometria",
+  "classe": "3ª",
+  "titolo": "Circonferenza e cerchio",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1347,
+    "link": "materiali/GEOMETRIA/3 - Circonferenza e cerchio/Circonferenza e cerchio - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 50,
+    "link": "materiali/GEOMETRIA/3 - Circonferenza e cerchio/Circonferenza e cerchio - Mappa concettuale.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 272,
+    "link": "materiali/GEOMETRIA/3 - Circonferenza e cerchio/Circonferenza e cerchio - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 679,
+    "link": "materiali/GEOMETRIA/3 - Circonferenza e cerchio/Circonferenza e cerchio - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 96,
+    "link": "materiali/GEOMETRIA/3 - Circonferenza e cerchio/Circonferenza e cerchio - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
+  "materia": "geometria",
+  "classe": "3ª",
+  "titolo": "I solidi e i poliedri",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1330,
+    "link": "materiali/GEOMETRIA/3 - I solidi e i poliedri/I solidi e i poliedri - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 45,
+    "link": "materiali/GEOMETRIA/3 - I solidi e i poliedri/I solidi e i poliedri - Mappa concettuale.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 289,
+    "link": "materiali/GEOMETRIA/3 - I solidi e i poliedri/I solidi e i poliedri - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 643,
+    "link": "materiali/GEOMETRIA/3 - I solidi e i poliedri/I solidi e i poliedri - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 93,
+    "link": "materiali/GEOMETRIA/3 - I solidi e i poliedri/I solidi e i poliedri - Scheda visuale.pdf"
+   }
+  ]
+ },
+ {
   "materia": "algebra",
   "classe": "3ª",
   "titolo": "I numeri relativi",
