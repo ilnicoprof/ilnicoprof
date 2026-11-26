@@ -388,7 +388,10 @@ function apri(id){
     const t = tipoGioco(g);
     return `<a class="file gioco-link" href="${encodeURI(g.link)}"${giocoTarget(g)}><span class="ico">${t.icona}</span><b>${esc(g.titolo)}</b><small>${esc(g.sotto || t.nome)}</small></a>`;
   }).join("")}</div></section>` : "";
-  $("#d-corpo").innerHTML = parti.join("") + bloccoGiochi + blocco("Per l'inclusione", IC.cuore, c.inclusione, "incl");
+  /* nell'inclusione c'è sempre il riquadro "Esercizi": finché il file non c'è, resta "In arrivo" */
+  const incl = [...c.inclusione];
+  if(!incl.some(f => /^esercizi/i.test(f.nome))) incl.push({nome:"Esercizi", presto:true});
+  $("#d-corpo").innerHTML = parti.join("") + bloccoGiochi + blocco("Per l'inclusione", IC.cuore, incl, "incl");
   if(!dlg.open) dlg.showModal();
   dlg.scrollTop = 0;
   if(location.hash !== "#"+id) location.hash = id;
