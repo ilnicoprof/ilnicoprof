@@ -256,6 +256,8 @@ td.op{font-family:var(--f-display);font-weight:700;font-size:1.15rem;white-space
 </div>
 
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js"></script>
+<script src="oggetto-segreto.js"></script>
 <script>
 /* ===== disegni ===== */
 const SVG = {
@@ -699,8 +701,9 @@ function controlla3(){
 function disegna4(){
   const sez = $("#e4"), pronto = S.risolto.every(Boolean);
   if(S.libero){
-    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato piani sopra e sotto lo zero, opposti, punti nel piano cartesiano, regola dei segni e potenze.</p><p>${fraseSegreti()}</p><button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato piani sopra e sotto lo zero, opposti, punti nel piano cartesiano, regola dei segni e potenze.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone()}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
     $("#ricomincia").addEventListener("click", () => location.reload());
+    $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("relativi"));
     return;
   }
   sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">

@@ -116,6 +116,15 @@ h2{font-family:var(--f-display);font-weight:700;font-size:1.6rem;margin:0;text-w
 .gioco .vai{font-weight:800;color:var(--accent);display:flex;align-items:center;gap:6px}
 .gioco .vai svg{width:18px;height:18px;flex:none}
 .giochi.prof{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.giochi.escape .gioco{background:color-mix(in srgb,var(--viola) 28%,var(--card))}
+.premio-tag{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--card);border:1.5px solid var(--ink);color:var(--ink)}
+.premio-tag svg{width:16px;height:16px}
+.premio-tag.preso{background:var(--giallo);color:var(--giallo-ink)}
+.bacheca-btn{display:inline-flex;align-items:center;gap:8px;font-weight:800;text-decoration:none;color:var(--giallo-ink);background:var(--giallo);border:2px solid var(--ink);border-radius:999px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+.bacheca-btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.bacheca-btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.bacheca-btn svg{width:20px;height:20px}
+.bacheca-btn span{font-size:.85rem;background:var(--card);color:var(--ink);border-radius:999px;padding:0 8px}
 .giochi.prof .gioco{background:var(--giallo);color:var(--giallo-ink);padding:20px;border-radius:20px 20px 28px 20px}
 .giochi.prof .gioco p,.giochi.prof .gioco .meta,.giochi.prof .gioco .vai{color:var(--giallo-ink)}
 .giochi.prof .gioco b{font-size:1.5rem}
@@ -192,6 +201,11 @@ dialog::backdrop{background:var(--veil)}
     <div class="giochi" id="giochi"></div>
   </section>
 
+  <section aria-labelledby="t-escape">
+    <div class="sec-head"><h2 id="t-escape">Escape room</h2><a class="bacheca-btn" href="bacheca.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4M12 14v4M8 21h8M9 18h6"/></svg>Bacheca dei trofei <span id="conta-trofei"></span></a></div>
+    <div class="giochi escape" id="giochi-escape"></div>
+  </section>
+
   <section aria-labelledby="t-prof">
     <div class="sec-head"><h2 id="t-prof">I giochi del prof</h2><span class="note">le sfide più grandi</span></div>
     <div class="giochi prof" id="giochi-prof"></div>
@@ -214,6 +228,7 @@ dialog::backdrop{background:var(--veil)}
 <script src="materiali.js"></script>
 <script src="giochi.js"></script>
 <script src="frasi.js"></script>
+<script src="trofei.js"></script>
 <script>
 /* true finché il sito è solo un'anteprima: i link ai file non funzionano ancora */
 const ANTEPRIMA = false;
@@ -235,6 +250,7 @@ const IC = {
   gioco: svg('<rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v3M5.5 12.5h3"/><circle cx="16" cy="11.5" r=".8" fill="currentColor"/><circle cx="18" cy="13.5" r=".8" fill="currentColor"/>'),
   lampadina: svg('<path d="M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0012 3z"/>'),
   freccia: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+  coppa: svg('<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4M12 14v4M8 21h8M9 18h6"/>'),
   lucchetto: svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3M12 15v2"/>')
 };
 const TIPI_GIOCO = {
@@ -293,24 +309,43 @@ function disegnaElenco(){
       </button>`).join("")}</div></div>`;
   }).join("");
 }
-function disegnaGiochi(){
+/* giochi filtrati per materia, classe e ricerca; i giochi senza materia sono generali e vanno per primi */
+function filtraGiochi(lista){
   const q = norm(stato.q.trim());
-  /* i giochi senza materia sono generali: si vedono sempre e vanno per primi */
-  const res = GIOCHI
+  return lista
     .filter(g=>!g.materia || !stato.materia || g.materia===stato.materia)
     .filter(g=>!g.materia || stato.classe==="tutte" || g.classe===stato.classe)
     .filter(g=>!q || norm(g.titolo+" "+g.descr+" "+[].concat(g.capitolo||[]).join(" ")+" "+(MATERIE[g.materia]?.nome||"")).includes(q))
     .sort((a,b)=>!!a.materia - !!b.materia);
-  $("#giochi").innerHTML = res.length ? res.map(g => {
-    const m = MATERIE[g.materia] || {nome:"Tutte le materie", colore:"giallo"}, t = tipoGioco(g);
-    const link = g.link + (g.link==="eureka-solo.html" && stato.materia ? "#"+stato.materia : "");
-    const meta = [m.nome, g.classe, ...[].concat(g.capitolo||[]).map(esc)].filter(Boolean).join(" · ");
-    return `<a class="gioco" href="${encodeURI(link)}"${giocoTarget(g)}>
-      <div class="top"><span class="ico c-${m.colore}">${t.icona}</span><span class="tipo">${t.nome}</span></div>
-      <b>${esc(g.titolo)}</b><p>${esc(g.descr)}</p>
-      <span class="meta">${meta}</span>
-      <span class="vai">${t.esterno ? "Apri" : "Gioca"} ${IC.freccia}</span></a>`;
-  }).join("") : `<div class="vuoto" style="grid-column:1/-1">${GIOCHI.length ? "Nessun gioco per questa scelta… per ora!" : "Presto qui troverai i giochi per ripassare!"}</div>`;
+}
+function cartaGioco(g, extra=""){
+  const m = MATERIE[g.materia] || {nome:"Tutte le materie", colore:"giallo"}, t = tipoGioco(g);
+  const link = g.link + (g.link==="eureka-solo.html" && stato.materia ? "#"+stato.materia : "");
+  const meta = [m.nome, g.classe, ...[].concat(g.capitolo||[]).map(esc)].filter(Boolean).join(" · ");
+  return `<a class="gioco" href="${encodeURI(link)}"${giocoTarget(g)}>
+    <div class="top"><span class="ico c-${m.colore}">${t.icona}</span><span class="tipo">${t.nome}</span></div>
+    <b>${esc(g.titolo)}</b><p>${esc(g.descr)}</p>
+    <span class="meta">${meta}</span>${extra}
+    <span class="vai">${t.esterno ? "Apri" : "Gioca"} ${IC.freccia}</span></a>`;
+}
+function disegnaGiochi(){
+  const tutti = GIOCHI.filter(g => g.tipo !== "escape"), res = filtraGiochi(tutti);
+  $("#giochi").innerHTML = res.length ? res.map(g => cartaGioco(g)).join("")
+    : `<div class="vuoto" style="grid-column:1/-1">${tutti.length ? "Nessun gioco per questa scelta… per ora!" : "Presto qui troverai i giochi per ripassare!"}</div>`;
+}
+/* le escape room hanno una sezione tutta loro, con la bacheca dei trofei */
+function disegnaEscape(){
+  const tutte = GIOCHI.filter(g => g.tipo === "escape"), res = filtraGiochi(tutte);
+  const presi = typeof Trofei !== "undefined" ? Trofei.sbloccati() : {};
+  const trofeoDi = g => typeof TROFEI !== "undefined" ? TROFEI.find(t => t.link === g.link) : null;
+  $("#giochi-escape").innerHTML = res.length ? res.map(g => {
+    const t = trofeoDi(g);
+    return cartaGioco(g, t ? `<span class="premio-tag${presi[t.id] ? " preso" : ""}">${IC.coppa} ${presi[t.id] ? "Trofeo conquistato" : "In palio: " + esc(t.nome)}</span>` : "");
+  }).join("") : `<div class="vuoto" style="grid-column:1/-1">${tutte.length ? "Nessuna escape room per questa scelta… per ora!" : "Presto qui troverai le escape room!"}</div>`;
+  if(typeof TROFEI !== "undefined"){
+    const n = TROFEI.filter(t => presi[t.id]).length;
+    $("#conta-trofei").textContent = `${n} su ${TROFEI.length}`;
+  }
 }
 function disegnaGiochiProf(){
   const q = norm(stato.q.trim());
@@ -325,7 +360,7 @@ function disegnaGiochiProf(){
       <span class="vai">Gioca ${IC.freccia}</span></a>`;
   }).join("") : `<div class="vuoto" style="grid-column:1/-1">${GIOCHI_PROF.length ? "Nessun gioco trovato con questa ricerca." : "Qui arriveranno i giochi più grandi del prof!"}</div>`;
 }
-function tutto(){disegnaMaterie();disegnaClassi();disegnaElenco();disegnaGiochi();disegnaGiochiProf()}
+function tutto(){disegnaMaterie();disegnaClassi();disegnaElenco();disegnaGiochi();disegnaEscape();disegnaGiochiProf()}
 
 const fileLink = (f, ico) => `<a class="file" href="${encodeURI(f.link)}" download target="_blank" rel="noopener">
   <span class="ico">${ico}</span><b>${esc(f.nome)}</b><small>${f.formato} · ${peso(f.kb)}</small></a>`;
@@ -366,7 +401,7 @@ window.addEventListener("hashchange", () => { const id = location.hash.slice(1);
 
 $("#materie").addEventListener("click",e=>{const b=e.target.closest(".materia");if(!b)return;stato.materia=stato.materia===b.dataset.k?null:b.dataset.k;tutto()});
 $("#classi").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;stato.classe=b.dataset.c;tutto()});
-$("#cerca").addEventListener("input",e=>{stato.q=e.target.value;disegnaElenco();disegnaGiochi();disegnaGiochiProf()});
+$("#cerca").addEventListener("input",e=>{stato.q=e.target.value;disegnaElenco();disegnaGiochi();disegnaEscape();disegnaGiochiProf()});
 $("#elenco").addEventListener("click",e=>{const b=e.target.closest(".cap");if(b)apri(b.dataset.id)});
 
 let tt;

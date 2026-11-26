@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bacheca dei trofei</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" sizes="32x32" href="immagini/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="immagini/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="immagini/icon-192.png">
+<link rel="apple-touch-icon" href="immagini/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti di ilnicoprof; una bacheca di sughero con i trofei sui loro piedistalli, sopra il nome e il campo per i codici */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300;
+  --viola:#C9B8FF; --viola-ink:#35207A;
+  --sughero:#D9B98C; --sughero-punti:#C9A574; --cornice:#8A5A2B;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --viola:#B3A0F5;
+  --sughero:#6B5236; --sughero-punti:#5C462D; --cornice:#4E3519;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --viola:#B3A0F5;
+  --sughero:#6B5236; --sughero-punti:#5C462D; --cornice:#4E3519;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:860px;margin:0 auto;padding-block:20px 64px;display:grid;gap:18px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap>*{min-width:0}
+button,input{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna svg{width:16px;height:16px}
+header{display:grid;gap:6px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.sotto{margin:0;font-family:var(--f-hand);font-size:1.3rem;color:var(--ink-soft);max-width:60ch}
+
+.scheda{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 var(--ink);padding:16px;display:grid;gap:10px}
+.scheda h2{margin:0;font-family:var(--f-display);font-size:1.3rem;line-height:1.1}
+.scheda p{margin:0}
+.nota{font-size:.92rem;color:var(--ink-soft)}
+.riga{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.campo{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);font-weight:700}
+.campo.codice{font-family:var(--f-display);font-size:1.25rem;letter-spacing:.12em;text-transform:uppercase}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink);text-align:center}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+.btn.giallo{background:var(--giallo);color:var(--giallo-ink)}
+.btn.piccolo{font-size:.9rem;padding:5px 12px;box-shadow:2px 2px 0 var(--ink)}
+.esito{margin:0;min-height:1.4em;font-weight:800}
+.esito.si{color:var(--ok)} .esito.no{color:var(--errore)}
+.nome-fisso{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nome-fisso b{font-family:var(--f-display);font-size:1.5rem;background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%)}
+.due{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+
+/* la bacheca di sughero */
+.bacheca{position:relative;border:10px solid var(--cornice);border-radius:16px;padding:22px 16px 18px;background-color:var(--sughero);
+  background-image:radial-gradient(var(--sughero-punti) 1.2px,transparent 1.4px),radial-gradient(var(--sughero-punti) 1px,transparent 1.2px);background-size:14px 14px,9px 9px;background-position:0 0,5px 7px;
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.15),5px 6px 0 var(--ink)}
+.bacheca h2{margin:0 0 14px;text-align:center;font-family:var(--f-display);font-size:1.4rem}
+.bacheca h2 span{background:var(--card);padding:2px 14px;border-radius:8px;border:2px solid var(--ink);display:inline-block;transform:rotate(-1.5deg)}
+.trofei{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.trofeo{position:relative;background:var(--card);border:2px solid var(--ink);border-radius:14px;padding:12px 10px 12px;display:grid;justify-items:center;gap:4px;text-align:center;box-shadow:2px 3px 0 rgba(0,0,0,.25)}
+.trofeo::before{content:"";position:absolute;top:-7px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#E5534B;border:2px solid var(--ink)}
+.trofeo:nth-child(odd){transform:rotate(-1.2deg)} .trofeo:nth-child(even){transform:rotate(1deg)}
+.trofeo svg{width:110px;height:110px}
+.trofeo b{font-family:var(--f-display);font-size:1.1rem;line-height:1.15}
+.trofeo small{font-size:.8rem;color:var(--ink-soft);font-weight:700}
+.trofeo .cod{font-family:var(--f-display);font-weight:700;letter-spacing:.08em;font-size:.95rem;background:var(--pill);border-radius:8px;padding:0 8px}
+.trofeo.spento b{color:var(--ink-soft)}
+.trofeo.spento a{font-weight:800;font-size:.85rem;color:var(--accent)}
+.trofeo.nuovo{animation:nuovo 1s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes nuovo{0%{transform:scale(.4) rotate(-10deg);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+.trofeo.gran{grid-column:1/-1;max-width:320px;justify-self:center;width:100%;background:linear-gradient(var(--card),color-mix(in srgb,var(--giallo) 35%,var(--card)))}
+.trofeo.gran svg{width:140px;height:140px}
+.conta{margin:12px 0 0;text-align:center;font-weight:800}
+.conta span{background:var(--card);padding:2px 12px;border-radius:999px;border:2px solid var(--ink)}
+
+/* finestra per l'immagine da salvare */
+dialog{width:min(560px,calc(100% - 24px));max-height:calc(100% - 32px);overflow:auto;border:2px solid var(--ink);border-radius:18px;padding:16px;background:var(--card);color:var(--ink);box-shadow:6px 6px 0 var(--ink)}
+dialog::backdrop{background:rgba(20,27,43,.5)}
+dialog img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}
+dialog .riga{margin-top:12px}
+.conferma{border:2px dashed var(--errore);border-radius:12px;padding:10px 12px;background:var(--errore-bg);display:grid;gap:8px}
+.conferma p{color:var(--errore);font-weight:800}
+
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+.firma{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.1);font-family:var(--f-body);font-size:.75rem;color:var(--ink-soft);pointer-events:none}
+.firma img{width:30px;height:30px;border-radius:50%;background:#FFFFFF;border:1px solid var(--line);flex:none}
+.firma b{font-weight:800;color:var(--ink)}
+@media (max-width:480px){.firma{padding:3px}.firma span{display:none}.trofei{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.trofeo svg{width:84px;height:84px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>ilnicoprof</a>
+  <header>
+    <h1>bacheca dei <span class="hl">trofei</span></h1>
+    <p class="sotto">Supera le escape room, esplora l'oggetto che cade dalla porta e scrivi qui il codice segreto per vincere il trofeo.</p>
+  </header>
+
+  <div class="due">
+    <section class="scheda" aria-labelledby="t-nome">
+      <h2 id="t-nome">Il tuo nome</h2>
+      <div id="nome-zona"></div>
+    </section>
+    <section class="scheda" aria-labelledby="t-codice">
+      <h2 id="t-codice">Inserisci un codice</h2>
+      <form class="riga" id="form-codice" autocomplete="off">
+        <label class="sr" for="codice" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Codice segreto</label>
+        <input class="campo codice" id="codice" placeholder="ABCD-EFG" maxlength="9" spellcheck="false" autocapitalize="characters">
+        <button class="btn blu" type="submit">Sblocca</button>
+      </form>
+      <p class="esito" id="esito-codice" aria-live="polite"></p>
+    </section>
+  </div>
+
+  <section class="bacheca" aria-labelledby="t-bacheca">
+    <h2 id="t-bacheca"><span id="titolo-bacheca">La bacheca</span></h2>
+    <div class="trofei" id="trofei"></div>
+    <p class="conta"><span id="conta"></span></p>
+  </section>
+
+  <section class="scheda" aria-labelledby="t-salva">
+    <h2 id="t-salva">Salva la bacheca</h2>
+    <p>Crea un'immagine con i tuoi trofei e i loro codici. Se cambi telefono o computer, scrivi lo stesso nome e reinserisci i codici dell'immagine: i trofei tornano tutti.</p>
+    <div class="riga"><button class="btn giallo" type="button" id="esporta">Crea l'immagine della bacheca</button></div>
+    <p class="esito" id="esito-esporta" aria-live="polite"></p>
+  </section>
+
+  <section class="scheda" aria-labelledby="t-azzera">
+    <h2 id="t-azzera">Ricominciare da capo</h2>
+    <p class="nota">I trofei sono salvati solo su questo dispositivo. Se ricominci, il nome e i trofei vengono cancellati. I codici però restano validi: puoi sempre reinserirli con lo stesso nome.</p>
+    <div class="riga"><button class="btn piccolo" type="button" id="azzera">Ricomincia da capo</button></div>
+    <div class="conferma" id="conferma" hidden>
+      <p>Sicuro? Il nome e tutti i trofei di questo dispositivo verranno cancellati.</p>
+      <div class="riga"><button class="btn piccolo" type="button" id="si-azzera">Sì, cancella tutto</button><button class="btn piccolo" type="button" id="no-azzera">No, lascia stare</button></div>
+    </div>
+  </section>
+</div>
+
+<dialog id="finestra" aria-labelledby="t-fin">
+  <h2 id="t-fin" style="margin:0 0 10px;font-family:var(--f-display)">La tua bacheca</h2>
+  <img id="anteprima" alt="Immagine della bacheca dei trofei">
+  <p class="nota" style="margin-top:10px">Sul telefono puoi anche tenere premuto sull'immagine e scegliere "Salva immagine".</p>
+  <div class="riga"><a class="btn blu" id="scarica" download="bacheca-trofei.png" href="#">Scarica l'immagine</a><button class="btn" type="button" id="chiudi">Chiudi</button></div>
+</dialog>
+
+<div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dataIt = d => d ? d.split("-").reverse().join("/") : "";
+
+/* ===== suoni e coriandoli ===== */
+let audio;
+function suona(note){
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    note.forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
+  } catch {}
+}
+const FANFARA = [[523,0,.12],[659,.11,.12],[784,.22,.12],[1047,.33,.4],[784,.6,.1],[1047,.7,.5]];
+const ERRORE = [[200,0,.25,"sawtooth",.07]];
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--viola)", "var(--errore)"];
+  for(let i = 0; i < 80; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.6 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4300);
+  }
+}
+
+/* ===== il nome ===== */
+function disegnaNome(){
+  const n = Trofei.nome(), z = $("#nome-zona");
+  if(n){
+    z.innerHTML = `<div class="nome-fisso"><span>Questa è la bacheca di</span> <b>${esc(n)}</b></div>
+      <p class="nota">I codici che trovi funzionano solo con questo nome. Per cambiarlo devi ricominciare da capo.</p>`;
+  } else {
+    z.innerHTML = `<form class="riga" id="form-nome" autocomplete="off">
+        <label for="nome" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Il tuo nome</label>
+        <input class="campo" id="nome" placeholder="Nome e iniziale del cognome, es. Marco R." maxlength="40">
+        <button class="btn blu" type="submit">Salva</button></form>
+      <p class="nota">Scrivilo bene: dopo non si può cambiare. Resta salvato solo su questo dispositivo, non viene inviato a nessuno.</p>
+      <p class="esito" id="esito-nome" aria-live="polite"></p>`;
+    $("#form-nome").addEventListener("submit", e => {
+      e.preventDefault();
+      const v = $("#nome").value.trim();
+      if(Trofei.pulisci(v).length < 2){ $("#esito-nome").textContent = "Scrivi un nome di almeno 2 lettere."; $("#esito-nome").className = "esito no"; return; }
+      Trofei.impostaNome(v); tutto();
+      $("#codice").focus();
+    });
+  }
+}
+
+/* ===== i trofei ===== */
+function disegnaTrofei(nuovo){
+  const s = Trofei.sbloccati(), n = Trofei.nome();
+  const presi = TROFEI.filter(t => s[t.id]).length, tutti = presi === TROFEI.length;
+  $("#titolo-bacheca").textContent = n ? `La bacheca di ${n}` : "La bacheca";
+  $("#trofei").innerHTML = TROFEI.map(t => s[t.id]
+    ? `<article class="trofeo${nuovo === t.id ? " nuovo" : ""}">${svgTrofeo(t.id, COLORI_ORO)}<b>${esc(t.nome)}</b><small>${esc(t.gioco)} · ${esc(t.argomento)}</small><span class="cod">${esc(s[t.id].codice)}</span><small>conquistato il ${dataIt(s[t.id].data)}</small></article>`
+    : `<article class="trofeo spento">${svgTrofeo(t.id, COLORI_SPENTO)}<b>${esc(t.nome)}</b><small>Ancora da conquistare</small><a href="${t.link}">Gioca a ${esc(t.gioco)}</a></article>`).join("")
+    + (tutti ? `<article class="trofeo gran${nuovo ? " nuovo" : ""}">${svgTrofeo("gran", COLORI_ORO)}<b>Il gran trofeo ilnicoprof</b><small>Hai conquistato tutti i trofei!</small></article>` : "");
+  $("#conta").textContent = `${presi} ${presi === 1 ? "trofeo" : "trofei"} su ${TROFEI.length}`;
+}
+
+/* ===== inserire un codice ===== */
+$("#form-codice").addEventListener("submit", e => {
+  e.preventDefault();
+  const out = $("#esito-codice"), campo = $("#codice"), n = Trofei.nome();
+  const scrivi = (t, tipo) => { out.textContent = t; out.className = "esito " + tipo; };
+  if(!n){ scrivi("Prima scrivi il tuo nome qui accanto.", "no"); $("#nome")?.focus(); return; }
+  const v = Trofei.verifica(campo.value);
+  if(!v){ suona(ERRORE); scrivi(`Questo codice non è valido per ${n}. Controlla di averlo copiato bene: ogni codice funziona solo con il nome di chi l'ha trovato.`, "no"); return; }
+  if(Trofei.sbloccati()[v.trofeo.id]){ scrivi(`Hai già "${v.trofeo.nome}"! Gioca alle altre escape room per vincere nuovi trofei.`, "si"); campo.value = ""; return; }
+  Trofei.sblocca(v.trofeo.id, v.codice);
+  campo.value = ""; scrivi(`Fantastico! Hai vinto "${v.trofeo.nome}".`, "si");
+  disegnaTrofei(v.trofeo.id); suona(FANFARA); coriandoli();
+  $(".bacheca").scrollIntoView({behavior:"smooth", block:"center"});
+});
+
+/* ===== immagine della bacheca ===== */
+const carica = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
+function rett(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+async function creaImmagine(){
+  try { await document.fonts.ready; } catch {}
+  const s = Trofei.sbloccati(), n = Trofei.nome() || "senza nome";
+  const tutti = TROFEI.every(t => s[t.id]);
+  const lista = [...TROFEI.map(t => ({id:t.id, nome:t.nome, gioco:t.gioco, preso:s[t.id]})), ...(tutti ? [{id:"gran", nome:"Il gran trofeo ilnicoprof", gioco:"tutti i trofei", preso:{codice:"", data:""}}] : [])];
+  const W = 1080, col = 2, cw = 440, ch = 470, gx = 40, x0 = (W - col*cw - gx) / 2, righe = Math.ceil(lista.length / col);
+  const H = 330 + righe * (ch + 36) + 150;
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
+  const x = c.getContext("2d");
+  /* foglio a quadretti */
+  x.fillStyle = "#FBFCFF"; x.fillRect(0, 0, W, H);
+  x.strokeStyle = "#D9E4F2"; x.lineWidth = 1.5;
+  for(let i = 0; i <= W; i += 36){ x.beginPath(); x.moveTo(i, 0); x.lineTo(i, H); x.stroke(); }
+  for(let j = 0; j <= H; j += 36){ x.beginPath(); x.moveTo(0, j); x.lineTo(W, j); x.stroke(); }
+  /* titolo */
+  x.fillStyle = "#1E2A44"; x.font = "800 76px 'Baloo 2', 'Trebuchet MS', sans-serif"; x.textBaseline = "alphabetic";
+  x.fillText("Bacheca dei trofei", 70, 140);
+  x.font = "400 50px 'Patrick Hand', 'Comic Sans MS', cursive";
+  const tn = "di " + n, wn = x.measureText(tn).width;
+  x.fillStyle = "#FFE066"; x.fillRect(66, 178, wn + 10, 26);
+  x.fillStyle = "#1E2A44"; x.fillText(tn, 70, 200);
+  x.font = "700 30px 'Nunito', sans-serif"; x.fillStyle = "#56627A";
+  const presi = TROFEI.filter(t => s[t.id]).length;
+  x.fillText(`${presi} ${presi === 1 ? "trofeo" : "trofei"} su ${TROFEI.length} · salvata il ${new Date().toLocaleDateString("it-IT")}`, 70, 262);
+  /* i trofei */
+  for(let i = 0; i < lista.length; i++){
+    const t = lista[i], cx = x0 + (i % col) * (cw + gx), cy = 310 + Math.floor(i / col) * (ch + 36);
+    x.fillStyle = "rgba(0,0,0,.15)"; rett(x, cx + 6, cy + 8, cw, ch, 22); x.fill();
+    x.fillStyle = t.preso ? "#FFFFFF" : "#F1F5FB"; rett(x, cx, cy, cw, ch, 22); x.fill();
+    x.lineWidth = 4; x.strokeStyle = "#1E2A44"; rett(x, cx, cy, cw, ch, 22); x.stroke();
+    const img = await carica("data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgTrofeo(t.id, t.preso ? COLORI_ORO : COLORI_SPENTO)));
+    x.drawImage(img, cx + (cw - 230) / 2, cy + 22, 230, 230);
+    x.textAlign = "center"; x.fillStyle = t.preso ? "#1E2A44" : "#8A96AB";
+    x.font = "800 40px 'Baloo 2', sans-serif"; x.fillText(t.nome, cx + cw/2, cy + 300);
+    x.font = "700 26px 'Nunito', sans-serif"; x.fillStyle = "#56627A"; x.fillText(t.gioco, cx + cw/2, cy + 340);
+    if(t.preso && t.preso.codice){
+      x.fillStyle = "#F1F5FB"; rett(x, cx + 70, cy + 362, cw - 140, 54, 12); x.fill();
+      x.fillStyle = "#1E2A44"; x.font = "700 40px 'Baloo 2', sans-serif"; x.fillText(t.preso.codice, cx + cw/2, cy + 402);
+      x.font = "600 24px 'Nunito', sans-serif"; x.fillStyle = "#56627A"; x.fillText("conquistato il " + dataIt(t.preso.data), cx + cw/2, cy + 448);
+    } else if(t.preso){
+      x.font = "700 28px 'Nunito', sans-serif"; x.fillStyle = "#0B6B3F"; x.fillText("Tutti i trofei conquistati!", cx + cw/2, cy + 410);
+    } else {
+      x.font = "700 28px 'Nunito', sans-serif"; x.fillText("ancora da conquistare", cx + cw/2, cy + 410);
+    }
+    x.textAlign = "left";
+  }
+  /* firma in fondo */
+  const yf = H - 90;
+  try {
+    const logo = await carica("immagini/logo-mini.png");
+    x.save(); x.beginPath(); x.arc(100, yf, 38, 0, Math.PI*2); x.closePath(); x.fillStyle = "#FFFFFF"; x.fill(); x.clip(); x.drawImage(logo, 62, yf - 38, 76, 76); x.restore();
+    x.lineWidth = 3; x.strokeStyle = "#1E2A44"; x.beginPath(); x.arc(100, yf, 38, 0, Math.PI*2); x.stroke();
+  } catch {}
+  x.fillStyle = "#1E2A44"; x.font = "800 36px 'Baloo 2', sans-serif"; x.fillText("ilnicoprof", 156, yf - 4);
+  x.font = "600 24px 'Nunito', sans-serif"; x.fillStyle = "#56627A"; x.fillText("Per ritrovare i trofei: stesso nome + questi codici nella bacheca.", 156, yf + 30);
+  return c;
+}
+let urlImmagine = null;
+$("#esporta").addEventListener("click", async () => {
+  const out = $("#esito-esporta");
+  if(!Trofei.nome()){ out.textContent = "Prima scrivi il tuo nome."; out.className = "esito no"; return; }
+  out.textContent = "Sto preparando l'immagine..."; out.className = "esito";
+  try {
+    const c = await creaImmagine();
+    const blob = await new Promise(r => c.toBlob(r, "image/png"));
+    if(urlImmagine) URL.revokeObjectURL(urlImmagine);
+    urlImmagine = URL.createObjectURL(blob);
+    $("#anteprima").src = urlImmagine;
+    const a = $("#scarica"); a.href = urlImmagine;
+    a.download = "bacheca-trofei-" + (Trofei.pulisci(Trofei.nome()) || "ilnicoprof") + ".png";
+    out.textContent = ""; $("#finestra").showModal();
+  } catch {
+    out.textContent = "Non sono riuscito a creare l'immagine. Riprova, oppure fai uno screenshot della bacheca."; out.className = "esito no";
+  }
+});
+$("#chiudi").addEventListener("click", () => $("#finestra").close());
+$("#finestra").addEventListener("click", e => { if(e.target === $("#finestra")) $("#finestra").close(); });
+
+/* ===== ricominciare ===== */
+$("#azzera").addEventListener("click", () => { $("#conferma").hidden = false; $("#no-azzera").focus(); });
+$("#no-azzera").addEventListener("click", () => { $("#conferma").hidden = true; });
+$("#si-azzera").addEventListener("click", () => { Trofei.azzera(); $("#conferma").hidden = true; $("#esito-codice").textContent = ""; tutto(); });
+
+function tutto(){ disegnaNome(); disegnaTrofei(); }
+tutto();
+/* se si arriva dalla escape room con il codice nell'indirizzo, lo trovo già scritto */
+const dalLink = decodeURIComponent(location.hash.slice(1));
+if(/^[A-Za-z0-9]{4}-?[A-Za-z0-9]{3}$/.test(dalLink)) $("#codice").value = dalLink.toUpperCase();
+</script>
+</body>
+</html>
