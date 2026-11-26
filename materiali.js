@@ -236,5 +236,50 @@ const CAPITOLI = [
     "link": "materiali/SCIENZE/2 - Dentro la materia/Dentro la materia - Scheda visuale.pdf"
    }
   ]
+ },
+ {
+  "materia": "scienze",
+  "classe": "2ª",
+  "titolo": "La materia si trasforma",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1312,
+    "link": "materiali/SCIENZE/2 - La materia si trasforma/La materia si trasforma - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 69,
+    "link": "materiali/SCIENZE/2 - La materia si trasforma/La materia si trasforma - Mappa concettuale.pdf"
+   },
+   {
+    "nome": "Slide",
+    "formato": "PDF",
+    "kb": 3368,
+    "link": "materiali/SCIENZE/2 - La materia si trasforma/La materia si trasforma - Slides.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 392,
+    "link": "materiali/SCIENZE/2 - La materia si trasforma/La materia si trasforma - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 700,
+    "link": "materiali/SCIENZE/2 - La materia si trasforma/La materia si trasforma - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 123,
+    "link": "materiali/SCIENZE/2 - La materia si trasforma/La materia si trasforma - Scheda visuale.pdf"
+   }
+  ]
  }
 ];
