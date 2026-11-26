@@ -124,6 +124,9 @@ h2{font-family:var(--f-display);font-weight:700;font-size:1.6rem;margin:0;text-w
 .bacheca-btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
 .bacheca-btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .bacheca-btn svg{width:20px;height:20px}
+.esc-filtri{display:flex;flex-wrap:wrap;gap:8px 16px;margin:-4px 0 14px}
+.esc-filtri .chip{font-size:.88rem;padding:5px 12px}
+.esc-filtri .chip[data-em]:not([data-em="tutte"])[aria-pressed="false"]{background:color-mix(in srgb,var(--cm) 45%,var(--card))}
 .bacheca-btn span{font-size:.85rem;background:var(--card);color:var(--ink);border-radius:999px;padding:0 8px}
 .giochi.prof .gioco{background:var(--giallo);color:var(--giallo-ink);padding:20px;border-radius:20px 20px 28px 20px}
 .giochi.prof .gioco p,.giochi.prof .gioco .meta,.giochi.prof .gioco .vai{color:var(--giallo-ink)}
@@ -203,6 +206,10 @@ dialog::backdrop{background:var(--veil)}
 
   <section aria-labelledby="t-escape">
     <div class="sec-head"><h2 id="t-escape">Escape room</h2><a class="bacheca-btn" href="bacheca.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4M12 14v4M8 21h8M9 18h6"/></svg>Bacheca dei trofei <span id="conta-trofei"></span></a></div>
+    <div class="esc-filtri">
+      <div class="classi" id="esc-classi" role="group" aria-label="Escape room: filtra per classe"></div>
+      <div class="classi" id="esc-materie" role="group" aria-label="Escape room: filtra per materia"></div>
+    </div>
     <div class="giochi escape" id="giochi-escape"></div>
   </section>
 
@@ -334,8 +341,27 @@ function disegnaGiochi(){
     : `<div class="vuoto" style="grid-column:1/-1">${tutti.length ? "Nessun gioco per questa scelta… per ora!" : "Presto qui troverai i giochi per ripassare!"}</div>`;
 }
 /* le escape room hanno una sezione tutta loro, con la bacheca dei trofei */
+/* filtri propri delle escape room (classe e materia), indipendenti da quelli dei capitoli;
+   le escape room sono in ordine di classe (1ª, 2ª, 3ª), poi di materia */
+const statoEsc = {classe:"tutte", materia:"tutte"};
+function disegnaFiltriEscape(){
+  const tutte = GIOCHI.filter(g => g.tipo === "escape");
+  const classi = CLASSI.filter(c => tutte.some(g => g.classe === c));
+  const materie = Object.keys(MATERIE).filter(k => tutte.some(g => g.materia === k));
+  $("#esc-classi").innerHTML = ["tutte", ...classi].map(c =>
+    `<button class="chip" type="button" data-ec="${c}" aria-pressed="${statoEsc.classe===c}">${c==="tutte" ? "Tutte le classi" : c+" media"}</button>`).join("");
+  $("#esc-materie").innerHTML = ["tutte", ...materie].map(k =>
+    `<button class="chip" type="button" data-em="${k}" aria-pressed="${statoEsc.materia===k}"${k==="tutte" ? "" : ` style="--cm:var(--${MATERIE[k].colore})"`}>${k==="tutte" ? "Tutte le materie" : MATERIE[k].nome}</button>`).join("");
+}
 function disegnaEscape(){
-  const tutte = GIOCHI.filter(g => g.tipo === "escape"), res = filtraGiochi(tutte);
+  disegnaFiltriEscape();
+  const q = norm(stato.q.trim()), ordMat = Object.keys(MATERIE);
+  const tutte = GIOCHI.filter(g => g.tipo === "escape");
+  const res = tutte
+    .filter(g => statoEsc.classe === "tutte" || g.classe === statoEsc.classe)
+    .filter(g => statoEsc.materia === "tutte" || g.materia === statoEsc.materia)
+    .filter(g => !q || norm(g.titolo+" "+g.descr+" "+[].concat(g.capitolo||[]).join(" ")+" "+(MATERIE[g.materia]?.nome||"")).includes(q))
+    .sort((a, b) => CLASSI.indexOf(a.classe) - CLASSI.indexOf(b.classe) || ordMat.indexOf(a.materia) - ordMat.indexOf(b.materia));
   const presi = typeof Trofei !== "undefined" ? Trofei.sbloccati() : {};
   const trofeoDi = g => typeof TROFEI !== "undefined" ? TROFEI.find(t => t.link === g.link) : null;
   $("#giochi-escape").innerHTML = res.length ? res.map(g => {
@@ -404,6 +430,8 @@ window.addEventListener("hashchange", () => { const id = location.hash.slice(1);
 
 $("#materie").addEventListener("click",e=>{const b=e.target.closest(".materia");if(!b)return;stato.materia=stato.materia===b.dataset.k?null:b.dataset.k;tutto()});
 $("#classi").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;stato.classe=b.dataset.c;tutto()});
+$("#esc-classi").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;statoEsc.classe=b.dataset.ec;disegnaEscape()});
+$("#esc-materie").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;statoEsc.materia=b.dataset.em;disegnaEscape()});
 $("#cerca").addEventListener("input",e=>{stato.q=e.target.value;disegnaElenco();disegnaGiochi();disegnaEscape();disegnaGiochiProf()});
 $("#elenco").addEventListener("click",e=>{const b=e.target.closest(".cap");if(b)apri(b.dataset.id)});
 
