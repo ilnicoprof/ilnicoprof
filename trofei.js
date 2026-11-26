@@ -6,6 +6,7 @@
 const TROFEI = [
   {id:"insiemi", nome:"Gli anelli di Venn", gioco:"L'aula chiusa", link:"escape-insiemi.html", argomento:"Insiemi, tabelle e grafici"},
   {id:"relativi", nome:"Il drone d'oro", gioco:"Il drone sotto zero", link:"escape-relativi.html", argomento:"Numeri relativi"},
+  {id:"naturali", nome:"Il carrello d'oro", gioco:"Il supermercato chiuso", link:"escape-numeri.html", argomento:"Numeri naturali e decimali"},
   {id:"materia", nome:"L'atomo d'oro", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"Atomi, tavola periodica e legami"}
 ];
 
@@ -75,6 +76,10 @@ function svgTrofeo(id, colori){
                <rect x="20" y="36" width="60" height="26" rx="10" fill="${oro}" stroke="${linea}" stroke-width="3.5"/>
                <circle cx="50" cy="49" r="7" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
                <path d="M40 62l-5 12M60 62l5 12" stroke="${linea}" stroke-width="4" stroke-linecap="round"/>`,
+    naturali: `<path d="M8 18h12l10 40h42" fill="none" stroke="${linea}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+               <path d="M24 26h60l-9 24H31z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
+               <path d="M38 26l2 24M52 26v24M66 26l-3 24M27 38h53" stroke="${linea}" stroke-width="2"/>
+               <circle cx="38" cy="66" r="6" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/><circle cx="66" cy="66" r="6" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>`,
     materia: `<g fill="none" stroke-linecap="round">
                <ellipse cx="50" cy="40" rx="31" ry="11" stroke="${linea}" stroke-width="9"/><ellipse cx="50" cy="40" rx="31" ry="11" stroke="${oro}" stroke-width="4.5"/>
                <ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(60 50 40)" stroke="${linea}" stroke-width="9"/><ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(60 50 40)" stroke="${oro}" stroke-width="4.5"/>
