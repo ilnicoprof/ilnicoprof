@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Il luna park dopo la chiusura</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" sizes="32x32" href="immagini/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="immagini/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="immagini/icon-192.png">
+<link rel="apple-touch-icon" href="immagini/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti del nicoprof; enigma 1 = la ruota panoramica (elementi e lunghezza della circonferenza),
+   enigma 2 = il chiosco della pizza (area del cerchio), enigma 3 = la giostra dei cavalli (archi e settori), poi la porta */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300; --azzurro:#9FD0FF; --azzurro-ink:#0D3B6E;
+  --cielo:#E4EEFF; --acciaio:#AEB9CA; --luce:#FFD23F; --menta:#9BE3C0;
+  --r-blu:#2F6FDE; --r-arancio:#F08A24; --r-viola:#8B5CF6; --r-rosso:#E5534B;
+  --pizza:#F6C25B; --crosta:#C98A3A; --pom:#E5534B;
+  --g1:#FFB3C1; --g2:#A9D4FF; --g3:#FFE08A;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --porta:#5B6BB5; --porta-scura:#3A4880; --metallo:#D5DCE6;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+  --f-mono:"Courier New",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --azzurro:#86BEF5;
+  --cielo:#0F1830; --acciaio:#5A6680; --luce:#FFD23F; --menta:#3E8A66;
+  --r-blu:#7FB0FF; --r-arancio:#FFA14D; --r-viola:#B794FF; --r-rosso:#FF7A70;
+  --pizza:#D9A443; --crosta:#9A6528; --pom:#C8433B;
+  --g1:#8A4A5A; --g2:#29496E; --g3:#6B5A22;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#3A4880; --porta-scura:#24305A; --metallo:#5A6680;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --azzurro:#86BEF5;
+  --cielo:#0F1830; --acciaio:#5A6680; --luce:#FFD23F; --menta:#3E8A66;
+  --r-blu:#7FB0FF; --r-arancio:#FFA14D; --r-viola:#B794FF; --r-rosso:#FF7A70;
+  --pizza:#D9A443; --crosta:#9A6528; --pom:#C8433B;
+  --g1:#8A4A5A; --g2:#29496E; --g3:#6B5A22;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#3A4880; --porta-scura:#24305A; --metallo:#5A6680;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:820px;margin:0 auto;padding-block:20px 56px;display:grid;gap:20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap>*{min-width:0}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna svg{width:16px;height:16px}
+header{display:grid;gap:8px}
+.eyebrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:800;font-size:.85rem}
+.tag{font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.storia{margin:0;font-family:var(--f-hand);font-size:1.3rem;line-height:1.35;max-width:60ch}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.indizi{display:flex;gap:8px;flex-wrap:wrap}
+.cifra-mini{display:inline-grid;place-items:center;width:34px;height:40px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.cifra-mini.vuota{border-style:dashed;color:var(--ink-soft);background:transparent}
+
+.enigma{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px;display:grid;gap:14px;min-width:0}
+.enigma>*{min-width:0}
+.enigma.chiuso{box-shadow:none;border-style:dashed;border-color:var(--line);background:transparent}
+.enigma.risolto{border-color:var(--ok);box-shadow:5px 5px 0 var(--ok)}
+.e-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.e-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.1;display:flex;align-items:center;gap:10px}
+.e-head h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);font-size:1.1rem;flex:none}
+.enigma.chiuso h2{color:var(--ink-soft)}
+.enigma.chiuso .e-head h2 .n{background:transparent;color:var(--ink-soft);border-color:var(--line)}
+.consegna{margin:0;font-size:1.02rem;max-width:65ch}
+.consegna b{font-weight:800}
+.nota{margin:0;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+.esito{margin:0;min-height:1.5em;font-weight:800}
+.esito.si{color:var(--ok)} .esito.no{color:var(--errore)}
+.azioni{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+.btn.piccolo{font-size:.92rem;padding:5px 12px;box-shadow:2px 2px 0 var(--ink)}
+.aiuto{margin:0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--giallo) 30%,transparent);border:1.5px dashed var(--giallo-ink);font-family:var(--f-hand);font-size:1.15rem}
+.premio{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:var(--ok-bg);color:var(--ok);font-weight:800}
+.premio .cifra-mini{border-color:var(--ok);flex:none}
+
+/* pezzi che si spostano */
+.pezzo{all:unset;box-sizing:border-box;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-width:40px;height:40px;padding:0 10px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:1.1rem;box-shadow:0 3px 0 var(--ink);font-variant-numeric:tabular-nums}
+.pezzo:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pezzo.scelto{background:var(--marker);transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
+.pezzo.sollevato{opacity:.3}
+.pezzo.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+.ombra{position:fixed!important;z-index:50!important;pointer-events:none!important;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
+.scegli .zona{outline:2px dashed var(--accent);outline-offset:-2px}
+.zona.sopra{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
+.banco{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:58px;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
+.banco .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.1rem}
+.etichetta{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin:0 0 -6px}
+.display{font-family:var(--f-mono);font-weight:700;background:#16241A;color:#7CFFA0;padding:10px 14px;border-radius:10px;border:3px solid var(--ink);font-size:1.15rem;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 6px rgba(124,255,160,.5)}
+.display small{display:block;font-size:.75rem;color:#4FBF73;text-shadow:none}
+
+.c-azzurro{background:var(--azzurro);color:var(--azzurro-ink)}
+.e-head h2 .n{background:var(--azzurro);color:var(--azzurro-ink)}
+.scena{border-radius:14px;border:2px solid var(--ink);background:var(--cielo);overflow:hidden}
+.scena svg{display:block;width:100%;height:auto}
+.domande{display:grid;gap:8px}
+.domanda{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:800;padding:10px;border-radius:12px;background:var(--pill)}
+.domanda.sbagliata{background:var(--errore-bg)}
+.domanda input{width:70px;font:inherit;font-family:var(--f-mono);font-size:1.1rem;padding:4px 8px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+.opz{all:unset;box-sizing:border-box;cursor:pointer;padding:3px 10px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-weight:800;font-size:.9rem}
+.opz[aria-pressed="true"]{background:var(--marker)}
+.opz:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opz:disabled{cursor:default}
+.cartello{font-family:var(--f-hand);font-size:1.25rem;padding:8px 14px;border-radius:10px;border:3px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);justify-self:start;transform:rotate(-1deg)}
+
+/* enigma 1: la ruota panoramica */
+.ruota-box{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:12px;align-items:start}
+@media (max-width:640px){.ruota-box{grid-template-columns:1fr}}
+.slots{display:grid;gap:6px}
+.slot{display:flex;align-items:center;gap:8px;min-height:48px;padding:4px 8px;border-radius:12px;border:2px dashed var(--line);background:var(--pill)}
+.slot .num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);background:var(--card);font-family:var(--f-display);font-weight:800;flex:none}
+.slot .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.05rem}
+.slot.sbagliato{border-color:var(--errore);background:var(--errore-bg)}
+.nome{font-size:.98rem}
+#mozzo{cursor:pointer}
+.ruota-gira{transform-box:view-box;transform-origin:180px 170px}
+.risolto .ruota-gira{animation:ruota 6s cubic-bezier(.45,0,.3,1) 1}
+@keyframes ruota{to{transform:rotate(360deg)}}
+.lampadina{fill:var(--line)}
+.risolto .lampadina{fill:var(--luce);animation:brilla 1s ease-in-out infinite alternate}
+.risolto .lampadina:nth-child(2n){animation-delay:.5s}
+@keyframes brilla{from{opacity:.35}to{opacity:1}}
+
+/* enigma 2: la pizza a spicchi */
+.spicchio{transform-box:view-box;transform-origin:0 0;transition:transform .9s cubic-bezier(.4,0,.2,1)}
+.fila-et{opacity:0;transition:opacity .4s ease .6s}
+.in-fila .fila-et{opacity:1}
+.comandi{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* enigma 3: la giostra */
+.giostra-svg{touch-action:none;cursor:grab}
+.giostra-svg:active{cursor:grabbing}
+#giostra{transform-box:view-box;transform-origin:170px 185px}
+#giostra.scatta{transition:transform .35s cubic-bezier(.3,1.3,.5,1)}
+.risolto #giostra{animation:festa 7s linear infinite}
+@keyframes festa{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.cavallo{animation:none}
+.risolto .cavallo{animation:salta .9s ease-in-out infinite alternate}
+.risolto .cavallo:nth-child(2n){animation-delay:.45s}
+@keyframes salta{to{transform:translateY(-4px)}}
+.stato-giostra{margin:0;font-weight:800}
+.stato-giostra.ok{color:var(--ok)}
+@media (prefers-reduced-motion:reduce){.risolto .ruota-gira,.risolto #giostra,.risolto .cavallo,.risolto .lampadina{animation:none}.spicchio{transition:none}}
+
+/* il lucchetto */
+.porta{display:grid;gap:16px;justify-items:center;text-align:center;background:var(--porta);background-image:repeating-linear-gradient(90deg,transparent 0 46px,var(--porta-scura) 46px 48px);border:3px solid var(--ink);border-radius:18px 18px 6px 6px;padding:22px 14px;box-shadow:5px 5px 0 var(--ink);color:#FFF8EC}
+.porta h2{margin:0;font-family:var(--f-display);font-size:1.5rem}
+.porta.chiuso .lucchetto{opacity:.6}
+.lucchetto{display:flex;gap:10px;padding:16px 18px;border-radius:18px;background:var(--metallo);border:3px solid var(--ink);box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.rotella{display:grid;gap:4px;justify-items:center}
+.rotella button{all:unset;cursor:pointer;width:44px;height:28px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);font-weight:800}
+.rotella button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rotella button:disabled{cursor:default;opacity:.6}
+.rotella output{display:grid;place-items:center;width:52px;height:62px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:2.2rem;font-variant-numeric:tabular-nums}
+.porta .esito{color:#FFF8EC}
+.libero{display:grid;gap:10px;justify-items:center;text-align:center;padding:24px 16px;border-radius:18px;background:var(--ok-bg);border:3px solid var(--ok);color:var(--ink)}
+.libero b{font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--ok)}
+.libero p{margin:0;font-weight:700}
+
+.suoni{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+#segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
+#segreto b{font-family:var(--f-display);font-size:1.1rem}
+@keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
+@keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.scuoti{animation:scuoti .3s ease 2}
+@media (max-width:480px){.enigma{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.firma{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.1);font-family:var(--f-body);font-size:.75rem;color:var(--ink-soft);pointer-events:none}
+.firma img{width:30px;height:30px;border-radius:50%;background:#FFFFFF;border:1px solid var(--line);flex:none}
+.firma b{font-weight:800;color:var(--ink)}
+@media (max-width:480px){.firma{padding:3px}.firma span{display:none}}
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>ilnicoprof</a>
+  <header>
+    <div class="eyebrow"><span class="tag c-azzurro">Geometria</span> 3ª media · Circonferenza e cerchio · escape room</div>
+    <h1>il luna park dopo la <span class="hl">chiusura</span></h1>
+    <p class="storia">La classe è in gita al luna park. Mentre visiti la cabina di comando della ruota panoramica, il giostraio va a spegnere le luci e la porta della cabina si chiude: il lucchetto ha un codice di 3 cifre. Al luna park è tutto rotondo: usa cerchi e circonferenze per uscire!</p>
+    <div class="barra">
+      <span class="pill" id="tempo">Tempo 00:00</span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
+      <div class="indizi" id="indizi" aria-label="Cifre trovate"></div>
+    </div>
+  </header>
+
+  <section class="enigma" id="e1" aria-labelledby="t1"></section>
+  <section class="enigma" id="e2" aria-labelledby="t2"></section>
+  <section class="enigma" id="e3" aria-labelledby="t3"></section>
+  <section id="e4" aria-labelledby="t4"></section>
+  <p class="sr" aria-live="polite" id="annuncio"></p>
+</div>
+
+<div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js?v=af126df0"></script>
+<script src="oggetto-segreto.js?v=3a8350fe"></script>
+<script>
+/* ===== dati ===== */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mescola = a => { const b = [...a]; for(let i = b.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]] = [b[j],b[i]]; } return b; };
+const pesca = (a, n) => mescola(a).slice(0, n);
+const numero = v => { const t = String(v).trim().replace(",", "."); return t === "" ? NaN : +t; };
+const f1 = x => String(Math.round(x * 100) / 100).replace(".", ",");
+
+/* enigma 1: le parti della ruota panoramica, numerate a caso */
+const PARTI = [
+  {id:"centro", n:"Centro"}, {id:"raggio", n:"Raggio"}, {id:"diametro", n:"Diametro"}, {id:"corda", n:"Corda"},
+  {id:"arco", n:"Arco"}, {id:"settore", n:"Settore circolare"}, {id:"corona", n:"Corona circolare"}
+];
+const NUM1 = mescola([1, 2, 3, 4, 5, 6, 7]);          /* NUM1[p] = numero scritto sulla parte p */
+const ORDINE1 = mescola(PARTI.map((_, i) => i));        /* ordine dei cartellini sul banco */
+const R1 = rnd(3, 9);                                   /* raggio della ruota in metri: C = 2·R1·π */
+
+/* enigma 2: la pizza e il cartello del chiosco */
+const PIZZE = [
+  {G:40, m:28, v:"gigante"}, {G:30, m:20, v:"gigante"}, {G:36, m:24, v:"gigante"},
+  {G:30, m:22, v:"medie"}, {G:40, m:30, v:"medie"}, {G:24, m:18, v:"medie"}
+];
+const PZ = pesca(PIZZE, 1)[0];
+const R2 = rnd(2, 9);
+const DOLCE2 = R2 <= 3 ? {n:"biscotto al cioccolato", del:"del"} : R2 <= 6 ? {n:"frittella", del:"della"} : {n:"pizzetta", del:"della"};
+
+/* enigma 3: la giostra (raggio, settori uguali; l'area di un settore R²:n è un numero intero) */
+const GIOSTRE = [[4, 4], [6, 4], [4, 8], [6, 6], [6, 12], [6, 9], [5, 5], [8, 8], [3, 9]];
+const [R3, N3] = pesca(GIOSTRE, 1)[0];
+const TH3 = 360 / N3;
+const K3 = pesca(Array.from({length: N3 - 1}, (_, i) => i + 1).filter(k => (2 * R3 * k) % N3 === 0), 1)[0];
+const ALFA3 = K3 * TH3, ARCO3 = 2 * R3 * K3 / N3, SETT3 = R3 * R3 / N3;
+
+const CODICE = [R1, R2, SETT3];
+const INDIZI = [
+  "Quanti metri misura il raggio della ruota panoramica?",
+  `Quanti centimetri misura il raggio ${DOLCE2.del} ${DOLCE2.n}?`,
+  "Quanti π m² misura l'area di un settore del pavimento della giostra?"
+];
+const AIUTI = [
+  "Raggio, diametro e corda sono segmenti: il raggio va dal centro alla circonferenza, il diametro passa per il centro (d = 2r), la corda unisce due punti qualsiasi. L'arco è un pezzo di circonferenza, il settore è la fetta tra due raggi, la corona è la parte tra due circonferenze con lo stesso centro. Per il cartello: C = 2πr, quindi r = C : 2π. Se C = 18π, r = 9.",
+  "Taglia la pizza in tanti spicchi e mettili in fila, uno in su e uno in giù: la base è metà della circonferenza e l'altezza è il raggio, quindi A = πr · r = πr². Per confrontare le pizze calcola le aree (il raggio è metà del diametro!). Per il cartello: r = √(A : π); se A = 49π, r = √49 = 7.",
+  "Gira la giostra finché il cavallo con la stella arriva al cancello e conta i settori: ogni settore è 360° : n. L'arco si calcola con l = α · C : 360°, l'area del settore con As = A : n (oppure α · A : 360°). Lascia π scritto: se C = 12π e α = 90°, l = 3π."
+];
+
+const S = {
+  risolto:[false,false,false], aiuto:[false,false,false],
+  slot1:{}, sbagliati1:new Set(), r1:"", d1:"", dom1:new Set(),
+  n2:8, fila:false, base:null, alt:null, pizza:null, r2:"", dom2:new Set(),
+  giro:0, totale:0, a3:"", l3:"", s3:"", dom3:new Set(),
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+};
+const $ = s => document.querySelector(s);
+const annuncia = t => { $("#annuncio").textContent = t; };
+
+/* ===== trascina oppure tocca-e-posa ===== */
+let scelto = null;
+function seleziona(el, posa){
+  if(scelto && scelto.el === el){ deseleziona(); return; }
+  deseleziona();
+  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli"); suona("prendi");
+  annuncia(`Hai preso ${el.getAttribute("aria-label") || el.textContent}. Ora tocca dove vuoi metterlo.`);
+}
+function deseleziona(){ if(scelto) scelto.el.classList.remove("scelto"); scelto = null; document.body.classList.remove("scegli"); }
+const zonaSotto = (x,y) => document.elementFromPoint(x,y)?.closest("[data-zona]");
+function pezzo(el, posa){
+  el.addEventListener("pointerdown", e => {
+    if(e.button > 0) return;
+    avvia();
+    const r = el.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
+    let ombra = null, sopra = null;
+    document.querySelectorAll(".ombra").forEach(o => o.remove());   /* nessuna copia rimasta da un trascinamento precedente */
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    const muovi = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      /* il rilascio del tasto è andato perso (mouse fuori dalla finestra, ctrl-clic...): poso il pezzo qui */
+      if(ev.pointerType === "mouse" && ev.buttons === 0){ fine({type:"pointerup", pointerId:e.pointerId, clientX:ev.clientX, clientY:ev.clientY}); return; }
+      if(!ombra){
+        if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
+        deseleziona();
+        ombra = el.cloneNode(true); ombra.classList.add("ombra");
+        /* la copia che segue il dito resta sempre visibile, qualunque stile abbia il pezzo */
+        Object.assign(ombra.style, {position:"fixed", zIndex:"50", pointerEvents:"none", margin:"0", opacity:"1", visibility:"visible"}); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
+        document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
+      }
+      ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z !== sopra){ sopra?.classList.remove("sopra"); z?.classList.add("sopra"); sopra = z; }
+    };
+    const fine = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      window.removeEventListener("pointermove", muovi); window.removeEventListener("pointerup", fine); window.removeEventListener("pointercancel", fine);
+      if(!ombra) return;
+      ombra.remove(); el.classList.remove("sollevato"); sopra?.classList.remove("sopra");
+      el.dataset.trascinato = "1"; setTimeout(() => { delete el.dataset.trascinato; }, 400);   /* serve solo a ignorare il clic che segue il rilascio */
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z && ev.type === "pointerup") posa(el, z, ev.clientX, ev.clientY);
+    };
+    /* ascolto tutta la pagina: il rilascio arriva anche se il dito o il mouse non è più sopra il pezzo */
+    window.addEventListener("pointermove", muovi); window.addEventListener("pointerup", fine); window.addEventListener("pointercancel", fine);
+  });
+  el.addEventListener("dragstart", ev => ev.preventDefault());
+  el.addEventListener("click", e => {
+    e.stopPropagation();
+    if(el.dataset.trascinato){ delete el.dataset.trascinato; return; }
+    avvia(); seleziona(el, posa);
+  });
+}
+document.addEventListener("click", e => {
+  if(!scelto) return;
+  const z = e.target.closest("[data-zona]");
+  if(z){ const s = scelto; deseleziona(); s.posa(s.el, z, e.clientX, e.clientY); }
+  else if(!e.target.closest(".pezzo")) deseleziona();
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") deseleziona(); });
+
+/* ===== tempo e suoni ===== */
+function avvia(){ if(!S.inizio) S.inizio = Date.now(); }
+const mmss = ms => { const s = Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+setInterval(() => { $("#tempo").textContent = "Tempo " + mmss(S.inizio ? (S.fine || Date.now()) - S.inizio : 0); }, 500);
+let audio;
+let suoniOn = true; try { suoniOn = localStorage.getItem("nicoprof:suoni") !== "no"; } catch {}
+/* [frequenza, ritardo, durata, forma, volume] */
+const SUONI = {
+  si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25,"sawtooth",.07]], bip:[[880,0,.06,"triangle",.05]],
+  prendi:[[520,0,.05,"triangle",.08],[780,.04,.06,"triangle",.08]],
+  posa:[[300,0,.07,"triangle",.13],[200,.05,.09,"triangle",.11]],
+  scatto:[[1400,0,.03,"square",.04],[900,.03,.04,"square",.03]],
+  equilibrio:[[659,0,.1],[880,.1,.2]],
+  spicchi:[[700,0,.05,"triangle",.07],[600,.08,.05,"triangle",.07],[500,.16,.05,"triangle",.07],[800,.3,.12,"triangle",.08]],
+  giro:[[392,0,.2,"sine",.08],[494,.2,.2,"sine",.08],[587,.4,.2,"sine",.08],[784,.6,.4,"sine",.1]],
+  musica:[[523,0,.18,"sine",.1],[659,.2,.18,"sine",.1],[784,.4,.18,"sine",.1],[659,.6,.18,"sine",.1],[523,.8,.18,"sine",.1],[784,1,.18,"sine",.1],[1047,1.2,.4,"sine",.12]],
+  segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[140,0,.5,"sawtooth",.035],[155,.25,.6,"sawtooth",.03]],
+  porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
+};
+function suona(tipo){
+  if(!suoniOn || !SUONI[tipo]) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    SUONI[tipo].forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
+  } catch {}
+}
+function aggiornaSuoni(){ const b = document.querySelector("#suoni"); if(b){ b.textContent = "Suoni: " + (suoniOn ? "sì" : "no"); b.setAttribute("aria-pressed", suoniOn); } }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#suoni")) return;
+  suoniOn = !suoniOn; try { localStorage.setItem("nicoprof:suoni", suoniOn ? "si" : "no"); } catch {}
+  aggiornaSuoni(); suona("bip");
+});
+
+/* ===== coriandoli per la vittoria ===== */
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--verde)", "var(--rosa)"];
+  for(let i = 0; i < 90; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.8 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4500);
+  }
+}
+
+/* ===== segreti nascosti ===== */
+const trovati = new Set();
+function segreto(id, testo){
+  if(trovati.has(id)) return;
+  trovati.add(id); suona("segreto");
+  let t = document.querySelector("#segreto");
+  if(!t){ t = document.createElement("div"); t.id = "segreto"; t.setAttribute("role", "status"); document.body.append(t); }
+  t.innerHTML = `<b>Segreto trovato! (${trovati.size} di ${SEGRETI})</b><span>${testo}</span>`;
+  t.hidden = false; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  clearTimeout(segreto.timer); segreto.timer = setTimeout(() => { t.hidden = true; }, 6500);
+}
+let digitate = "";
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea") || e.key.length !== 1) return;
+  digitate = (digitate + e.key.toLowerCase()).slice(-12);
+  PAROLE_SEGRETE.forEach(([parola, azione]) => { if(digitate.endsWith(parola)) azione(); });
+});
+const fraseSegreti = () => trovati.size === SEGRETI ? "Hai scoperto anche tutti i segreti nascosti!" : `Segreti nascosti trovati: ${trovati.size} su ${SEGRETI}. Gioca di nuovo per scoprirli tutti!`;
+
+/* ===== parti comuni ===== */
+function testa(i, titolo){
+  const chiuso = i > 0 && !S.risolto[i-1];
+  return `<div class="e-head"><h2 id="t${i+1}"><span class="n">${S.risolto[i] ? "✓" : i+1}</span>${titolo}</h2>
+    ${!chiuso && !S.risolto[i] ? `<button class="btn piccolo" type="button" data-aiuto="${i}">${S.aiuto[i] ? "Nascondi aiuto" : "Aiutino"}</button>` : ""}</div>`;
+}
+const chiusoHtml = i => `<p class="nota">Risolvi prima l'enigma ${i} per aprire questo.</p>`;
+const premioHtml = (i, extra = "") => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Cifra n. ${i+1} trovata! ${INDIZI[i]} ${extra}Risposta: ${CODICE[i]}.</span></div>`;
+const aiutoHtml = i => S.aiuto[i] ? `<p class="aiuto">${AIUTI[i]}</p>` : "";
+function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textContent = testo; el.className = "esito "+tipo; } }
+
+
+
+
+
+
+
+
+
+/* ===== enigma 1: la ruota panoramica ===== */
+const CX = 180, CY = 170, RR = 140, RI = 120;
+const pt = (a, d) => [CX + d * Math.cos(a * Math.PI / 180), CY + d * Math.sin(a * Math.PI / 180)].map(v => +v.toFixed(1));
+function svgRuota(){
+  const [ax, ay] = pt(20, RR), [bx, by] = pt(70, RR), [s1x, s1y] = pt(315, RR), [s2x, s2y] = pt(360, RR);
+  const [c1x, c1y] = pt(135, RR), [c2x, c2y] = pt(180, RR), [rx, ry] = pt(225, RR), [tx, ty] = pt(270, RR), [ux, uy] = pt(90, RR);
+  const anello = r => `M${CX - r} ${CY}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0z`;
+  const cabine = [0, 45, 90, 135, 180, 225, 270, 315].map((a, i) => { const [x, y] = pt(a, RR); return `<path d="M${x} ${y}v8" stroke="var(--ink)" stroke-width="2"/><rect x="${x - 11}" y="${y + 8}" width="22" height="17" rx="5" fill="${["var(--g1)", "var(--g2)", "var(--g3)"][i % 3]}" stroke="var(--ink)" stroke-width="2"/>`; }).join("");
+  const luci = Array.from({length: 24}, (_, i) => { const [x, y] = pt(i * 15 + 7.5, RR); return `<circle class="lampadina" cx="${x}" cy="${y}" r="3.2" stroke="var(--ink)" stroke-width="1"/>`; }).join("");
+  const segni = [
+    {p:"centro", at:[CX + 30, CY + 32], to:[CX, CY]}, {p:"raggio", at:pt(225, 82)}, {p:"diametro", at:pt(270, 62)},
+    {p:"settore", at:pt(337.5, 88)}, {p:"corda", at:[(c1x + c2x) / 2, (c1y + c2y) / 2]}, {p:"arco", at:pt(45, RR + 20), to:pt(45, RR)},
+    {p:"corona", at:pt(250, (RR + RI) / 2)}
+  ].map(s => { const i = PARTI.findIndex(x => x.id === s.p), [x, y] = s.at;
+    return `${s.to ? `<path d="M${x} ${y}L${s.to[0]} ${s.to[1]}" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="3 2"/>` : ""}<circle cx="${x}" cy="${y}" r="13" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="15" fill="var(--ink)">${NUM1[i]}</text>`; }).join("");
+  return `<svg viewBox="0 0 360 380" role="img" aria-label="La ruota panoramica con 7 parti numerate">
+    <path d="M0 372h360" stroke="var(--ink)" stroke-width="3"/>
+    <path d="M${CX} ${CY}L112 372M${CX} ${CY}L248 372M140 300h80" stroke="var(--acciaio)" stroke-width="9" stroke-linecap="round"/>
+    <g class="ruota-gira">
+      <path d="${anello(RR)}${anello(RI)}" fill="var(--menta)" fill-rule="evenodd" opacity=".75"/>
+      <path d="M${CX} ${CY}L${s1x} ${s1y}A${RR} ${RR} 0 0 1 ${s2x} ${s2y}z" fill="var(--g3)" stroke="var(--giallo-ink)" stroke-width="1.5" opacity=".95"/>
+      ${[0, 45, 90, 135, 180, 225, 270, 315].map(a => { const [x, y] = pt(a, RR); return `<path d="M${CX} ${CY}L${x} ${y}" stroke="var(--acciaio)" stroke-width="3"/>`; }).join("")}
+      <circle cx="${CX}" cy="${CY}" r="${RR}" fill="none" stroke="var(--ink)" stroke-width="4"/><circle cx="${CX}" cy="${CY}" r="${RI}" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+      <path d="M${CX} ${CY}L${rx} ${ry}" stroke="var(--r-blu)" stroke-width="6" stroke-linecap="round"/>
+      <path d="M${tx} ${ty}L${ux} ${uy}" stroke="var(--r-arancio)" stroke-width="6" stroke-linecap="round"/>
+      <path d="M${c1x} ${c1y}L${c2x} ${c2y}" stroke="var(--r-viola)" stroke-width="6" stroke-linecap="round"/>
+      <path d="M${ax} ${ay}A${RR} ${RR} 0 0 1 ${bx} ${by}" fill="none" stroke="var(--r-rosso)" stroke-width="9" stroke-linecap="round"/>
+      ${luci}${cabine}
+      <circle id="mozzo" cx="${CX}" cy="${CY}" r="12" fill="var(--metallo)" stroke="var(--ink)" stroke-width="3"/>
+    </g>
+    ${segni}
+  </svg>`;
+}
+function disegna1(){
+  const sez = $("#e1"), fatto = S.risolto[0];
+  sez.className = "enigma" + (fatto ? " risolto" : "");
+  const tag = p => `<button class="pezzo nome" type="button" data-p="${p}" aria-label="${PARTI[p].n}"${fatto ? " disabled" : ""}>${PARTI[p].n}</button>`;
+  const posati = new Set(Object.values(S.slot1));
+  const fuori = ORDINE1.filter(p => !posati.has(p));
+  const vero = n => PARTI.findIndex((_, i) => NUM1[i] === n);
+  sez.innerHTML = testa(0, "La ruota panoramica") + `
+    <p class="consegna">Sul pannello di comando c'è il disegno della ruota con 7 parti numerate. <b>Trascina ogni nome sul numero giusto</b>, poi leggi il cartello e trova le misure della ruota.</p>
+    ${aiutoHtml(0)}
+    <div class="ruota-box">
+      <div class="scena">${svgRuota()}</div>
+      <div class="slots">${[1, 2, 3, 4, 5, 6, 7].map(n => { const p = fatto ? vero(n) : S.slot1[n];
+        return `<div class="slot zona${S.sbagliati1.has(n) ? " sbagliato" : ""}" data-zona="s${n}"><span class="num">${n}</span>${p !== undefined ? tag(p) : '<span class="vuoto">trascina qui un nome</span>'}</div>`; }).join("")}</div>
+    </div>
+    ${fatto ? "" : `<p class="etichetta">I nomi delle parti</p>
+    <div class="banco zona" data-zona="banco1">${fuori.length ? fuori.map(tag).join("") : '<span class="vuoto">Tutti i nomi sono al loro posto.</span>'}</div>`}
+    <p class="cartello">Ruota panoramica · lunghezza della circonferenza: C = ${2 * R1}π m</p>
+    <div class="domande">
+      <label class="domanda${S.dom1.has("r") ? " sbagliata" : ""}">Raggio della ruota: r = <input type="text" inputmode="decimal" id="r1" value="${fatto ? R1 : S.r1}"${fatto ? " disabled" : ""}> m</label>
+      <label class="domanda${S.dom1.has("d") ? " sbagliata" : ""}">Diametro della ruota: d = <input type="text" inputmode="decimal" id="d1" value="${fatto ? 2 * R1 : S.d1}"${fatto ? " disabled" : ""}> m</label>
+    </div>
+    ${fatto ? premioHtml(0, `C = ${2 * R1}π m, quindi r = ${2 * R1}π : 2π = ${R1} m. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla1">Controlla la ruota</button><p class="esito" id="esito0"></p></div>`}`;
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa1));
+  $("#r1").addEventListener("input", e => { avvia(); S.r1 = e.target.value; });
+  $("#d1").addEventListener("input", e => { avvia(); S.d1 = e.target.value; });
+  $("#controlla1").addEventListener("click", controlla1);
+}
+function posa1(el, zona){
+  const p = +el.dataset.p, z = zona.dataset.zona;
+  for(const k of Object.keys(S.slot1)) if(S.slot1[k] === p) delete S.slot1[k];
+  if(z.startsWith("s")){ const n = +z.slice(1); S.slot1[n] = p; S.sbagliati1.delete(n); }
+  else if(z !== "banco1") return;
+  suona("posa"); disegna1();
+}
+function controlla1(){
+  const mancano = 7 - Object.keys(S.slot1).length;
+  if(mancano){ esito(0, `Mancano ancora ${mancano} ${mancano === 1 ? "nome" : "nomi"} sul pannello.`, "no"); suona("no"); return; }
+  S.sbagliati1 = new Set(Object.entries(S.slot1).filter(([n, p]) => NUM1[p] !== +n).map(([n]) => +n));
+  S.dom1 = new Set();
+  if(numero(S.r1) !== R1) S.dom1.add("r");
+  if(numero(S.d1) !== 2 * R1) S.dom1.add("d");
+  if(S.sbagliati1.size || S.dom1.size){
+    disegna1();
+    esito(0, (S.sbagliati1.size ? `${S.sbagliati1.size === 1 ? "1 nome è" : S.sbagliati1.size + " nomi sono"} sul numero sbagliato. ` : "") + (S.dom1.size ? "Le misure della ruota non tornano: ricorda che C = 2πr e d = 2r." : ""), "no"); suona("no"); return;
+  }
+  risolvi(0); suona("giro");
+}
+let tocchiMozzo = 0;
+document.addEventListener("click", e => {
+  if(!e.target.closest("#mozzo")) return;
+  suona("bip");
+  if(++tocchiMozzo >= 3) segreto("pi", "Le cifre di π non finiscono mai e non si ripetono: 3,14159265358979… Con i computer ne hanno calcolate più di 100 000 miliardi!");
+});
+
+/* ===== enigma 2: il chiosco della pizza ===== */
+const PX = 80, PY = 100, PR = 64, X0 = 205, Y0 = 62;
+function posizioneSpicchio(i, n, fila){
+  const th = 360 / n, w = 2 * PR * Math.sin(Math.PI / n), k = Math.floor(i / 2);
+  if(!fila) return `translate(${PX}px,${PY}px) rotate(${i * th}deg)`;
+  return i % 2 === 0 ? `translate(${(X0 + k * w).toFixed(1)}px,${Y0}px) rotate(0deg)` : `translate(${(X0 + k * w + w / 2).toFixed(1)}px,${Y0 + PR}px) rotate(180deg)`;
+}
+function svgPizza(){
+  const n = S.n2, th = 360 / n, a1 = (90 - th / 2) * Math.PI / 180, a2 = (90 + th / 2) * Math.PI / 180;
+  const p1 = [PR * Math.cos(a1), PR * Math.sin(a1)].map(v => v.toFixed(2)), p2 = [PR * Math.cos(a2), PR * Math.sin(a2)].map(v => v.toFixed(2));
+  const w = 2 * PR * Math.sin(Math.PI / n), xa = X0 - w / 2, xb = X0 + n / 2 * w;
+  const sp = Array.from({length: n}, (_, i) => `<g class="spicchio" style="transform:${posizioneSpicchio(i, n, S.fila)};transition-delay:${i * 25}ms">
+    <path d="M0 0L${p1[0]} ${p1[1]}A${PR} ${PR} 0 0 1 ${p2[0]} ${p2[1]}z" fill="var(--pizza)" stroke="var(--ink)" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M${(p1[0] * .9).toFixed(2)} ${(p1[1] * .9).toFixed(2)}A${PR * .9} ${PR * .9} 0 0 1 ${(p2[0] * .9).toFixed(2)} ${(p2[1] * .9).toFixed(2)}" fill="none" stroke="var(--crosta)" stroke-width="${PR * .12}"/>
+    ${n <= 16 ? `<circle cx="0" cy="${PR * .55}" r="${Math.min(7, w * .18).toFixed(1)}" fill="var(--pom)" stroke="var(--ink)" stroke-width="1"/>` : ""}</g>`).join("");
+  return `<svg viewBox="0 0 440 200" class="${S.fila ? "in-fila" : ""}" id="pizza-svg" role="img" aria-label="Pizza tagliata in ${n} spicchi">
+    <circle cx="${PX}" cy="${PY}" r="${PR + 8}" fill="var(--card)" stroke="var(--ink)" stroke-width="2" opacity=".7"/>
+    ${sp}
+    <g class="fila-et" font-family="Nunito, sans-serif" font-weight="800" font-size="13" fill="var(--ink)">
+      <path d="M${xa.toFixed(1)} ${Y0 + PR + 14}H${xb.toFixed(1)}" stroke="var(--ink)" stroke-width="2"/><path d="M${xa.toFixed(1)} ${Y0 + PR + 8}v12M${xb.toFixed(1)} ${Y0 + PR + 8}v12" stroke="var(--ink)" stroke-width="2"/>
+      <text x="${((xa + xb) / 2).toFixed(1)}" y="${Y0 + PR + 32}" text-anchor="middle">base = ?</text>
+      <path d="M${(xb + 12).toFixed(1)} ${Y0}V${Y0 + PR}" stroke="var(--ink)" stroke-width="2"/><path d="M${(xb + 6).toFixed(1)} ${Y0}h12M${(xb + 6).toFixed(1)} ${Y0 + PR}h12" stroke="var(--ink)" stroke-width="2"/>
+      <text x="${(xb + 20).toFixed(1)}" y="${Y0 - 10}" text-anchor="end">altezza = ?</text>
+    </g></svg>`;
+}
+function metti(fila){
+  S.fila = fila;
+  const svg = $("#pizza-svg"); if(!svg) return;
+  svg.classList.toggle("in-fila", fila);
+  svg.querySelectorAll(".spicchio").forEach((g, i) => { g.style.transform = posizioneSpicchio(i, S.n2, fila); });
+  const b = $("#fila"); if(b) b.textContent = fila ? "Rimetti la pizza nel piatto" : "Metti gli spicchi in fila";
+  suona("spicchi");
+}
+function disegna2(){
+  const sez = $("#e2"), chiuso = !S.risolto[0], fatto = S.risolto[1];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(1, "Il chiosco della pizza") + chiusoHtml(1); return; }
+  const op = (chiave, val, giusto) => `<button class="opz" type="button" data-q="${chiave}" data-v="${val}" aria-pressed="${(fatto ? giusto : S[chiave]) === val}"${fatto ? " disabled" : ""}>${val}</button>`;
+  sez.innerHTML = testa(1, "Il chiosco della pizza") + `
+    <p class="consegna">Il chiosco della pizza è chiuso, ma il cassetto con la chiave della cabina ha un lucchetto. Il pizzaiolo ha lasciato una pizza da tagliare: <b>tagliala in spicchi e mettili in fila</b>, uno in su e uno in giù. Che figura viene fuori?</p>
+    ${aiutoHtml(1)}
+    <div class="scena">${svgPizza()}</div>
+    <div class="comandi"><span style="font-weight:800">Spicchi:</span>${[4, 8, 16, 32].map(n => `<button class="opz" type="button" data-n="${n}" aria-pressed="${S.n2 === n}">${n}</button>`).join("")}
+      <button class="btn piccolo" type="button" id="fila">${S.fila ? "Rimetti la pizza nel piatto" : "Metti gli spicchi in fila"}</button></div>
+    <div class="domande">
+      <div class="domanda${S.dom2.has("b") ? " sbagliata" : ""}">La base della figura è… ${["il raggio", "il diametro", "metà circonferenza"].map(v => op("base", v, "metà circonferenza")).join("")}</div>
+      <div class="domanda${S.dom2.has("h") ? " sbagliata" : ""}">L'altezza della figura è… ${["il raggio", "il diametro", "la circonferenza"].map(v => op("alt", v, "il raggio")).join("")}</div>
+      <div class="domanda${S.dom2.has("p") ? " sbagliata" : ""}">Con lo stesso prezzo puoi prendere 1 pizza gigante (diametro ${PZ.G} cm) oppure 2 pizze medie (diametro ${PZ.m} cm). Mangi di più con… ${["la pizza gigante", "le due medie"].map(v => op("pizza", v, PZ.v === "gigante" ? "la pizza gigante" : "le due medie")).join("")}</div>
+      <p class="cartello">Chiosco · area ${DOLCE2.del} ${DOLCE2.n}: A = ${R2 * R2}π cm²</p>
+      <label class="domanda${S.dom2.has("r") ? " sbagliata" : ""}">Raggio ${DOLCE2.del} ${DOLCE2.n}: r = <input type="text" inputmode="decimal" id="r2" value="${fatto ? R2 : S.r2}"${fatto ? " disabled" : ""}> cm</label>
+    </div>
+    ${fatto ? premioHtml(1, `A = πr · r = πr², quindi r = √${R2 * R2} = ${R2} cm. Pizza gigante: ${(PZ.G / 2) ** 2}π cm², due medie: ${2 * (PZ.m / 2) ** 2}π cm². `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla2">Controlla il chiosco</button><p class="esito" id="esito1"></p></div>`}`;
+  sez.querySelectorAll("[data-n]").forEach(b => b.addEventListener("click", () => { avvia(); S.n2 = +b.dataset.n; suona("bip"); disegna2(); segreto32(); }));
+  $("#fila").addEventListener("click", () => { avvia(); metti(!S.fila); segreto32(); });
+  if(fatto) return;
+  sez.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { avvia(); S[b.dataset.q] = b.dataset.v; S.dom2.delete({base:"b", alt:"h", pizza:"p"}[b.dataset.q]); suona("bip"); disegna2(); }));
+  $("#r2").addEventListener("input", e => { avvia(); S.r2 = e.target.value; });
+  $("#controlla2").addEventListener("click", controlla2);
+}
+function segreto32(){ if(S.n2 === 32 && S.fila) segreto("rettangolo", "Con 32 spicchi la pizza in fila è quasi un rettangolo: più spicchi fai, più la base diventa dritta. È il ragionamento che usava Archimede!"); }
+function controlla2(){
+  if(!S.base || !S.alt || !S.pizza || !String(S.r2).trim()){ esito(1, "Rispondi a tutte e quattro le domande.", "no"); suona("no"); return; }
+  S.dom2 = new Set();
+  if(S.base !== "metà circonferenza") S.dom2.add("b");
+  if(S.alt !== "il raggio") S.dom2.add("h");
+  if(S.pizza !== (PZ.v === "gigante" ? "la pizza gigante" : "le due medie")) S.dom2.add("p");
+  if(numero(S.r2) !== R2) S.dom2.add("r");
+  if(S.dom2.size){
+    disegna2();
+    const msg = {b:"Guarda la base: metà degli spicchi ha la crosta in basso.", h:"L'altezza è la distanza tra la crosta in alto e quella in basso: quanto è lungo uno spicchio?", p:"Calcola le due aree: il raggio è metà del diametro e le pizze medie sono 2!", r:"Il raggio non torna: r = √(A : π)."};
+    esito(1, [...S.dom2].map(k => msg[k]).join(" "), "no"); suona("no"); return;
+  }
+  risolvi(1);
+}
+
+/* ===== enigma 3: la giostra dei cavalli ===== */
+const GX = 170, GY = 185, GR = 125;
+const gp = (a, d) => [GX + d * Math.cos(a * Math.PI / 180), GY + d * Math.sin(a * Math.PI / 180)].map(v => +v.toFixed(1));
+const COL3 = ["var(--g1)", "var(--g2)", "var(--g3)"];
+const SVG_CAVALLO = '<g transform="scale(1.3)"><path d="M-5 9V2c0-6 3-9 7-9l1-3 2 3c3 2 4 5 3 7l-4 1-2-1v9z" fill="var(--card)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/><path d="M-1-6c-3 1-5 4-5 7" fill="none" stroke="var(--r-rosso)" stroke-width="2.4" stroke-linecap="round"/><circle cx="3" cy="-3" r="1.1" fill="var(--ink)"/></g>';
+function svgGiostra(){
+  const stella = (N3 - K3) % N3;
+  const settori = Array.from({length: N3}, (_, j) => {
+    const a = -90 + j * TH3, [x1, y1] = gp(a - TH3 / 2, GR), [x2, y2] = gp(a + TH3 / 2, GR), [hx, hy] = gp(a, GR - 24);
+    const col = N3 % 2 === 0 ? COL3[j % 2] : (j === N3 - 1 ? COL3[2] : COL3[j % 2]);
+    return `<path d="M${GX} ${GY}L${x1} ${y1}A${GR} ${GR} 0 0 1 ${x2} ${y2}z" fill="${col}" stroke="var(--ink)" stroke-width="2"/>
+      <g transform="translate(${hx} ${hy}) rotate(${a + 90})"><g class="cavallo"><circle r="14" fill="${j === stella ? "var(--luce)" : "var(--card)"}" stroke="var(--ink)" stroke-width="2"/>${j === stella ? '<text y="6" text-anchor="middle" font-size="17" font-weight="800" fill="var(--ink)">★</text>' : SVG_CAVALLO}</g></g>`;
+  }).join("");
+  const a0 = -90 - ALFA3, [px, py] = gp(a0, GR + 16), [ax, ay] = gp(a0, GR + 8), [bx, by] = gp(-90, GR + 8);
+  return `<svg class="giostra-svg" id="giostra-svg" viewBox="0 0 340 350" role="img" aria-label="La giostra dei cavalli vista dall'alto, divisa in ${N3} settori uguali">
+    <path id="arco3" d="M${ax} ${ay}A${GR + 8} ${GR + 8} 0 ${ALFA3 > 180 ? 1 : 0} 1 ${bx} ${by}" fill="none" stroke="var(--r-rosso)" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 9" opacity="0"/>
+    <g id="giostra" style="transform:rotate(${S.giro}deg)">
+      <circle cx="${GX}" cy="${GY}" r="${GR + 4}" fill="var(--ink)"/>
+      ${settori}
+      <circle cx="${GX}" cy="${GY}" r="20" fill="var(--r-rosso)" stroke="var(--ink)" stroke-width="3"/><circle cx="${GX}" cy="${GY}" r="7" fill="var(--luce)" stroke="var(--ink)" stroke-width="2"/>
+    </g>
+    <circle cx="${px}" cy="${py}" r="9" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2"/><text x="${px}" y="${py + 4}" text-anchor="middle" font-size="11" fill="var(--ink)">★</text>
+    <rect x="${GX - 34}" y="6" width="68" height="26" rx="6" fill="var(--porta)" stroke="var(--ink)" stroke-width="2.5"/><text x="${GX}" y="24" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="800" font-size="13" fill="#fff">cancello</text>
+    <path d="M${GX} 32v12" stroke="var(--ink)" stroke-width="2.5"/>
+  </svg>`;
+}
+const posizione3 = () => ((Math.round(S.giro / TH3) % N3) + N3) % N3;
+const alCancello = () => posizione3() === K3 && Math.abs(S.giro - Math.round(S.giro / TH3) * TH3) < .5;
+function aggiornaGiostra(scatta){
+  const g = $("#giostra"); if(!g) return;
+  g.classList.toggle("scatta", !!scatta);
+  g.style.transform = `rotate(${S.giro}deg)`;
+  const ok = alCancello();
+  $("#arco3")?.setAttribute("opacity", ok ? "1" : "0");
+  const st = $("#stato3"); if(st){ st.textContent = ok ? "Il cavallo con la stella è al cancello! La linea rossa è l'arco che ha percorso." : "Il cavallo con la stella non è ancora al cancello."; st.className = "stato-giostra" + (ok ? " ok" : ""); }
+}
+function gira(d){
+  S.giro += d; S.totale += Math.abs(d);
+  aggiornaGiostra(true); suona(alCancello() ? "equilibrio" : "scatto");
+  if(S.totale >= 1080) segreto("giri", "Hai fatto girare la giostra di più di 1080°: sono 3 angoli giro! I cavalli hanno fatto 3 volte tutta la circonferenza.");
+}
+function disegna3(){
+  const sez = $("#e3"), chiuso = !S.risolto[1], fatto = S.risolto[2];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(2, "La giostra dei cavalli") + chiusoHtml(2); return; }
+  sez.innerHTML = testa(2, "La giostra dei cavalli") + `
+    <p class="consegna">La chiave è legata al cavallo con la stella, ma la giostra si è fermata lontano dal cancello. <b>Fai girare la giostra in senso orario</b> (trascinala o usa le frecce) finché il cavallo con la stella arriva al cancello. Poi rispondi alle domande del giostraio.</p>
+    ${aiutoHtml(2)}
+    <p class="cartello">Giostra · raggio ${R3} m · pavimento diviso in ${N3} settori uguali</p>
+    <div class="scena" style="max-width:420px;justify-self:center;width:100%">${svgGiostra()}</div>
+    ${fatto ? "" : `<div class="comandi" style="justify-content:center"><button class="btn piccolo" type="button" id="antiorario" aria-label="Gira di un settore in senso antiorario">↺ indietro</button><button class="btn piccolo" type="button" id="orario" aria-label="Gira di un settore in senso orario">avanti ↻</button></div>`}
+    <p class="stato-giostra" id="stato3" aria-live="polite"></p>
+    <div class="domande">
+      <label class="domanda${S.dom3.has("a") ? " sbagliata" : ""}">Ampiezza dell'angolo al centro che ha percorso il cavallo: α = <input type="text" inputmode="decimal" id="a3" value="${fatto ? ALFA3 : S.a3}"${fatto ? " disabled" : ""}> °</label>
+      <label class="domanda${S.dom3.has("l") ? " sbagliata" : ""}">Il cavallo è sul bordo: lunghezza dell'arco che ha percorso: l = <input type="text" inputmode="decimal" id="l3" value="${fatto ? ARCO3 : S.l3}"${fatto ? " disabled" : ""}> π m</label>
+      <label class="domanda${S.dom3.has("s") ? " sbagliata" : ""}">Area di un settore del pavimento: As = <input type="text" inputmode="decimal" id="s3" value="${fatto ? SETT3 : S.s3}"${fatto ? " disabled" : ""}> π m²</label>
+    </div>
+    ${fatto ? premioHtml(2, `A = ${R3 * R3}π m², diviso ${N3} settori = ${SETT3}π m². `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla3">Controlla la giostra</button><p class="esito" id="esito2"></p></div>`}`;
+  aggiornaGiostra(false);
+  if(fatto){ $("#stato3").textContent = "La giostra riparte con la musica!"; return; }
+  $("#orario").addEventListener("click", () => { avvia(); gira(TH3); });
+  $("#antiorario").addEventListener("click", () => { avvia(); gira(-TH3); });
+  ["a3", "l3", "s3"].forEach(id => $("#" + id).addEventListener("input", e => { avvia(); S[id] = e.target.value; }));
+  $("#controlla3").addEventListener("click", controlla3);
+  /* trascinare la giostra: l'angolo segue il dito, al rilascio scatta sul settore più vicino */
+  const svg = $("#giostra-svg");
+  const angolo = e => { const r = svg.getBoundingClientRect(), k = 340 / r.width; return Math.atan2((e.clientY - r.top) * k - GY, (e.clientX - r.left) * k - GX) * 180 / Math.PI; };
+  svg.addEventListener("pointerdown", e => {
+    if(e.button > 0) return;
+    avvia();
+    let prima = angolo(e), mosso = 0;
+    try { svg.setPointerCapture(e.pointerId); } catch {}
+    const muovi = ev => {
+      const ora = angolo(ev); let d = ora - prima; if(d > 180) d -= 360; if(d < -180) d += 360;
+      prima = ora; mosso += Math.abs(d); S.giro += d; S.totale += Math.abs(d);
+      aggiornaGiostra(false);
+      if(mosso > 8 && Math.floor((mosso - Math.abs(d)) / TH3) !== Math.floor(mosso / TH3)) suona("scatto");
+    };
+    const fine = () => {
+      svg.removeEventListener("pointermove", muovi); svg.removeEventListener("pointerup", fine); svg.removeEventListener("pointercancel", fine);
+      S.giro = Math.round(S.giro / TH3) * TH3; aggiornaGiostra(true);
+      if(alCancello()) suona("equilibrio");
+      if(S.totale >= 1080) segreto("giri", "Hai fatto girare la giostra di più di 1080°: sono 3 angoli giro! I cavalli hanno fatto 3 volte tutta la circonferenza.");
+    };
+    svg.addEventListener("pointermove", muovi); svg.addEventListener("pointerup", fine); svg.addEventListener("pointercancel", fine);
+  });
+}
+function controlla3(){
+  if(!alCancello()){ esito(2, "Prima porta il cavallo con la stella davanti al cancello.", "no"); suona("no"); return; }
+  if(![S.a3, S.l3, S.s3].every(v => String(v).trim())){ esito(2, "Rispondi a tutte e tre le domande.", "no"); suona("no"); return; }
+  S.dom3 = new Set();
+  if(numero(S.a3) !== ALFA3) S.dom3.add("a");
+  if(numero(S.l3) !== ARCO3) S.dom3.add("l");
+  if(numero(S.s3) !== SETT3) S.dom3.add("s");
+  if(S.dom3.size){
+    disegna3();
+    const msg = {a:"L'angolo non torna: quanti settori ha attraversato il cavallo? Ogni settore misura 360° : " + N3 + ".", l:"L'arco non torna: prima C = 2πr, poi l = α · C : 360°.", s:"L'area del settore non torna: prima l'area di tutta la giostra (πr²), poi dividi per il numero di settori."};
+    esito(2, [...S.dom3].map(k => msg[k]).join(" "), "no"); suona("no"); return;
+  }
+  risolvi(2);
+  setTimeout(() => suona("musica"), 300);
+}
+
+/* ===== il lucchetto ===== */
+function disegna4(){
+  const sez = $("#e4"), pronto = S.risolto.every(Boolean);
+  if(S.libero){
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta della cabina è aperta e il giostraio ti regala un giro gratis sulla ruota: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato gli elementi della circonferenza, π, la lunghezza della circonferenza, l'area del cerchio, gli archi e i settori circolari.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("cerchio")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    $("#ricomincia").addEventListener("click", () => location.reload());
+    $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("cerchio"));
+    return;
+  }
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
+    <h2 id="t4">La porta della cabina</h2>
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
+      <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
+      <output aria-label="Cifra ${i+1}">${v}</output>
+      <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
+    <p class="esito" id="esito3"></p></div></div>`;
+  sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
+    b.parentElement.querySelector("output").textContent = S.rotelle[i];
+  }));
+  $("#apri")?.addEventListener("click", () => {
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
+    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+  });
+}
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
+}
+
+function disegnaIndizi(){
+  $("#indizi").innerHTML = CODICE.map((c,i) => `<span class="cifra-mini${S.risolto[i] ? "" : " vuota"}" title="${INDIZI[i]}">${S.risolto[i] ? c : "?"}</span>`).join("");
+}
+function risolvi(i){
+  S.risolto[i] = true; suona("si");
+  annuncia(`Enigma ${i+1} risolto! La cifra numero ${i+1} è ${CODICE[i]}.`);
+  tutto();
+  const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
+  setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
+}
+function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-aiuto]"); if(!b) return;
+  const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
+  [disegna1, disegna2, disegna3][i]();
+});
+
+
+
+/* segreti: toccare 3 volte il mozzo della ruota, scrivere "archimede", mettere in fila 32 spicchi (oppure far girare la giostra di 3 giri) */
+const SEGRETI = 4;
+const PAROLE_SEGRETE = [["archimede", () => segreto("archimede", "Archimede di Siracusa, più di 2000 anni fa, scoprì che π sta tra 3 + 10/71 e 3 + 1/7 disegnando poligoni con 96 lati dentro e fuori dal cerchio!")]];
+tutto();
+aggiornaSuoni();
+</script>
+</body>
+</html>

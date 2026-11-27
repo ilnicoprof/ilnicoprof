@@ -261,8 +261,8 @@ h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker
 </div>
 
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
-<script src="trofei.js?v=5c1da07c"></script>
-<script src="oggetto-segreto.js?v=467a202f"></script>
+<script src="trofei.js?v=af126df0"></script>
+<script src="oggetto-segreto.js?v=3a8350fe"></script>
 <script>
 /* ===== dati ===== */
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
@@ -373,8 +373,12 @@ function pezzo(el, posa){
     avvia();
     const r = el.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
     let ombra = null, sopra = null;
+    document.querySelectorAll(".ombra").forEach(o => o.remove());   /* nessuna copia rimasta da un trascinamento precedente */
     try { el.setPointerCapture(e.pointerId); } catch {}
     const muovi = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      /* il rilascio del tasto è andato perso (mouse fuori dalla finestra, ctrl-clic...): poso il pezzo qui */
+      if(ev.pointerType === "mouse" && ev.buttons === 0){ fine({type:"pointerup", pointerId:e.pointerId, clientX:ev.clientX, clientY:ev.clientY}); return; }
       if(!ombra){
         if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
         deseleziona();
@@ -388,15 +392,18 @@ function pezzo(el, posa){
       if(z !== sopra){ sopra?.classList.remove("sopra"); z?.classList.add("sopra"); sopra = z; }
     };
     const fine = ev => {
-      el.removeEventListener("pointermove", muovi); el.removeEventListener("pointerup", fine); el.removeEventListener("pointercancel", fine);
+      if(ev.pointerId !== e.pointerId) return;
+      window.removeEventListener("pointermove", muovi); window.removeEventListener("pointerup", fine); window.removeEventListener("pointercancel", fine);
       if(!ombra) return;
       ombra.remove(); el.classList.remove("sollevato"); sopra?.classList.remove("sopra");
-      el.dataset.trascinato = "1";
+      el.dataset.trascinato = "1"; setTimeout(() => { delete el.dataset.trascinato; }, 400);   /* serve solo a ignorare il clic che segue il rilascio */
       const z = zonaSotto(ev.clientX, ev.clientY);
       if(z && ev.type === "pointerup") posa(el, z, ev.clientX, ev.clientY);
     };
-    el.addEventListener("pointermove", muovi); el.addEventListener("pointerup", fine); el.addEventListener("pointercancel", fine);
+    /* ascolto tutta la pagina: il rilascio arriva anche se il dito o il mouse non è più sopra il pezzo */
+    window.addEventListener("pointermove", muovi); window.addEventListener("pointerup", fine); window.addEventListener("pointercancel", fine);
   });
+  el.addEventListener("dragstart", ev => ev.preventDefault());
   el.addEventListener("click", e => {
     e.stopPropagation();
     if(el.dataset.trascinato){ delete el.dataset.trascinato; return; }

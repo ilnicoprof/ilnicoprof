@@ -7,10 +7,10 @@ const OggettoSegreto = (() => {
   const OGGETTI = ["diario", "barattolo", "scatola", "mappamondo"];
   /* ogni escape room ha il suo oggetto, legato alla sua storia; gli altri 4 restano per le escape room nuove */
   const PER_STANZA = {insiemi:"astuccio", naturali:"grattaevinci", relativi:"pacco", materia:"provetta", letterale:"attrezzi",
-                      elementi:"pergamena", misure:"orologio", segmenti:"biglietto", stati:"ghiaccio", trasforma:"torta"};
+                      elementi:"pergamena", misure:"orologio", segmenti:"biglietto", stati:"ghiaccio", trasforma:"torta", cerchio:"palloncino"};
   let scelto = OGGETTI[Math.floor(Math.random() * OGGETTI.length)];
   /* se la pagina non dice quale oggetto usare (per esempio una pagina vecchia rimasta in memoria nel browser), lo ricavo dal nome del file */
-  const DA_PAGINA = {insiemi:"insiemi", numeri:"naturali", relativi:"relativi", chimica:"materia", letterale:"letterale", elementi:"elementi", misure:"misure", segmenti:"segmenti", stati:"stati", trasforma:"trasforma"};
+  const DA_PAGINA = {insiemi:"insiemi", numeri:"naturali", relativi:"relativi", chimica:"materia", letterale:"letterale", elementi:"elementi", misure:"misure", segmenti:"segmenti", stati:"stati", trasforma:"trasforma", cerchio:"cerchio"};
   const daPagina = () => { const m = /^escape-([a-z]+)\.html$/.exec(location.pathname.split("/").pop()); return m ? DA_PAGINA[m[1]] : null; };
   const scegli = id => { const k = (id && PER_STANZA[id]) ? id : daPagina(); if(k && PER_STANZA[k]) scelto = PER_STANZA[k]; };
   let codice = null, trovato = false, idTrofeo = null;
@@ -33,11 +33,12 @@ const OggettoSegreto = (() => {
     orologio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="28" y="4" width="8" height="8" rx="2" fill="#E0B53A" stroke="#1E2A44" stroke-width="2"/><circle cx="32" cy="36" r="22" fill="#F5C542" stroke="#1E2A44" stroke-width="3"/><circle cx="32" cy="36" r="16" fill="#E0B53A" stroke="#1E2A44" stroke-width="1.5"/><path d="M24 30q8-6 16 0" fill="none" stroke="#FFF8EC" stroke-width="2"/></svg>',
     biglietto:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 20h52v8a4 4 0 0 0 0 8v8H6v-8a4 4 0 0 0 0-8z" fill="#FFF3B0" stroke="#1E2A44" stroke-width="3"/><path d="M14 28h22M14 34h16" stroke="#1E2A44" stroke-width="2.5"/><path d="M44 24v16" stroke="#1E2A44" stroke-width="2" stroke-dasharray="2 2"/></svg>',
     torta:'<svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="44" rx="26" ry="10" fill="#E0A065" stroke="#1E2A44" stroke-width="3"/><path d="M6 30v14M58 30v14" stroke="#1E2A44" stroke-width="3"/><ellipse cx="32" cy="30" rx="26" ry="10" fill="#F7C6D0" stroke="#1E2A44" stroke-width="3"/><circle cx="32" cy="26" r="4" fill="#E5534B" stroke="#1E2A44" stroke-width="1.5"/></svg>',
+    palloncino:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 44c-3 6 3 8 0 18" fill="none" stroke="#1E2A44" stroke-width="2"/><ellipse cx="32" cy="24" rx="17" ry="20" fill="#E5534B" stroke="#1E2A44" stroke-width="3"/><path d="M29 44h6l-3-4z" fill="#E5534B" stroke="#1E2A44" stroke-width="2"/><ellipse cx="25" cy="16" rx="4" ry="7" fill="#fff" opacity=".5"/></svg>',
     ghiaccio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="12" width="40" height="40" rx="8" fill="#DDF3FF" stroke="#1E2A44" stroke-width="3"/><path d="M18 18l10 0" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="24" y="28" width="18" height="12" fill="#FFF8EC" stroke="#1E2A44" stroke-width="1.5" opacity=".7"/></svg>'
   });
   const NOMI = {diario:"un vecchio diario", barattolo:"un barattolo", scatola:"una scatola misteriosa", mappamondo:"un piccolo mappamondo",
     astuccio:"un astuccio dimenticato", grattaevinci:"un gratta e vinci del supermercato", pacco:"il pacco del drone", provetta:"una provetta misteriosa",
-    attrezzi:"la cassetta degli attrezzi", pergamena:"una cartina arrotolata", orologio:"un vecchio orologio da taschino", biglietto:"un biglietto del treno", ghiaccio:"un cubetto di ghiaccio", torta:"una torta del pasticcere"};
+    attrezzi:"la cassetta degli attrezzi", pergamena:"una cartina arrotolata", orologio:"un vecchio orologio da taschino", biglietto:"un biglietto del treno", ghiaccio:"un cubetto di ghiaccio", torta:"una torta del pasticcere", palloncino:"un palloncino del luna park"};
   const ISTRUZIONI = {
     diario:"Sfoglia il diario pagina per pagina: da qualche parte qualcuno ha scritto il codice.",
     barattolo:"Dentro il barattolo c'è un bigliettino. Scuotilo forte (anche trascinandolo a destra e a sinistra) finché il tappo salta!",
@@ -52,6 +53,7 @@ const OggettoSegreto = (() => {
     orologio:"L'orologio è chiuso: carica la corona in alto toccandola, finché il coperchio scatta.",
     biglietto:"Prima di partire il biglietto va timbrato: trascinalo nella macchinetta obliteratrice (o usa il pulsante).",
     torta:"Dentro la torta il pasticcere ha nascosto una sorpresa: tagliala in fette (tocca il coltello o la torta) e cerca il bigliettino.",
+    palloncino:"Dentro il palloncino si vede un bigliettino arrotolato: gonfialo ancora (tocca il palloncino o la pompa) finché scoppia!",
     ghiaccio:"Dentro il cubetto c'è un bigliettino congelato: scaldalo strofinandoci sopra il dito (o con il pulsante) finché si scioglie."
   };
 
@@ -174,6 +176,17 @@ const OggettoSegreto = (() => {
 @keyframes os-taglia{to{stroke-dashoffset:0}}
 .os-fetta{transition:transform .8s cubic-bezier(.3,1.3,.5,1)}
 .os-fetta.fuori{transform:translate(60px,30px)}
+/* palloncino */
+.os-luna{position:relative;width:260px;height:250px;display:grid;place-items:center;touch-action:manipulation}
+.os-pall{cursor:pointer;transition:transform .35s cubic-bezier(.3,1.6,.5,1);transform-origin:50% 90%}
+.os-pall.trema{animation:os-trema .25s linear infinite}
+@keyframes os-trema{0%,100%{translate:0 0}25%{translate:-2px 1px}75%{translate:2px -1px}}
+.os-scoppio{position:absolute;inset:0;pointer-events:none}
+.os-pezzetto{position:absolute;left:50%;top:40%;width:12px;height:8px;border-radius:3px;background:#E5534B;border:1.5px solid #1E2A44;animation:os-vola .9s ease-out forwards}
+@keyframes os-vola{to{transform:translate(var(--dx),var(--dy)) rotate(var(--g));opacity:0}}
+.os-scende{position:absolute;left:50%;top:30%;padding:6px 10px;background:#FFF8EC;border:2px solid #1E2A44;border-radius:4px;color:#1E2A44;font-family:"Courier New",monospace;font-weight:700;font-size:1.1rem;transform:translateX(-50%);animation:os-plana 1.4s cubic-bezier(.3,1.2,.5,1) forwards}
+@keyframes os-plana{0%{transform:translate(-50%,-20px) rotate(-14deg) scale(.4);opacity:0}60%{transform:translate(-50%,40px) rotate(8deg)}100%{transform:translate(-50%,70px) rotate(-3deg) scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.os-pall.trema,.os-pezzetto,.os-scende{animation:none!important}.os-scende{transform:translate(-50%,70px)}.os-pezzetto{display:none}}
 @media (prefers-reduced-motion:reduce){.os-cade,.os-cade svg,.os-pag.gira,.os-vaso.scuoti,.os-cubo.gira,.os-bigliettino,.os-aperto,.os-trovato{animation:none!important}.os-tappo{transition:none}}
 `;
   let stile = false;
@@ -226,7 +239,7 @@ const OggettoSegreto = (() => {
       <div class="os-scena" id="os-scena"></div>
       <div class="os-riga" id="os-comandi"></div>
       <div id="os-premio" style="width:100%"></div></div>`;
-    ({diario, barattolo, scatola, mappamondo, astuccio, grattaevinci, pacco, provetta, attrezzi, pergamena, orologio, biglietto, ghiaccio, torta})[scelto]();
+    ({diario, barattolo, scatola, mappamondo, astuccio, grattaevinci, pacco, provetta, attrezzi, pergamena, orologio, biglietto, ghiaccio, torta, palloncino})[scelto]();
     if(trovato) mostraCodice();
   }
   function mostraCodice(){
@@ -622,6 +635,33 @@ const OggettoSegreto = (() => {
     disegna();
     comandi(`<button class="os-btn blu" type="button" id="os-coltello">Taglia una fetta</button><span class="os-nota" id="os-tagli">Tagli: 0 su 3</span>`);
     fin.querySelector("#os-coltello").addEventListener("click", taglia);
+  }
+
+  /* ---- il palloncino (Il luna park dopo la chiusura): si gonfia a ogni tocco e al quinto scoppia, il bigliettino plana giù ---- */
+  function palloncino(){
+    let soffi = 0;
+    const MAX = 5;
+    scena().innerHTML = `<div class="os-luna" id="os-luna"><svg viewBox="0 0 260 250" width="260" height="250" role="img" aria-label="Palloncino rosso con un bigliettino dentro">
+      <g id="os-pall-g" class="os-pall"><path d="M130 170c-8 18 10 30-2 76" fill="none" stroke="#1E2A44" stroke-width="2.5"/>
+        <ellipse cx="130" cy="110" rx="52" ry="60" fill="#E5534B" fill-opacity=".9" stroke="#1E2A44" stroke-width="4"/>
+        <path d="M122 170h16l-8-10z" fill="#E5534B" stroke="#1E2A44" stroke-width="3"/>
+        <rect x="114" y="104" width="32" height="12" rx="6" fill="#FFF8EC" fill-opacity=".6" stroke="#1E2A44" stroke-width="1.5" transform="rotate(-12 130 110)"/>
+        <ellipse cx="108" cy="82" rx="10" ry="18" fill="#fff" opacity=".45"/></g></svg></div>`;
+    const g = fin.querySelector("#os-pall-g"), luna = fin.querySelector("#os-luna");
+    const soffia = () => {
+      if(soffi >= MAX) return;
+      soffi++;
+      g.style.transform = `scale(${1 + soffi * .09})`;
+      fin.querySelector("#os-soffi").textContent = `Gonfiato: ${soffi} su ${MAX}`;
+      if(soffi === MAX - 1) g.classList.add("trema");
+      if(soffi < MAX){ suono("prendi"); return; }
+      suono("sblocco"); comandi("");
+      luna.innerHTML = `<div class="os-scoppio">${Array.from({length:14}, (_, i) => { const a = i / 14 * Math.PI * 2, d = 90 + (i % 3) * 25; return `<span class="os-pezzetto" style="--dx:${Math.round(Math.cos(a) * d)}px;--dy:${Math.round(Math.sin(a) * d)}px;--g:${i * 50}deg"></span>`; }).join("")}</div><span class="os-scende">${codice}</span>`;
+      setTimeout(mostraCodice, 1300);
+    };
+    g.addEventListener("click", soffia);
+    comandi(`<button class="os-btn blu" type="button" id="os-pompa">Gonfia con la pompa</button><span class="os-nota" id="os-soffi">Gonfiato: 0 su ${MAX}</span>`);
+    fin.querySelector("#os-pompa").addEventListener("click", soffia);
   }
 
   return {bottone, apri};

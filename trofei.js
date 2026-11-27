@@ -13,6 +13,7 @@ const TROFEI = [
   {id:"stati", nome:"La Goccia di Ghiaccio Eterno", gioco:"Il rifugio nella bufera", link:"escape-stati.html", argomento:"Gli stati di aggregazione della materia"},
   {id:"elementi", nome:"La Bussola delle Stelle", gioco:"La casetta del guardiaparco", link:"escape-elementi.html", argomento:"I primi elementi della geometria"},
   {id:"trasforma", nome:"L'Uovo della Fenice", gioco:"Il laboratorio della pasticceria", link:"escape-trasforma.html", argomento:"La materia si trasforma"},
+  {id:"cerchio", nome:"L'Anello dell'Uroboro", gioco:"Il luna park dopo la chiusura", link:"escape-cerchio.html", argomento:"Circonferenza e cerchio"},
   {id:"materia", nome:"Il Cristallo dell'Alchimista", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"Atomi, tavola periodica e legami"}
 ];
 
@@ -85,6 +86,7 @@ const COLORI_TROFEO = {
   segmenti: {oro:"#BFF0E6", oroScuro:"#2FB59B", linea:"#1E2A44", base:"#5A6A7A", extra:"#FFE066"},
   stati:    {oro:"#CDEFFF", oroScuro:"#5BB8F0", linea:"#1E2A44", base:"#7FA8C9", extra:"#FFFFFF"},
   trasforma:{oro:"#FFB36B", oroScuro:"#E5534B", linea:"#1E2A44", base:"#8A4A3A", extra:"#FFE066"},
+  cerchio:  {oro:"#9BE3C0", oroScuro:"#2F9E5B", linea:"#1E2A44", base:"#4A6A5A", extra:"#FFE066"},
   gran:     {oro:"#F5C542", oroScuro:"#D9A21B", linea:"#1E2A44", base:"#B98042", extra:"#E5534B"}
 };
 function svgTrofeo(id, colori){
@@ -153,6 +155,14 @@ function svgTrofeo(id, colori){
                <path d="M38 40l6 4 6-6 6 6 6-4" fill="none" stroke="${oroScuro}" stroke-width="2.5" stroke-linejoin="round"/>
                <ellipse cx="44" cy="34" rx="4" ry="6" fill="#FFFFFF" opacity=".55"/>
                ${scintilla(16, 22, 6)}${scintilla(84, 30, 5)}<path d="M50 68v6" stroke="${linea}" stroke-width="4"/>`,
+    /* l'anello dell'uroboro: il drago che si morde la coda e forma un cerchio perfetto, senza inizio né fine */
+    cerchio:  `<circle cx="50" cy="40" r="25" fill="none" stroke="${linea}" stroke-width="14"/><circle cx="50" cy="40" r="25" fill="none" stroke="${oro}" stroke-width="9"/>
+               <circle cx="50" cy="40" r="25" fill="none" stroke="${oroScuro}" stroke-width="3" stroke-dasharray="4 5"/>
+               <path d="M66 18l12-6-4 12z" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5" stroke-linejoin="round"/>
+               <path d="M60 14c8-2 14 4 13 10l-7 2c-2-4-4-6-8-6z" fill="${oro}" stroke="${linea}" stroke-width="2.5" stroke-linejoin="round"/>
+               <circle cx="66" cy="18" r="1.8" fill="${linea}"/>
+               <circle cx="50" cy="40" r="7" fill="${extra}" stroke="${linea}" stroke-width="2"/><text x="50" y="44" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="11" fill="${linea}">π</text>
+               ${scintilla(14, 18, 6)}${scintilla(86, 52, 5)}<path d="M50 65v9" stroke="${linea}" stroke-width="4"/>`,
     /* la corona del gran maestro: una gemma per ogni regno */
     gran:     `<path d="M18 58l-4-34 18 16 18-26 18 26 18-16-4 34z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
                <rect x="17" y="56" width="66" height="12" rx="3" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
