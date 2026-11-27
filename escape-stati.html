@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Il rifugio nella bufera</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" sizes="32x32" href="immagini/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="immagini/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="immagini/icon-192.png">
+<link rel="apple-touch-icon" href="immagini/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti del nicoprof; enigma 1 = la dispensa (i 3 stati), enigma 2 = il banco del cuoco
+   (miscugli e soluzioni, esperimento della saturazione), enigma 3 = i segreti dell'acqua, poi la porta */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300; --verde:#8EDDB4; --verde-ink:#0B4A2C;
+  --legno:#C9935A; --legno-scuro:#7A5428; --acqua:#8EC5F0; --ghiaccio:#E3F4FF; --sale:#FFFFFF; --particella:#5B8DEF;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --porta:#8A5A34; --porta-scura:#5A3A1E; --metallo:#D5DCE6;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+  --f-mono:"Courier New",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C;
+  --legno:#8A6236; --legno-scuro:#5A3E1E; --acqua:#3E7FB8; --ghiaccio:#24354F; --sale:#E8EEF7; --particella:#7FB0FF;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#6A4528; --porta-scura:#3E2714; --metallo:#5A6680;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C;
+  --legno:#8A6236; --legno-scuro:#5A3E1E; --acqua:#3E7FB8; --ghiaccio:#24354F; --sale:#E8EEF7; --particella:#7FB0FF;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#6A4528; --porta-scura:#3E2714; --metallo:#5A6680;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:820px;margin:0 auto;padding-block:20px 56px;display:grid;gap:20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap>*{min-width:0}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna svg{width:16px;height:16px}
+header{display:grid;gap:8px}
+.eyebrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:800;font-size:.85rem}
+.tag{font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.storia{margin:0;font-family:var(--f-hand);font-size:1.3rem;line-height:1.35;max-width:60ch}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.indizi{display:flex;gap:8px;flex-wrap:wrap}
+.cifra-mini{display:inline-grid;place-items:center;width:34px;height:40px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.cifra-mini.vuota{border-style:dashed;color:var(--ink-soft);background:transparent}
+
+.enigma{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px;display:grid;gap:14px;min-width:0}
+.enigma>*{min-width:0}
+.enigma.chiuso{box-shadow:none;border-style:dashed;border-color:var(--line);background:transparent}
+.enigma.risolto{border-color:var(--ok);box-shadow:5px 5px 0 var(--ok)}
+.e-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.e-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.1;display:flex;align-items:center;gap:10px}
+.e-head h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);font-size:1.1rem;flex:none}
+.enigma.chiuso h2{color:var(--ink-soft)}
+.enigma.chiuso .e-head h2 .n{background:transparent;color:var(--ink-soft);border-color:var(--line)}
+.consegna{margin:0;font-size:1.02rem;max-width:65ch}
+.consegna b{font-weight:800}
+.nota{margin:0;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+.esito{margin:0;min-height:1.5em;font-weight:800}
+.esito.si{color:var(--ok)} .esito.no{color:var(--errore)}
+.azioni{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+.btn.piccolo{font-size:.92rem;padding:5px 12px;box-shadow:2px 2px 0 var(--ink)}
+.aiuto{margin:0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--giallo) 30%,transparent);border:1.5px dashed var(--giallo-ink);font-family:var(--f-hand);font-size:1.15rem}
+.premio{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:var(--ok-bg);color:var(--ok);font-weight:800}
+.premio .cifra-mini{border-color:var(--ok);flex:none}
+
+/* pezzi che si spostano */
+.pezzo{all:unset;box-sizing:border-box;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-width:40px;height:40px;padding:0 10px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:1.1rem;box-shadow:0 3px 0 var(--ink);font-variant-numeric:tabular-nums}
+.pezzo:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pezzo.scelto{background:var(--marker);transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
+.pezzo.sollevato{opacity:.3}
+.pezzo.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+.ombra{position:fixed!important;z-index:50!important;pointer-events:none!important;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
+.scegli .zona{outline:2px dashed var(--accent);outline-offset:-2px}
+.zona.sopra{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
+.banco{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:58px;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
+.banco .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.1rem}
+.etichetta{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin:0 0 -6px}
+.display{font-family:var(--f-mono);font-weight:700;background:#16241A;color:#7CFFA0;padding:10px 14px;border-radius:10px;border:3px solid var(--ink);font-size:1.15rem;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 6px rgba(124,255,160,.5)}
+.display small{display:block;font-size:.75rem;color:#4FBF73;text-shadow:none}
+
+.c-verde{background:var(--verde);color:var(--verde-ink)}
+.e-head h2 .n{background:var(--verde);color:var(--verde-ink)}
+.neve{position:fixed;top:-10px;width:6px;height:6px;border-radius:50%;background:#FFFFFF;opacity:.85;pointer-events:none;z-index:-1;animation:nevica linear infinite;box-shadow:0 0 2px rgba(30,42,68,.4)}
+@keyframes nevica{to{transform:translate(40px,110vh)}}
+
+/* enigma 1: la dispensa */
+.stati3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.stati3{grid-template-columns:1fr}}
+.stato{position:relative;display:grid;align-content:start;gap:6px;min-height:200px;padding:8px;border-radius:12px;border:3px solid var(--legno-scuro);background:color-mix(in srgb,var(--legno) 20%,var(--card))}
+.stato h3{margin:0;font-family:var(--f-display);font-size:1.1rem}
+.stato small{font-size:.75rem;font-weight:700;color:var(--ink-soft);line-height:1.25}
+.stato .dentro{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.scatola{position:relative;width:130px;justify-self:center;height:56px;border-radius:8px;border:2px solid var(--ink);background:var(--card);overflow:hidden}
+.part{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--particella);border:1.5px solid var(--ink)}
+.solido .part{animation:vibra .25s ease-in-out infinite alternate}
+@keyframes vibra{to{transform:translate(1.5px,-1px)}}
+.liquido .part{animation:scivola 2.4s ease-in-out infinite alternate}
+@keyframes scivola{to{transform:translate(14px,2px)}}
+.aeriforme .part{animation:vola 1.8s linear infinite alternate}
+@keyframes vola{0%{transform:translate(0,0)}33%{transform:translate(40px,18px)}66%{transform:translate(-20px,30px)}100%{transform:translate(26px,-6px)}}
+.oggetto{flex-direction:column;height:auto;width:112px;padding:4px;gap:2px;border-radius:8px;font-family:var(--f-body);font-size:.74rem;font-weight:700;line-height:1.15;text-align:center}
+.oggetto svg{width:56px;height:44px}
+.oggetto.sbagliato{background:var(--errore-bg)}
+
+/* enigma 2: il banco del cuoco */
+.miscugli{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.miscugli{grid-template-columns:1fr}}
+.vass{display:grid;align-content:start;gap:6px;min-height:120px;padding:8px;border-radius:12px;border:2px solid var(--ink);background:var(--pill)}
+.vass h3{margin:0;font-family:var(--f-display);font-size:1.05rem}
+.vass small{font-size:.75rem;font-weight:700;color:var(--ink-soft)}
+.vass .dentro{display:flex;flex-wrap:wrap;gap:6px}
+.esperimento{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center;padding:12px;border-radius:12px;border:2px solid var(--ink);background:var(--card)}
+@media (max-width:560px){.esperimento{grid-template-columns:1fr;justify-items:center}}
+.esperimento svg{width:170px;height:200px}
+.granello{transition:transform .5s ease-in,opacity .6s ease .45s}
+.comandi-esp{display:grid;gap:8px}
+.opz{all:unset;box-sizing:border-box;cursor:pointer;padding:4px 12px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-weight:800}
+.opz[aria-pressed="true"]{background:var(--marker)}
+.opz:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opz:disabled{cursor:default}
+.riga-domanda{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:800}
+.riga-domanda.sbagliata .opz[aria-pressed="true"],.riga-domanda.sbagliata input{border-color:var(--errore);background:var(--errore-bg)}
+.riga-domanda input{width:64px;font:inherit;font-family:var(--f-mono);font-size:1.1rem;padding:4px 8px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+
+/* enigma 3: i segreti dell'acqua */
+.fenomeni{display:grid;gap:8px}
+.fenomeno{display:grid;gap:6px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--card)}
+.fenomeno p{margin:0;font-weight:700}
+.fenomeno.sbagliato{border-color:var(--errore);background:var(--errore-bg)}
+.fenomeno.giusto{border-color:var(--ok)}
+.proprieta{display:flex;flex-wrap:wrap;gap:6px}
+.legenda-acqua{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.85rem;font-weight:700;color:var(--ink-soft)}
+.molecole{display:grid;justify-items:center;padding:10px;border-radius:12px;border:2px solid var(--ink);background:var(--card)}
+.molecole svg{width:100%;max-width:420px;height:auto}
+.mol-b{transition:transform 1.2s cubic-bezier(.3,1.4,.5,1)}
+.legame{opacity:0;transition:opacity .5s ease 1.1s}
+.molecole.unite .mol-b{transform:translateX(-46px)}
+.molecole.unite .legame{opacity:1}
+.palloncino{all:unset;cursor:pointer;display:inline-grid}
+.palloncino svg{width:46px;height:80px;transition:transform 1.5s ease-in}
+.palloncino.vola svg{transform:translateY(-120vh)}
+.palloncino:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* il lucchetto */
+.porta{display:grid;gap:16px;justify-items:center;text-align:center;background:var(--porta);background-image:repeating-linear-gradient(90deg,transparent 0 46px,var(--porta-scura) 46px 48px);border:3px solid var(--ink);border-radius:18px 18px 6px 6px;padding:22px 14px;box-shadow:5px 5px 0 var(--ink);color:#FFF8EC}
+.porta h2{margin:0;font-family:var(--f-display);font-size:1.5rem}
+.porta.chiuso .lucchetto{opacity:.6}
+.lucchetto{display:flex;gap:10px;padding:16px 18px;border-radius:18px;background:var(--metallo);border:3px solid var(--ink);box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.rotella{display:grid;gap:4px;justify-items:center}
+.rotella button{all:unset;cursor:pointer;width:44px;height:28px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);font-weight:800}
+.rotella button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rotella button:disabled{cursor:default;opacity:.6}
+.rotella output{display:grid;place-items:center;width:52px;height:62px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:2.2rem;font-variant-numeric:tabular-nums}
+.porta .esito{color:#FFF8EC}
+.libero{display:grid;gap:10px;justify-items:center;text-align:center;padding:24px 16px;border-radius:18px;background:var(--ok-bg);border:3px solid var(--ok);color:var(--ink)}
+.libero b{font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--ok)}
+.libero p{margin:0;font-weight:700}
+
+.suoni{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+#segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
+#segreto b{font-family:var(--f-display);font-size:1.1rem}
+@keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
+@keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.scuoti{animation:scuoti .3s ease 2}
+@media (max-width:480px){.enigma{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.firma{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.1);font-family:var(--f-body);font-size:.75rem;color:var(--ink-soft);pointer-events:none}
+.firma img{width:30px;height:30px;border-radius:50%;background:#FFFFFF;border:1px solid var(--line);flex:none}
+.firma b{font-weight:800;color:var(--ink)}
+@media (max-width:480px){.firma{padding:3px}.firma span{display:none}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>ilnicoprof</a>
+  <header>
+    <div class="eyebrow"><span class="tag c-verde">Scienze</span> 1ª media · Gli stati di aggregazione della materia · escape room</div>
+    <h1>il rifugio nella <span class="hl">bufera</span></h1>
+    <p class="storia">Durante l'uscita sulla neve arriva una bufera: vi riparate nel rifugio, ma tu resti chiuso nella cucina e la porta ha un lucchetto con un codice di 3 cifre. Il rifugista ha lasciato tre prove sulla materia: risolvile per tornare al caldo con i compagni!</p>
+    <div class="barra">
+      <span class="pill" id="tempo">Tempo 00:00</span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
+      <div class="indizi" id="indizi" aria-label="Cifre trovate"></div>
+    </div>
+  </header>
+
+  <section class="enigma" id="e1" aria-labelledby="t1"></section>
+  <section class="enigma" id="e2" aria-labelledby="t2"></section>
+  <section class="enigma" id="e3" aria-labelledby="t3"></section>
+  <section id="e4" aria-labelledby="t4"></section>
+  <p class="sr" aria-live="polite" id="annuncio"></p>
+</div>
+
+<div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js?v=614d90f4"></script>
+<script src="oggetto-segreto.js?v=9c38c69a"></script>
+<script>
+/* ===== dati ===== */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mescola = a => { const b = [...a]; for(let i = b.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]] = [b[j],b[i]]; } return b; };
+const pesca = (a, n) => mescola(a).slice(0, n);
+
+/* enigma 1: le cose della cucina del rifugio (disegni 56 x 44) */
+const COSE = [
+  {id:"ghiaccio", s:"solido", t:"Il cubetto di ghiaccio", d:'<rect x="14" y="10" width="28" height="26" rx="4" fill="#E3F4FF" stroke="#1E2A44" stroke-width="2"/><path d="M19 15l8 0" stroke="#fff" stroke-width="3"/>'},
+  {id:"moneta", s:"solido", t:"La moneta della mancia", d:'<ellipse cx="28" cy="24" rx="16" ry="15" fill="#E0A065" stroke="#1E2A44" stroke-width="2"/><text x="28" y="29" text-anchor="middle" font-size="13" font-weight="800" font-family="sans-serif" fill="#1E2A44">1</text>'},
+  {id:"cucchiaio", s:"solido", t:"Il cucchiaio di legno", d:'<ellipse cx="16" cy="22" rx="9" ry="7" fill="#C9935A" stroke="#1E2A44" stroke-width="2"/><path d="M24 22h28" stroke="#C9935A" stroke-width="5" stroke-linecap="round"/><path d="M24 22h28" stroke="#1E2A44" stroke-width="1" stroke-linecap="round"/>'},
+  {id:"sasso", s:"solido", t:"Il sasso del sentiero", d:'<path d="M8 32c2-12 14-20 26-16s16 8 14 16-12 8-22 8-20-2-18-8z" fill="#AEB4BE" stroke="#1E2A44" stroke-width="2"/>'},
+  {id:"olio", s:"liquido", t:"L'olio nella bottiglia", d:'<path d="M23 4h10v8l6 6v22H17V18l6-6z" fill="#FFF3B0" stroke="#1E2A44" stroke-width="2"/><path d="M18 24h20v16H18z" fill="#E8C23A" opacity=".8"/>'},
+  {id:"latte", s:"liquido", t:"Il latte nella tazza", d:'<path d="M12 14h28v18a8 8 0 0 1-8 8H20a8 8 0 0 1-8-8z" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/><path d="M40 18h4a5 5 0 0 1 0 10h-4" fill="none" stroke="#1E2A44" stroke-width="2"/>'},
+  {id:"miele", s:"liquido", t:"Il miele nel vasetto", d:'<rect x="14" y="12" width="28" height="28" rx="5" fill="#F5B93C" stroke="#1E2A44" stroke-width="2"/><rect x="12" y="6" width="32" height="8" rx="2" fill="#C9935A" stroke="#1E2A44" stroke-width="2"/>'},
+  {id:"acqua", s:"liquido", t:"L'acqua del rubinetto", d:'<path d="M10 10h22v6H22v4" fill="none" stroke="#1E2A44" stroke-width="3"/><path d="M22 22q-4 8 0 10q4-2 0-10z" fill="#8EC5F0" stroke="#1E2A44" stroke-width="1.5"/><path d="M14 36h24" stroke="#8EC5F0" stroke-width="4" stroke-linecap="round"/>'},
+  {id:"vapore", s:"aeriforme", t:"Il vapore della pentola", d:'<path d="M10 26h36v12a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4z" fill="#AEB9CA" stroke="#1E2A44" stroke-width="2"/><path d="M20 22c-4-5 4-7 0-12M30 22c-4-5 4-7 0-12M40 22c-4-5 4-7 0-12" fill="none" stroke="#8EA2BC" stroke-width="2.5" stroke-linecap="round"/>'},
+  {id:"pallone", s:"aeriforme", t:"L'aria dentro il pallone", d:'<circle cx="28" cy="24" r="16" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2"/><path d="M28 8l6 10-6 6-6-6zM14 30l8-6 6 6-4 9M42 30l-8-6-6 6 4 9" fill="#1E2A44" opacity=".85"/>'},
+  {id:"elio", s:"aeriforme", t:"L'elio nel palloncino", d:'<ellipse cx="28" cy="18" rx="12" ry="14" fill="#E5534B" stroke="#1E2A44" stroke-width="2"/><path d="M28 32c-2 4 2 6 0 10" fill="none" stroke="#1E2A44" stroke-width="1.5"/>'},
+  {id:"gas", s:"aeriforme", t:"Il gas della bombola del fornello", d:'<rect x="16" y="10" width="24" height="32" rx="10" fill="#2F6FDE" stroke="#1E2A44" stroke-width="2"/><rect x="24" y="4" width="8" height="8" fill="#AEB4BE" stroke="#1E2A44" stroke-width="1.5"/><text x="28" y="31" text-anchor="middle" font-size="9" font-weight="800" font-family="sans-serif" fill="#fff">GAS</text>'}
+];
+const STATI = [
+  {k:"solido", nome:"Solido", descr:"forma propria e volume proprio: le particelle vibrano strette strette"},
+  {k:"liquido", nome:"Liquido", descr:"prende la forma del contenitore, ma ha un volume proprio"},
+  {k:"aeriforme", nome:"Aeriforme", descr:"niente forma e niente volume propri: occupa tutto lo spazio e si comprime"}
+];
+function scegliCose(){
+  const per = k => COSE.filter(c => c.s === k);
+  return mescola([...pesca(per("solido"), rnd(2, 3)), ...pesca(per("liquido"), rnd(2, 3)), ...pesca(per("aeriforme"), rnd(1, 3))]);
+}
+const COSE1 = scegliCose();
+const FLUIDI = COSE1.filter(c => c.s !== "solido").length;
+
+/* enigma 2: i miscugli del banco e l'esperimento del sale */
+const MISCUGLI = [
+  {t:"Acqua e sale", m:"omogeneo"}, {t:"Tè con lo zucchero", m:"omogeneo"}, {t:"Acqua e sciroppo di menta", m:"omogeneo"}, {t:"L'aria (azoto, ossigeno e altri gas)", m:"omogeneo"},
+  {t:"Acqua e olio", m:"eterogeneo"}, {t:"Acqua e sabbia", m:"eterogeneo"}, {t:"Il minestrone", m:"eterogeneo"}, {t:"Latte e cereali", m:"eterogeneo"}
+];
+const MISC2 = mescola([...pesca(MISCUGLI.filter(x => x.m === "omogeneo"), 3), ...pesca(MISCUGLI.filter(x => x.m === "eterogeneo"), 3)]);
+/* in 100 mL d'acqua si sciolgono circa 36 g di sale: un cucchiaino è circa 6 g */
+const ML = pesca([80, 100, 120], 1)[0];
+const SATURA = Math.round(ML * 0.36 / 6);
+
+/* enigma 3: i fenomeni dell'acqua visti nel rifugio */
+const PROP = [
+  {k:"tensione", nome:"Tensione superficiale"},
+  {k:"capillarita", nome:"Capillarità"},
+  {k:"ghiaccio", nome:"Il ghiaccio galleggia"},
+  {k:"solvente", nome:"L'acqua è un solvente"},
+  {k:"osmosi", nome:"Osmosi"}
+];
+const FENOMENI = [
+  {p:"tensione", t:"La graffetta appoggiata piano piano resta a galla sull'acqua del lavandino."},
+  {p:"tensione", t:"Nello stagno davanti al rifugio piccoli insetti camminano sull'acqua senza affondare."},
+  {p:"tensione", t:"Una goccia caduta sul tavolo resta tonda come una pallina."},
+  {p:"capillarita", t:"Il tovagliolo di carta tocca il tè versato e il tè risale su per la carta."},
+  {p:"capillarita", t:"Il gambo di sedano messo nell'acqua colorata si colora fino alle foglie."},
+  {p:"capillarita", t:"La zolletta toccata appena dal caffè si bagna tutta, dal basso verso l'alto."},
+  {p:"ghiaccio", t:"I cubetti nel succo restano a galla."},
+  {p:"ghiaccio", t:"D'inverno il laghetto gela solo in superficie e i pesci vivono sotto."},
+  {p:"solvente", t:"Il sale grosso buttato nella pentola della pasta sparisce."},
+  {p:"solvente", t:"Lo zucchero mescolato nella cioccolata calda non si vede più."},
+  {p:"osmosi", t:"Le prugne secche lasciate a bagno nell'acqua si gonfiano."},
+  {p:"osmosi", t:"L'insalata condita con tanto sale dopo un po' diventa molle e appassita."}
+];
+function scegliFenomeni(){
+  for(;;){
+    const f = pesca(FENOMENI, 6);
+    if(new Set(f.map(x => x.p)).size >= 4) return f;
+  }
+}
+const FEN3 = scegliFenomeni();
+const STELLA3 = pesca([...new Set(FEN3.map(x => x.p))], 1)[0];
+
+const CODICE = [FLUIDI, SATURA, FEN3.filter(f => f.p === STELLA3).length];
+const INDIZI = [
+  "Quante cose della dispensa sono fluidi (liquidi e aeriformi)?",
+  "Quanti cucchiaini di sale si sciolgono al massimo nel bicchiere?",
+  "Quanti fenomeni si spiegano con la proprietà con la stella?"
+];
+const AIUTI = [
+  "Il solido ha forma propria e volume proprio. Il liquido prende la forma del contenitore ma ha un volume proprio, anche se è denso come il miele. L'aeriforme non ha né forma né volume propri: occupa tutto lo spazio che trova. Liquidi e aeriformi insieme si chiamano fluidi.",
+  "In un miscuglio omogeneo non riesci a vedere i pezzi delle sostanze (acqua e sale); in uno eterogeneo sì (acqua e olio). Il solvente è quello che c'è di più, il soluto quello che c'è di meno. Aggiungi il sale un cucchiaino alla volta: quando il sale comincia a restare sul fondo la soluzione è satura, cioè non ne scioglie più.",
+  "Tensione superficiale: l'acqua in superficie fa come una pelle. Capillarità: l'acqua risale negli spazi strettissimi. Il ghiaccio è meno denso dell'acqua e galleggia. L'acqua scioglie tante sostanze: è un solvente. Osmosi: l'acqua passa verso dove c'è più roba sciolta."
+];
+
+const S = {
+  risolto:[false,false,false], aiuto:[false,false,false],
+  stato1: COSE1.map(() => null), sbagliate1:new Set(),
+  misc: MISC2.map(() => null), sbagliate2:new Set(), cucchiaini:0, nuovo:false, solvente:null, risp2:"", dom2:new Set(),
+  prop3: FEN3.map(() => null), sbagliati3:new Set(), unite:false,
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+};
+const $ = s => document.querySelector(s);
+const annuncia = t => { $("#annuncio").textContent = t; };
+
+/* ===== trascina oppure tocca-e-posa ===== */
+let scelto = null;
+function seleziona(el, posa){
+  if(scelto && scelto.el === el){ deseleziona(); return; }
+  deseleziona();
+  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli"); suona("prendi");
+  annuncia(`Hai preso ${el.getAttribute("aria-label") || el.textContent}. Ora tocca dove vuoi metterlo.`);
+}
+function deseleziona(){ if(scelto) scelto.el.classList.remove("scelto"); scelto = null; document.body.classList.remove("scegli"); }
+const zonaSotto = (x,y) => document.elementFromPoint(x,y)?.closest("[data-zona]");
+function pezzo(el, posa){
+  el.addEventListener("pointerdown", e => {
+    if(e.button > 0) return;
+    avvia();
+    const r = el.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
+    let ombra = null, sopra = null;
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    const muovi = ev => {
+      if(!ombra){
+        if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
+        deseleziona();
+        ombra = el.cloneNode(true); ombra.classList.add("ombra");
+        /* la copia che segue il dito resta sempre visibile, qualunque stile abbia il pezzo */
+        Object.assign(ombra.style, {position:"fixed", zIndex:"50", pointerEvents:"none", margin:"0", opacity:"1", visibility:"visible"}); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
+        document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
+      }
+      ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z !== sopra){ sopra?.classList.remove("sopra"); z?.classList.add("sopra"); sopra = z; }
+    };
+    const fine = ev => {
+      el.removeEventListener("pointermove", muovi); el.removeEventListener("pointerup", fine); el.removeEventListener("pointercancel", fine);
+      if(!ombra) return;
+      ombra.remove(); el.classList.remove("sollevato"); sopra?.classList.remove("sopra");
+      el.dataset.trascinato = "1";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z && ev.type === "pointerup") posa(el, z, ev.clientX, ev.clientY);
+    };
+    el.addEventListener("pointermove", muovi); el.addEventListener("pointerup", fine); el.addEventListener("pointercancel", fine);
+  });
+  el.addEventListener("click", e => {
+    e.stopPropagation();
+    if(el.dataset.trascinato){ delete el.dataset.trascinato; return; }
+    avvia(); seleziona(el, posa);
+  });
+}
+document.addEventListener("click", e => {
+  if(!scelto) return;
+  const z = e.target.closest("[data-zona]");
+  if(z){ const s = scelto; deseleziona(); s.posa(s.el, z, e.clientX, e.clientY); }
+  else if(!e.target.closest(".pezzo")) deseleziona();
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") deseleziona(); });
+
+/* ===== tempo e suoni ===== */
+function avvia(){ if(!S.inizio) S.inizio = Date.now(); }
+const mmss = ms => { const s = Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+setInterval(() => { $("#tempo").textContent = "Tempo " + mmss(S.inizio ? (S.fine || Date.now()) - S.inizio : 0); }, 500);
+let audio;
+let suoniOn = true; try { suoniOn = localStorage.getItem("nicoprof:suoni") !== "no"; } catch {}
+/* [frequenza, ritardo, durata, forma, volume] */
+const SUONI = {
+  si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25,"sawtooth",.07]], bip:[[880,0,.06,"triangle",.05]],
+  prendi:[[520,0,.05,"triangle",.08],[780,.04,.06,"triangle",.08]],
+  posa:[[300,0,.07,"triangle",.13],[200,.05,.09,"triangle",.11]],
+  sale:[[2600,0,.03,"square",.02],[3100,.05,.03,"square",.02],[2800,.1,.03,"square",.02],[700,.35,.12,"sine",.06]],
+  fondo:[[2600,0,.03,"square",.02],[3100,.05,.03,"square",.02],[160,.4,.15,"triangle",.12]],
+  versa:[[400,0,.4,"sawtooth",.02],[300,.2,.4,"sawtooth",.02]],
+  attira:[[392,0,.15],[523,.5,.15],[784,1.1,.3]],
+  segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[140,0,.5,"sawtooth",.035],[155,.25,.6,"sawtooth",.03]],
+  porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
+};
+function suona(tipo){
+  if(!suoniOn || !SUONI[tipo]) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    SUONI[tipo].forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
+  } catch {}
+}
+function aggiornaSuoni(){ const b = document.querySelector("#suoni"); if(b){ b.textContent = "Suoni: " + (suoniOn ? "sì" : "no"); b.setAttribute("aria-pressed", suoniOn); } }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#suoni")) return;
+  suoniOn = !suoniOn; try { localStorage.setItem("nicoprof:suoni", suoniOn ? "si" : "no"); } catch {}
+  aggiornaSuoni(); suona("bip");
+});
+
+/* ===== coriandoli per la vittoria ===== */
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--verde)", "var(--acqua)"];
+  for(let i = 0; i < 90; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.8 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4500);
+  }
+}
+
+/* ===== segreti nascosti ===== */
+const trovati = new Set();
+function segreto(id, testo){
+  if(trovati.has(id)) return;
+  trovati.add(id); suona("segreto");
+  let t = document.querySelector("#segreto");
+  if(!t){ t = document.createElement("div"); t.id = "segreto"; t.setAttribute("role", "status"); document.body.append(t); }
+  t.innerHTML = `<b>Segreto trovato! (${trovati.size} di ${SEGRETI})</b><span>${testo}</span>`;
+  t.hidden = false; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  clearTimeout(segreto.timer); segreto.timer = setTimeout(() => { t.hidden = true; }, 6500);
+}
+let digitate = "";
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea") || e.key.length !== 1) return;
+  digitate = (digitate + e.key.toLowerCase()).slice(-12);
+  PAROLE_SEGRETE.forEach(([parola, azione]) => { if(digitate.endsWith(parola)) azione(); });
+});
+const fraseSegreti = () => trovati.size === SEGRETI ? "Hai scoperto anche tutti i segreti nascosti!" : `Segreti nascosti trovati: ${trovati.size} su ${SEGRETI}. Gioca di nuovo per scoprirli tutti!`;
+
+/* ===== parti comuni ===== */
+function testa(i, titolo){
+  const chiuso = i > 0 && !S.risolto[i-1];
+  return `<div class="e-head"><h2 id="t${i+1}"><span class="n">${S.risolto[i] ? "✓" : i+1}</span>${titolo}</h2>
+    ${!chiuso && !S.risolto[i] ? `<button class="btn piccolo" type="button" data-aiuto="${i}">${S.aiuto[i] ? "Nascondi aiuto" : "Aiutino"}</button>` : ""}</div>`;
+}
+const chiusoHtml = i => `<p class="nota">Risolvi prima l'enigma ${i} per aprire questo.</p>`;
+const premioHtml = (i, extra = "") => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Cifra n. ${i+1} trovata! ${INDIZI[i]} ${extra}Risposta: ${CODICE[i]}.</span></div>`;
+const aiutoHtml = i => S.aiuto[i] ? `<p class="aiuto">${AIUTI[i]}</p>` : "";
+function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textContent = testo; el.className = "esito "+tipo; } }
+
+
+
+
+
+/* la neve che cade fuori dalla finestra */
+if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
+  for(let i = 0; i < 26; i++){ const n = document.createElement("span"); n.className = "neve"; n.style.left = Math.random() * 100 + "vw"; n.style.animationDuration = 8 + Math.random() * 10 + "s"; n.style.animationDelay = -Math.random() * 18 + "s"; const d = 3 + Math.random() * 5; n.style.width = n.style.height = d + "px"; document.body.prepend(n); }
+}
+
+/* ===== enigma 1: la dispensa ===== */
+function scatola(k){
+  const pos = {
+    solido: Array.from({length:21}, (_, i) => [20 + (i % 7) * 13, 4 + Math.floor(i / 7) * 13]),
+    liquido: Array.from({length:12}, (_, i) => [10 + (i % 6) * 18 + (Math.floor(i / 6) % 2) * 8, 24 + Math.floor(i / 6) * 13]),
+    aeriforme: [[10, 6], [62, 10], [30, 30], [90, 34], [108, 6]]
+  }[k];
+  return `<div class="scatola ${k}" aria-hidden="true">${pos.map(([x, y], i) => `<span class="part" style="left:${x}px;top:${y}px;animation-delay:${-i * .17}s"></span>`).join("")}${k === "liquido" ? '<span style="position:absolute;left:0;right:0;top:20px;border-top:2px dashed var(--acqua)"></span>' : ""}</div>`;
+}
+function disegna1(){
+  const sez = $("#e1"), fatto = S.risolto[0];
+  sez.className = "enigma" + (fatto ? " risolto" : "");
+  const cosa = i => `<button class="pezzo oggetto${S.sbagliate1.has(i) ? " sbagliato" : ""}" type="button" data-c="${i}" aria-label="${COSE1[i].t}"${fatto ? " disabled" : ""}><svg viewBox="0 0 56 44" aria-hidden="true">${COSE1[i].d}</svg>${COSE1[i].t}</button>`;
+  const fuori = COSE1.map((_, i) => i).filter(i => S.stato1[i] === null);
+  sez.innerHTML = testa(0, "La dispensa del rifugio") + `
+    <p class="consegna">Il rifugista ha messo in disordine la dispensa: <b>sistema ogni cosa nello scaffale del suo stato di aggregazione.</b> Guarda come si muovono le particelle in ogni scaffale!</p>
+    ${aiutoHtml(0)}
+    <div class="stati3">${STATI.map(s => `<div class="stato zona" data-zona="s-${s.k}" aria-label="Scaffale ${s.nome}"><h3>${s.nome}</h3>${scatola(s.k)}<small>${s.descr}</small><div class="dentro">${COSE1.map((_, i) => i).filter(i => S.stato1[i] === s.k).map(cosa).join("")}</div></div>`).join("")}</div>
+    ${fatto ? premioHtml(0, `I fluidi sono i liquidi e gli aeriformi: in dispensa ce ne sono ${FLUIDI}. `) : `
+    <p class="etichetta">Cose da sistemare</p>
+    <div class="banco zona" data-zona="banco1">${fuori.length ? fuori.map(cosa).join("") : '<span class="vuoto">Tutto in ordine? Ora controlla!</span>'}</div>
+    <div class="azioni"><button class="btn blu" type="button" id="controlla1">Controlla la dispensa</button><p class="esito" id="esito0"></p></div>`}`;
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa1));
+  $("#controlla1").addEventListener("click", controlla1);
+}
+function posa1(el, zona){
+  const i = +el.dataset.c, z = zona.dataset.zona;
+  if(z === "banco1") S.stato1[i] = null;
+  else if(z.startsWith("s-")) S.stato1[i] = z.slice(2);
+  else return;
+  S.sbagliate1.delete(i); suona("posa");
+  disegna1();
+}
+function controlla1(){
+  const fuori = S.stato1.filter(v => v === null).length;
+  if(fuori){ esito(0, `Mancano ancora ${fuori} ${fuori === 1 ? "cosa" : "cose"} da sistemare.`, "no"); suona("no"); return; }
+  S.sbagliate1 = new Set(COSE1.map((c, i) => S.stato1[i] === c.s ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliate1.size){
+    disegna1();
+    esito(0, S.sbagliate1.size === 1 ? "1 cosa è nello scaffale sbagliato: è colorata di rosso." : `${S.sbagliate1.size} cose sono negli scaffali sbagliati: sono colorate di rosso.`, "no"); suona("no"); return;
+  }
+  risolvi(0);
+}
+
+/* ===== enigma 2: il banco del cuoco ===== */
+function svgBicchiere(){
+  /* il sale sciolto non si vede; quello in più resta sul fondo */
+  const sciolti = Math.min(S.cucchiaini, SATURA), fondo = Math.max(0, S.cucchiaini - SATURA);
+  let mucchio = "";
+  for(let i = 0; i < fondo * 12; i++){ const x = 54 + (i * 37) % 62, y = 180 - Math.floor(i / 12) * 4 - (i % 3); mucchio += `<rect x="${x}" y="${y}" width="4" height="4" fill="var(--sale)" stroke="#1E2A44" stroke-width=".7"/>`; }
+  const nuovi = S.nuovo ? Array.from({length:7}, (_, i) => `<rect class="granello" x="${70 + i * 5}" y="14" width="4" height="4" fill="var(--sale)" stroke="#1E2A44" stroke-width=".7"/>`).join("") : "";
+  return `<svg viewBox="0 0 170 200" role="img" aria-label="Bicchiere con ${ML} mL d'acqua e ${S.cucchiaini} cucchiaini di sale">
+    <path d="M40 40l8 148h74l8-148" fill="none" stroke="#1E2A44" stroke-width="3"/>
+    <path d="M44 ${70}l6 116h70l6-116z" fill="var(--acqua)" opacity="${.45 + sciolti * .04}"/>
+    ${mucchio}<g id="granelli">${nuovi}</g>
+    <text x="85" y="62" text-anchor="middle" font-size="13" font-weight="800" font-family="Nunito, sans-serif" fill="#1E2A44">${ML} mL</text>
+    <path d="M100 10h46" stroke="#AEB4BE" stroke-width="5" stroke-linecap="round"/><ellipse cx="92" cy="12" rx="12" ry="6" fill="#D5DCE6" stroke="#1E2A44" stroke-width="1.5"/>
+  </svg>`;
+}
+function disegna2(){
+  const sez = $("#e2"), chiuso = !S.risolto[0], fatto = S.risolto[1];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(1, "Il banco del cuoco") + chiusoHtml(1); return; }
+  const card = i => `<button class="pezzo oggetto${S.sbagliate2.has(i) ? " sbagliato" : ""}" type="button" data-m="${i}" style="width:150px;padding:8px" aria-label="${MISC2[i].t}"${fatto ? " disabled" : ""}>${MISC2[i].t}</button>`;
+  const fuori = MISC2.map((_, i) => i).filter(i => S.misc[i] === null);
+  sez.innerHTML = testa(1, "Il banco del cuoco") + `
+    <p class="consegna">Il cuoco prepara la cena: <b>dividi i miscugli del banco in omogenei ed eterogenei</b>, poi fai l'esperimento del sale e rispondi alle domande.</p>
+    ${aiutoHtml(1)}
+    <div class="miscugli">
+      <div class="vass zona" data-zona="omogeneo"><h3>Omogenei</h3><small>non riesco a vedere i pezzi</small><div class="dentro">${MISC2.map((_, i) => i).filter(i => S.misc[i] === "omogeneo").map(card).join("")}</div></div>
+      <div class="vass zona" data-zona="eterogeneo"><h3>Eterogenei</h3><small>vedo i pezzi delle sostanze</small><div class="dentro">${MISC2.map((_, i) => i).filter(i => S.misc[i] === "eterogeneo").map(card).join("")}</div></div>
+    </div>
+    ${fatto ? "" : `<div class="banco zona" data-zona="banco2">${fuori.length ? fuori.map(card).join("") : '<span class="vuoto">Tutti i miscugli sono divisi.</span>'}</div>`}
+    <div class="esperimento">
+      <div id="bicchiere">${svgBicchiere()}</div>
+      <div class="comandi-esp">
+        <b>L'esperimento del sale</b>
+        <span>Nel bicchiere ci sono ${ML} mL d'acqua. Aggiungi il sale un cucchiaino alla volta e mescola: guarda quando smette di sciogliersi.</span>
+        <span>Cucchiaini messi: <b id="ncucchiaini">${S.cucchiaini}</b></span>
+        ${fatto ? "" : `<div class="azioni"><button class="btn piccolo" type="button" id="aggiungi">+ 1 cucchiaino di sale</button><button class="btn piccolo" type="button" id="svuota">Svuota il bicchiere</button></div>`}
+        <div class="riga-domanda${S.dom2.has("solvente") ? " sbagliata" : ""}">Il solvente è: ${["l'acqua", "il sale"].map(o => `<button class="opz" type="button" data-sv="${o}" aria-pressed="${(fatto ? "l'acqua" : S.solvente) === o}"${fatto ? " disabled" : ""}>${o}</button>`).join("")}</div>
+        <label class="riga-domanda${S.dom2.has("satura") ? " sbagliata" : ""}">Cucchiaini sciolti al massimo: <input type="text" inputmode="numeric" id="risp2" value="${fatto ? SATURA : S.risp2}"${fatto ? " disabled" : ""}></label>
+      </div>
+    </div>
+    ${fatto ? premioHtml(1, `Con ${ML} mL d'acqua la soluzione diventa satura dopo ${SATURA} cucchiaini. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla2">Controlla il banco</button><p class="esito" id="esito1"></p></div>`}`;
+  if(S.nuovo){ S.nuovo = false; requestAnimationFrame(() => requestAnimationFrame(() => {
+    const sciolto = S.cucchiaini <= SATURA;
+    document.querySelectorAll("#granelli .granello").forEach((g, i) => { g.style.transform = `translate(${(i - 3) * 3}px,${sciolto ? 120 : 150}px)`; if(sciolto) g.style.opacity = "0"; });
+  })); }
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa2));
+  $("#aggiungi").addEventListener("click", () => { avvia(); S.cucchiaini++; S.nuovo = true; suona(S.cucchiaini <= SATURA ? "sale" : "fondo"); disegna2(); });
+  $("#svuota").addEventListener("click", () => { S.cucchiaini = 0; suona("versa"); disegna2(); });
+  sez.querySelectorAll("[data-sv]").forEach(b => b.addEventListener("click", () => { S.solvente = b.dataset.sv; S.dom2.delete("solvente"); suona("bip"); disegna2(); }));
+  $("#risp2").addEventListener("input", e => { avvia(); S.risp2 = e.target.value; });
+  $("#controlla2").addEventListener("click", controlla2);
+}
+function posa2(el, zona){
+  const i = +el.dataset.m, z = zona.dataset.zona;
+  if(z === "banco2") S.misc[i] = null;
+  else if(z === "omogeneo" || z === "eterogeneo") S.misc[i] = z;
+  else return;
+  S.sbagliate2.delete(i); suona("posa");
+  disegna2();
+}
+function controlla2(){
+  const fuori = S.misc.filter(v => v === null).length;
+  if(fuori){ esito(1, `Mancano ancora ${fuori} ${fuori === 1 ? "miscuglio" : "miscugli"} da dividere.`, "no"); suona("no"); return; }
+  if(!S.solvente || !String(S.risp2).trim()){ esito(1, "Rispondi anche alle domande dell'esperimento.", "no"); suona("no"); return; }
+  S.sbagliate2 = new Set(MISC2.map((m, i) => S.misc[i] === m.m ? -1 : i).filter(i => i >= 0));
+  S.dom2 = new Set();
+  if(S.solvente !== "l'acqua") S.dom2.add("solvente");
+  if(+S.risp2 !== SATURA) S.dom2.add("satura");
+  if(S.sbagliate2.size || S.dom2.size){
+    disegna2();
+    const msg = S.sbagliate2.size ? `${S.sbagliate2.size === 1 ? "1 miscuglio è" : S.sbagliate2.size + " miscugli sono"} nella parte sbagliata.` : "";
+    esito(1, (msg + (S.dom2.has("satura") ? " Il numero di cucchiaini non torna: rifai l'esperimento e guarda quando il sale resta sul fondo." : "") + (S.dom2.has("solvente") ? " Il solvente è quello che c'è di più!" : "")).trim(), "no"); suona("no"); return;
+  }
+  risolvi(1);
+}
+
+/* ===== enigma 3: i segreti dell'acqua ===== */
+const SVG_MOLECOLA = (x, cls) => `<g class="${cls}"><circle cx="${x}" cy="70" r="26" fill="#E5534B" stroke="#1E2A44" stroke-width="2.5"/><text x="${x}" y="77" text-anchor="middle" font-size="20" font-weight="800" font-family="Baloo 2, sans-serif" fill="#fff">O</text>
+  <circle cx="${x - 26}" cy="100" r="15" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2.5"/><text x="${x - 26}" y="106" text-anchor="middle" font-size="15" font-weight="800" font-family="Baloo 2, sans-serif" fill="#1E2A44">H</text>
+  <circle cx="${x + 26}" cy="100" r="15" fill="#FFFFFF" stroke="#1E2A44" stroke-width="2.5"/><text x="${x + 26}" y="106" text-anchor="middle" font-size="15" font-weight="800" font-family="Baloo 2, sans-serif" fill="#1E2A44">H</text>
+  <text x="${x}" y="38" text-anchor="middle" font-size="18" font-weight="800" font-family="Nunito, sans-serif" fill="#2F6FDE">−</text><text x="${x - 26}" y="134" text-anchor="middle" font-size="16" font-weight="800" font-family="Nunito, sans-serif" fill="#E5534B">+</text><text x="${x + 26}" y="134" text-anchor="middle" font-size="16" font-weight="800" font-family="Nunito, sans-serif" fill="#E5534B">+</text></g>`;
+const SVG_PALLONCINO = '<svg viewBox="0 0 46 80" aria-hidden="true"><ellipse cx="23" cy="24" rx="18" ry="22" fill="#E5534B" stroke="#1E2A44" stroke-width="2"/><path d="M23 46l-3 4h6z" fill="#E5534B" stroke="#1E2A44" stroke-width="1.5"/><path d="M23 50c-4 8 4 14 0 28" fill="none" stroke="#1E2A44" stroke-width="1.5"/><ellipse cx="16" cy="15" rx="4" ry="6" fill="#fff" opacity=".5"/></svg>';
+function disegna3(){
+  const sez = $("#e3"), chiuso = !S.risolto[1], fatto = S.risolto[2];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(2, "I segreti dell'acqua") + chiusoHtml(2); return; }
+  sez.innerHTML = testa(2, "I segreti dell'acqua") + `
+    <div style="display:flex;gap:12px;align-items:center;justify-content:space-between"><p class="consegna">Sul quaderno del rifugista ci sono 6 cose strane osservate in rifugio: tutte succedono grazie alle proprietà speciali dell'acqua. <b>Per ogni osservazione scegli la proprietà che la spiega.</b></p>
+      <button class="palloncino" type="button" id="palloncino" aria-label="Il palloncino all'elio legato alla sedia">${SVG_PALLONCINO}</button></div>
+    ${aiutoHtml(2)}
+    <div class="legenda-acqua">La proprietà con la stella: <b>★ ${PROP.find(p => p.k === STELLA3).nome}</b></div>
+    <div class="fenomeni">${FEN3.map((f, i) => `<div class="fenomeno${S.sbagliati3.has(i) ? " sbagliato" : ""}${fatto ? " giusto" : ""}"><p>${i + 1}. ${f.t}</p>
+      <div class="proprieta" role="group" aria-label="Proprietà che spiega l'osservazione ${i + 1}">${PROP.map(p => `<button class="opz" type="button" data-f="${i}" data-p="${p.k}" aria-pressed="${(fatto ? f.p : S.prop3[i]) === p.k}"${fatto ? " disabled" : ""}>${p.k === STELLA3 ? "★ " : ""}${p.nome}</button>`).join("")}</div></div>`).join("")}</div>
+    ${fatto ? `<div class="molecole${S.unite ? " unite" : ""}" id="molecole"><svg viewBox="0 0 420 150" role="img" aria-label="Due molecole d'acqua che si attirano">${SVG_MOLECOLA(120, "mol-a")}${SVG_MOLECOLA(300, "mol-b")}<path class="legame" d="M146 100L218 70" stroke="#2F6FDE" stroke-width="3" stroke-dasharray="6 5"/><text class="legame" x="190" y="24" text-anchor="middle" font-size="14" font-weight="800" font-family="Nunito, sans-serif" fill="#2F6FDE">legame a idrogeno: il + attira il −</text></svg></div>` + premioHtml(2, `Con la ${PROP.find(p => p.k === STELLA3).nome.toLowerCase()} si spiegano ${CODICE[2]} ${CODICE[2] === 1 ? "osservazione" : "osservazioni"}. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla3">Controlla il quaderno</button><p class="esito" id="esito2"></p></div>`}`;
+  if(fatto){ if(!S.unite){ S.unite = true; requestAnimationFrame(() => requestAnimationFrame(() => { $("#molecole")?.classList.add("unite"); suona("attira"); })); } return; }
+  sez.querySelectorAll("[data-f]").forEach(b => b.addEventListener("click", () => {
+    avvia(); const i = +b.dataset.f; S.prop3[i] = b.dataset.p; S.sbagliati3.delete(i); suona("bip");
+    b.parentElement.querySelectorAll(".opz").forEach(x => x.setAttribute("aria-pressed", x === b));
+    b.closest(".fenomeno").classList.remove("sbagliato");
+  }));
+  $("#controlla3").addEventListener("click", controlla3);
+}
+function controlla3(){
+  const vuote = S.prop3.filter(v => v === null).length;
+  if(vuote){ esito(2, `Mancano ancora ${vuote} ${vuote === 1 ? "osservazione" : "osservazioni"}.`, "no"); suona("no"); return; }
+  S.sbagliati3 = new Set(FEN3.map((f, i) => S.prop3[i] === f.p ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliati3.size){
+    disegna3();
+    esito(2, S.sbagliati3.size === 1 ? "1 osservazione ha la proprietà sbagliata: è colorata di rosso." : `${S.sbagliati3.size} osservazioni hanno la proprietà sbagliata: sono colorate di rosso.`, "no"); suona("no"); return;
+  }
+  risolvi(2);
+}
+let tocchiPalloncino = 0;
+document.addEventListener("click", e => {
+  const p = e.target.closest("#palloncino"); if(!p) return;
+  suona("bip");
+  if(++tocchiPalloncino >= 3){ p.classList.add("vola"); segreto("elio", "Il palloncino è volato via! L'elio è un aeriforme più leggero dell'aria: per questo i palloncini salgono verso il soffitto."); }
+});
+
+/* ===== il lucchetto ===== */
+function disegna4(){
+  const sez = $("#e4"), pronto = S.risolto.every(Boolean);
+  if(S.libero){
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta della cucina è aperta e fuori ha smesso di nevicare: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato i 3 stati della materia e i fluidi, i miscugli omogenei ed eterogenei, le soluzioni sature e le proprietà speciali dell'acqua.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone()}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    $("#ricomincia").addEventListener("click", () => location.reload());
+    $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("stati"));
+    return;
+  }
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
+    <h2 id="t4">La porta della cucina</h2>
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
+      <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
+      <output aria-label="Cifra ${i+1}">${v}</output>
+      <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
+    <p class="esito" id="esito3"></p></div></div>`;
+  sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
+    b.parentElement.querySelector("output").textContent = S.rotelle[i];
+  }));
+  $("#apri")?.addEventListener("click", () => {
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
+    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+  });
+}
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
+}
+
+function disegnaIndizi(){
+  $("#indizi").innerHTML = CODICE.map((c,i) => `<span class="cifra-mini${S.risolto[i] ? "" : " vuota"}" title="${INDIZI[i]}">${S.risolto[i] ? c : "?"}</span>`).join("");
+}
+function risolvi(i){
+  S.risolto[i] = true; suona("si");
+  annuncia(`Enigma ${i+1} risolto! La cifra numero ${i+1} è ${CODICE[i]}.`);
+  tutto();
+  const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
+  setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
+}
+function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-aiuto]"); if(!b) return;
+  const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
+  [disegna1, disegna2, disegna3][i]();
+});
+
+
+/* segreti: far volare il palloncino all'elio, scrivere "neve", mettere 3 cucchiaini in più della saturazione */
+const SEGRETI = 3;
+const PAROLE_SEGRETE = [["neve", () => segreto("neve", "Ogni fiocco di neve ha sei punte: è fatto di cristalli di ghiaccio, cioè acqua allo stato solido!")]];
+document.addEventListener("click", e => { if(e.target.closest("#aggiungi") && S.cucchiaini >= SATURA + 3) segreto("mucchio", "Che montagna di sale sul fondo! Una soluzione satura non scioglie più niente: il sale in più resta lì, non importa quanto mescoli."); });
+tutto();
+aggiornaSuoni();
+</script>
+</body>
+</html>

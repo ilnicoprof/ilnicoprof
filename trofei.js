@@ -10,6 +10,7 @@ const TROFEI = [
   {id:"letterale", nome:"La Pergamena delle Rune", gioco:"Il cantiere bloccato", link:"escape-letterale.html", argomento:"Espressioni letterali e monomi"},
   {id:"misure", nome:"La Clessidra del Custode delle Misure", gioco:"La stazione meteo sul tetto", link:"escape-misure.html", argomento:"Metodo, grandezze e misure"},
   {id:"segmenti", nome:"La Locomotiva di Cristallo", gioco:"Il plastico ferroviario", link:"escape-segmenti.html", argomento:"I segmenti"},
+  {id:"stati", nome:"La Goccia di Ghiaccio Eterno", gioco:"Il rifugio nella bufera", link:"escape-stati.html", argomento:"Gli stati di aggregazione della materia"},
   {id:"elementi", nome:"La Bussola delle Stelle", gioco:"La casetta del guardiaparco", link:"escape-elementi.html", argomento:"I primi elementi della geometria"},
   {id:"materia", nome:"Il Cristallo dell'Alchimista", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"Atomi, tavola periodica e legami"}
 ];
@@ -81,6 +82,7 @@ const COLORI_TROFEO = {
   elementi: {oro:"#3A5A9E", oroScuro:"#D5DCE6", linea:"#1E2A44", base:"#4A5A7A", extra:"#FFE066"},
   misure:   {oro:"#D6F1FF", oroScuro:"#3FA9E0", linea:"#1E2A44", base:"#8A6A3E", extra:"#FFE066"},
   segmenti: {oro:"#BFF0E6", oroScuro:"#2FB59B", linea:"#1E2A44", base:"#5A6A7A", extra:"#FFE066"},
+  stati:    {oro:"#CDEFFF", oroScuro:"#5BB8F0", linea:"#1E2A44", base:"#7FA8C9", extra:"#FFFFFF"},
   gran:     {oro:"#F5C542", oroScuro:"#D9A21B", linea:"#1E2A44", base:"#B98042", extra:"#E5534B"}
 };
 function svgTrofeo(id, colori){
@@ -136,6 +138,13 @@ function svgTrofeo(id, colori){
                <path d="M62 36V22h8v14" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5"/><path d="M66 18c-6-6 2-10-4-14" fill="none" stroke="${oroScuro}" stroke-width="2.5" stroke-linecap="round"/>
                <circle cx="30" cy="58" r="6" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5"/><circle cx="56" cy="58" r="6" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5"/><circle cx="76" cy="58" r="5" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5"/>
                ${scintilla(14, 16, 5)}${scintilla(88, 24, 5)}<path d="M50 68v6" stroke="${linea}" stroke-width="4"/>`,
+    /* la goccia di ghiaccio eterno: metà ghiaccio, metà acqua, con un fiocco di neve dentro */
+    stati:    `<path d="M50 6C62 24 74 38 74 50a24 24 0 0 1-48 0C26 38 38 24 50 6z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
+               <path d="M27 54a23 23 0 0 0 46 0z" fill="${oroScuro}" opacity=".55"/>
+               <g stroke="${linea}" stroke-width="2" stroke-linecap="round"><path d="M50 34v24M40 40l20 12M60 40L40 52"/></g>
+               <g stroke="${extra}" stroke-width="1" stroke-linecap="round"><path d="M50 34v24M40 40l20 12M60 40L40 52"/></g>
+               <path d="M38 22c-4 6-6 12-6 18" fill="none" stroke="${extra}" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+               ${scintilla(16, 24, 6)}${scintilla(84, 40, 5)}<path d="M50 74v0" stroke="${linea}" stroke-width="4"/>`,
     /* la corona del gran maestro: una gemma per ogni regno */
     gran:     `<path d="M18 58l-4-34 18 16 18-26 18 26 18-16-4 34z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
                <rect x="17" y="56" width="66" height="12" rx="3" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
