@@ -7,10 +7,10 @@ const OggettoSegreto = (() => {
   const OGGETTI = ["diario", "barattolo", "scatola", "mappamondo"];
   /* ogni escape room ha il suo oggetto, legato alla sua storia; gli altri 4 restano per le escape room nuove */
   const PER_STANZA = {insiemi:"astuccio", naturali:"grattaevinci", relativi:"pacco", materia:"provetta", letterale:"attrezzi",
-                      elementi:"pergamena", misure:"orologio", segmenti:"biglietto", stati:"ghiaccio"};
+                      elementi:"pergamena", misure:"orologio", segmenti:"biglietto", stati:"ghiaccio", trasforma:"torta"};
   let scelto = OGGETTI[Math.floor(Math.random() * OGGETTI.length)];
   /* se la pagina non dice quale oggetto usare (per esempio una pagina vecchia rimasta in memoria nel browser), lo ricavo dal nome del file */
-  const DA_PAGINA = {insiemi:"insiemi", numeri:"naturali", relativi:"relativi", chimica:"materia", letterale:"letterale", elementi:"elementi", misure:"misure", segmenti:"segmenti", stati:"stati"};
+  const DA_PAGINA = {insiemi:"insiemi", numeri:"naturali", relativi:"relativi", chimica:"materia", letterale:"letterale", elementi:"elementi", misure:"misure", segmenti:"segmenti", stati:"stati", trasforma:"trasforma"};
   const daPagina = () => { const m = /^escape-([a-z]+)\.html$/.exec(location.pathname.split("/").pop()); return m ? DA_PAGINA[m[1]] : null; };
   const scegli = id => { const k = (id && PER_STANZA[id]) ? id : daPagina(); if(k && PER_STANZA[k]) scelto = PER_STANZA[k]; };
   let codice = null, trovato = false, idTrofeo = null;
@@ -32,11 +32,12 @@ const OggettoSegreto = (() => {
     pergamena:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="14" y="14" width="36" height="38" fill="#F2E1B6" stroke="#1E2A44" stroke-width="3"/><rect x="10" y="8" width="44" height="10" rx="5" fill="#C9A66B" stroke="#1E2A44" stroke-width="3"/><path d="M20 28l8 8 6-6 10 10" fill="none" stroke="#A8783E" stroke-width="2" stroke-dasharray="3 3"/><path d="M40 36l6 6M46 36l-6 6" stroke="#E5534B" stroke-width="2.5"/></svg>',
     orologio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="28" y="4" width="8" height="8" rx="2" fill="#E0B53A" stroke="#1E2A44" stroke-width="2"/><circle cx="32" cy="36" r="22" fill="#F5C542" stroke="#1E2A44" stroke-width="3"/><circle cx="32" cy="36" r="16" fill="#E0B53A" stroke="#1E2A44" stroke-width="1.5"/><path d="M24 30q8-6 16 0" fill="none" stroke="#FFF8EC" stroke-width="2"/></svg>',
     biglietto:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 20h52v8a4 4 0 0 0 0 8v8H6v-8a4 4 0 0 0 0-8z" fill="#FFF3B0" stroke="#1E2A44" stroke-width="3"/><path d="M14 28h22M14 34h16" stroke="#1E2A44" stroke-width="2.5"/><path d="M44 24v16" stroke="#1E2A44" stroke-width="2" stroke-dasharray="2 2"/></svg>',
+    torta:'<svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="44" rx="26" ry="10" fill="#E0A065" stroke="#1E2A44" stroke-width="3"/><path d="M6 30v14M58 30v14" stroke="#1E2A44" stroke-width="3"/><ellipse cx="32" cy="30" rx="26" ry="10" fill="#F7C6D0" stroke="#1E2A44" stroke-width="3"/><circle cx="32" cy="26" r="4" fill="#E5534B" stroke="#1E2A44" stroke-width="1.5"/></svg>',
     ghiaccio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="12" width="40" height="40" rx="8" fill="#DDF3FF" stroke="#1E2A44" stroke-width="3"/><path d="M18 18l10 0" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="24" y="28" width="18" height="12" fill="#FFF8EC" stroke="#1E2A44" stroke-width="1.5" opacity=".7"/></svg>'
   });
   const NOMI = {diario:"un vecchio diario", barattolo:"un barattolo", scatola:"una scatola misteriosa", mappamondo:"un piccolo mappamondo",
     astuccio:"un astuccio dimenticato", grattaevinci:"un gratta e vinci del supermercato", pacco:"il pacco del drone", provetta:"una provetta misteriosa",
-    attrezzi:"la cassetta degli attrezzi", pergamena:"una cartina arrotolata", orologio:"un vecchio orologio da taschino", biglietto:"un biglietto del treno", ghiaccio:"un cubetto di ghiaccio"};
+    attrezzi:"la cassetta degli attrezzi", pergamena:"una cartina arrotolata", orologio:"un vecchio orologio da taschino", biglietto:"un biglietto del treno", ghiaccio:"un cubetto di ghiaccio", torta:"una torta del pasticcere"};
   const ISTRUZIONI = {
     diario:"Sfoglia il diario pagina per pagina: da qualche parte qualcuno ha scritto il codice.",
     barattolo:"Dentro il barattolo c'è un bigliettino. Scuotilo forte (anche trascinandolo a destra e a sinistra) finché il tappo salta!",
@@ -50,6 +51,7 @@ const OggettoSegreto = (() => {
     pergamena:"La cartina è arrotolata: trascinala verso il basso (o usa il pulsante) per srotolarla e trova la X.",
     orologio:"L'orologio è chiuso: carica la corona in alto toccandola, finché il coperchio scatta.",
     biglietto:"Prima di partire il biglietto va timbrato: trascinalo nella macchinetta obliteratrice (o usa il pulsante).",
+    torta:"Dentro la torta il pasticcere ha nascosto una sorpresa: tagliala in fette (tocca il coltello o la torta) e cerca il bigliettino.",
     ghiaccio:"Dentro il cubetto c'è un bigliettino congelato: scaldalo strofinandoci sopra il dito (o con il pulsante) finché si scioglie."
   };
 
@@ -165,6 +167,13 @@ const OggettoSegreto = (() => {
 .os-cubetto{position:relative;display:grid;place-items:center;border-radius:22px;border:4px solid #1E2A44;background:linear-gradient(135deg,#F4FBFF,#BFE6FF);box-shadow:inset 8px 8px 0 rgba(255,255,255,.7);transition:width .4s ease,height .4s ease;cursor:pointer}
 .os-gelato{padding:6px 10px;background:#FFF8EC;border:2px solid #1E2A44;color:#1E2A44;font-family:var(--f-display);font-weight:800;font-size:1.2rem;letter-spacing:.08em;transition:filter .4s ease}
 .os-pozza{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);height:18px;border-radius:50%;background:#8EC5F0;opacity:.8;transition:width .4s ease}
+/* torta */
+.os-torta{width:260px;height:240px;cursor:pointer;touch-action:manipulation}
+.os-torta svg{width:100%;height:100%;overflow:visible}
+.os-taglio{stroke-dasharray:120;stroke-dashoffset:120;animation:os-taglia .4s ease forwards}
+@keyframes os-taglia{to{stroke-dashoffset:0}}
+.os-fetta{transition:transform .8s cubic-bezier(.3,1.3,.5,1)}
+.os-fetta.fuori{transform:translate(60px,30px)}
 @media (prefers-reduced-motion:reduce){.os-cade,.os-cade svg,.os-pag.gira,.os-vaso.scuoti,.os-cubo.gira,.os-bigliettino,.os-aperto,.os-trovato{animation:none!important}.os-tappo{transition:none}}
 `;
   let stile = false;
@@ -217,7 +226,7 @@ const OggettoSegreto = (() => {
       <div class="os-scena" id="os-scena"></div>
       <div class="os-riga" id="os-comandi"></div>
       <div id="os-premio" style="width:100%"></div></div>`;
-    ({diario, barattolo, scatola, mappamondo, astuccio, grattaevinci, pacco, provetta, attrezzi, pergamena, orologio, biglietto, ghiaccio})[scelto]();
+    ({diario, barattolo, scatola, mappamondo, astuccio, grattaevinci, pacco, provetta, attrezzi, pergamena, orologio, biglietto, ghiaccio, torta})[scelto]();
     if(trovato) mostraCodice();
   }
   function mostraCodice(){
@@ -579,6 +588,40 @@ const OggettoSegreto = (() => {
     cubo.addEventListener("pointerdown", e => { ultimo = [e.clientX, e.clientY]; try { cubo.setPointerCapture(e.pointerId); } catch {} });
     cubo.addEventListener("pointermove", e => { if(!ultimo) return; const d = Math.hypot(e.clientX - ultimo[0], e.clientY - ultimo[1]); ultimo = [e.clientX, e.clientY]; scalda(d / 1500); });
     cubo.addEventListener("pointerup", () => { ultimo = null; });
+  }
+
+
+  /* ---- la torta (Il laboratorio della pasticceria): si taglia a fette, nell'ultima c'è il bigliettino ---- */
+  function torta(){
+    let tagli = 0;
+    const A = [-30, 90, 210];
+    const raggio = (a, r) => [130 + r * Math.cos(a * Math.PI / 180), 120 + r * Math.sin(a * Math.PI / 180) * .55];
+    const disegna = () => {
+      const linee = A.slice(0, tagli).map((a, i) => { const [x, y] = raggio(a, 100); return `<line class="${i === tagli - 1 ? "os-taglio" : ""}" x1="130" y1="120" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#1E2A44" stroke-width="3"/>`; }).join("");
+      const [x1, y1] = raggio(-30, 100), [x2, y2] = raggio(90, 100);
+      const fetta = tagli >= 2 ? `<g class="os-fetta" id="os-fetta"><path d="M130 120L${x1.toFixed(1)} ${y1.toFixed(1)}A100 55 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}z" fill="#F7C6D0" stroke="#1E2A44" stroke-width="3"/>
+        ${tagli >= 3 ? `<rect x="150" y="128" width="78" height="24" rx="3" fill="#FFF8EC" stroke="#1E2A44" stroke-width="1.5" transform="rotate(-8 189 140)"/><text x="189" y="145" text-anchor="middle" font-family="Courier New, monospace" font-weight="700" font-size="13" fill="#1E2A44" transform="rotate(-8 189 140)">${codice}</text>` : ""}</g>` : "";
+      scena().innerHTML = `<div class="os-torta" id="os-torta" role="img" aria-label="Torta con ${tagli} tagli"><svg viewBox="0 0 260 240">
+        <ellipse cx="130" cy="160" rx="100" ry="55" fill="#E0A065" stroke="#1E2A44" stroke-width="4"/><path d="M30 120v40M230 120v40" stroke="#1E2A44" stroke-width="4"/>
+        <path d="M30 140q100 40 200 0" fill="none" stroke="#FFF3D6" stroke-width="6"/>
+        <ellipse cx="130" cy="120" rx="100" ry="55" fill="#F7C6D0" stroke="#1E2A44" stroke-width="4"/>
+        ${[[90, 100], [170, 100], [130, 145], [100, 135], [165, 140]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="#E5534B" stroke="#1E2A44" stroke-width="1.5"/>`).join("")}
+        ${linee}${fetta}
+        <path d="M210 20l-60 60" stroke="#AEB9CA" stroke-width="8" stroke-linecap="round"/><path d="M216 14l-10 10" stroke="#7A5428" stroke-width="10" stroke-linecap="round"/>
+      </svg></div>`;
+      fin.querySelector("#os-torta").addEventListener("click", taglia);
+      if(tagli >= 3){ requestAnimationFrame(() => requestAnimationFrame(() => fin.querySelector("#os-fetta")?.classList.add("fuori"))); setTimeout(mostraCodice, 900); }
+    };
+    const taglia = () => {
+      if(tagli >= 3) return;
+      tagli++; suono(tagli === 3 ? "sblocco" : "prendi");
+      fin.querySelector("#os-tagli").textContent = `Tagli: ${tagli} su 3`;
+      disegna();
+      if(tagli === 3) fin.querySelector("#os-coltello")?.remove();
+    };
+    disegna();
+    comandi(`<button class="os-btn blu" type="button" id="os-coltello">Taglia una fetta</button><span class="os-nota" id="os-tagli">Tagli: 0 su 3</span>`);
+    fin.querySelector("#os-coltello").addEventListener("click", taglia);
   }
 
   return {bottone, apri};
