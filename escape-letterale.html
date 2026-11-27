@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
 <style>
-/* Layout: il foglio a quadretti del nicoprof; enigma 1 = il container del capocantiere (metro a nastro e formule),
+/* Layout: il foglio a quadretti del nicoprof; enigma 1 = il container del capocantiere (disegno del progetto e formule),
    enigma 2 = il magazzino dei monomi (muletto e scaffali), enigma 3 = il quadro comandi della gru, poi il cancello */
 :root{
   --paper:#FBFCFF; --grid:#D9E4F2;
@@ -128,41 +128,35 @@ h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker
 .c-viola{background:var(--viola);color:var(--viola-ink)}
 .nascosto{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-/* enigma 1: il container del capocantiere */
+/* enigma 1: il container del capocantiere (disegno del progetto e tablet delle formule) */
 .container-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .casco{all:unset;cursor:pointer;display:inline-grid;place-items:center;width:58px;height:46px;border-radius:10px}
 .casco svg{width:56px;height:42px}
 .casco:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .casco.salta{animation:salta .35s ease}
 @keyframes salta{50%{transform:translateY(-10px) rotate(-8deg)}}
-.banco-lavoro{display:grid;gap:12px;padding:12px;border-radius:14px;background:var(--legno);border:3px solid var(--legno-scuro);box-shadow:inset 0 -6px 0 rgba(0,0,0,.12)}
-.postazione{position:relative;border-radius:10px;background:color-mix(in srgb,var(--card) 82%,var(--legno));border:2px solid var(--legno-scuro);overflow:hidden;touch-action:pan-y}
-.postazione .tit{position:absolute;right:8px;top:6px;font-weight:800;font-size:.8rem;color:var(--ink-soft);background:var(--card);padding:1px 8px;border-radius:999px;border:1.5px solid var(--line);z-index:3}
-.oggetto{position:absolute;border:2px solid var(--ink);border-radius:3px}
-.oggetto.piastrella{background:var(--piastrella);background-image:linear-gradient(135deg,rgba(255,255,255,.45) 0 18%,transparent 18%)}
-.oggetto.pannello{background:var(--legno);background-image:repeating-linear-gradient(90deg,transparent 0 9px,rgba(0,0,0,.08) 9px 11px)}
-.metro{position:absolute;z-index:2}
-.metro .nastro{position:absolute;left:0;top:0;background-color:var(--nastro);border:1.5px solid var(--ink);border-radius:2px}
-.metro.h .nastro{height:16px}
-.metro.v .nastro{width:16px}
-.metro .maniglia{all:unset;position:absolute;width:30px;height:30px;border-radius:8px;background:var(--cantiere);border:2px solid var(--ink);box-shadow:0 2px 0 var(--ink);cursor:grab;touch-action:none;display:grid;place-items:center;font-weight:800;font-size:.7rem;color:var(--ink)}
-.metro .maniglia:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.metro .maniglia.trascina{cursor:grabbing}
-.metro .lettura{position:absolute;white-space:nowrap;font-family:var(--f-mono);font-weight:700;font-size:.85rem;padding:1px 6px;border-radius:6px;background:var(--ink);color:var(--paper);pointer-events:none}
-.bancale{display:flex;align-items:flex-end;gap:4px;flex-wrap:wrap;padding:10px 12px 0;min-height:86px;position:relative}
-.bancale svg.sacco{width:44px;height:52px}
-.bancale .pallet{position:absolute;left:8px;right:8px;bottom:0;height:10px;background:var(--legno-scuro);border-radius:2px}
+.progetto{border-radius:12px;border:3px solid var(--ink);overflow:hidden;background:#1D4F91}
+.progetto svg{width:100%;height:auto;display:block}
+.progetto #bancale{cursor:pointer}
 .tablet{display:grid;gap:10px;padding:14px;border-radius:18px;background:var(--ink);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--cantiere-scuro)}
-.tablet .schermo{display:grid;gap:8px;padding:12px;border-radius:10px;background:var(--card)}
+.tablet .schermo{display:grid;gap:10px;padding:12px;border-radius:10px;background:var(--card)}
 .tablet h3{margin:0;font-family:var(--f-display);font-size:1.05rem}
-.formula-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding:6px 8px;border-radius:8px;background:var(--pill)}
-.formula-r .f{font-family:var(--f-mono);font-weight:700;font-size:1.1rem}
-.formula-r small{display:block;font-family:var(--f-body);font-weight:700;font-size:.78rem;color:var(--ink-soft)}
-.formula-r label{display:flex;align-items:center;gap:6px;font-weight:800}
-.formula-r input{width:96px;font:inherit;font-family:var(--f-mono);font-weight:700;font-size:1.1rem;padding:5px 8px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
-.formula-r.sbagliata{background:var(--errore-bg)}
-.formula-r.sbagliata input{border-color:var(--errore)}
-.formula-r.giusta input{border-color:var(--ok);background:var(--ok-bg)}
+.formula-r{display:grid;gap:6px;padding:8px 10px;border-radius:10px;background:var(--pill);border:2px solid transparent}
+.formula-r .nome{font-weight:700;font-size:.82rem;color:var(--ink-soft)}
+.formula-r .f{font-family:var(--f-mono);font-weight:700;font-size:1.15rem}
+.sost{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-family:var(--f-mono);font-weight:700;font-size:1.15rem}
+.lettera-slot{display:inline-grid;place-items:center;min-width:62px;min-height:44px;border-radius:9px;border:2px dashed var(--accent);background:var(--card);cursor:pointer}
+.lettera-slot::before{content:attr(data-l);font-family:var(--f-display);font-style:italic;font-weight:700;color:var(--accent);font-size:1.3rem}
+.lettera-slot.pieno{border-color:transparent;background:transparent}
+.lettera-slot.pieno::before{content:none}
+.sost input{width:100px;font:inherit;padding:5px 8px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+.sost input:disabled{opacity:1}
+.formula-r.sbagliata{background:var(--errore-bg);border-color:var(--errore)}
+.formula-r.giusta{background:var(--ok-bg);animation:verde .4s ease both;animation-delay:calc(var(--i) * .2s)}
+@keyframes verde{50%{transform:scale(1.02)}}
+.formula-r .f i{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:700;font-size:1.25rem}
+.lettera-slot::before{font-family:Georgia,"Times New Roman",serif!important}
+.pezzo.gettone{font-family:var(--f-mono);min-width:56px}
 
 /* enigma 2: il magazzino dei monomi */
 .magazzino{position:relative;display:grid;gap:8px;padding:12px 12px 70px;border-radius:14px;background:var(--cemento);border:3px solid var(--cemento-scuro)}
@@ -255,7 +249,7 @@ td.op .stella{color:var(--giallo);-webkit-text-stroke:1.2px var(--ink);margin-ri
   <header>
     <div class="eyebrow"><span class="tag c-viola">Algebra</span> 3ª media · Il calcolo letterale: espressioni letterali e monomi · escape room</div>
     <h1>il cantiere <span class="hl">bloccato</span></h1>
-    <p class="storia">Stai visitando il cantiere della nuova palestra della scuola quando scatta la chiusura automatica: il cancello è bloccato e il lucchetto ha un codice di 3 cifre. Usa il metro, le formule, il muletto e la gru del cantiere per trovarle!</p>
+    <p class="storia">Stai visitando il cantiere della nuova palestra della scuola quando scatta la chiusura automatica: il cancello è bloccato e il lucchetto ha un codice di 3 cifre. Usa il progetto, le formule, il muletto e la gru del cantiere per trovarle!</p>
     <div class="barra">
       <span class="pill" id="tempo">Tempo 00:00</span>
       <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
@@ -294,16 +288,19 @@ const grado = lett => lett.reduce((t, [, e]) => t + e, 0);
 const chiave = lett => lett.filter(([, e]) => e > 0).map(([l, e]) => l + e).join("");
 const coefCasuale = () => (rnd(0, 3) ? 1 : -1) * rnd(1, 9);
 
-/* enigma 1: le misure (in cm) e le formule del cantiere */
-const MAXCM = 130;
-const MISURE = {l: 5 * rnd(4, 9), b: 10 * rnd(6, 11), h: 5 * rnd(5, 10)};
+/* enigma 1: le misure del progetto (in cm), i sacchi da contare e le formule del cantiere */
+let MISURE;
+do { MISURE = {l: 5 * rnd(4, 9), b: 10 * rnd(6, 11), h: 5 * rnd(5, 10)}; } while(new Set(Object.values(MISURE)).size < 3);
 const SACCHI = rnd(3, 8);
 const PREZZO = pesca([7, 8, 9, 12], 1)[0], FISSO = pesca([10, 15, 20], 1)[0];
+const VALORI_LETTERE = {...MISURE, n: SACCHI};
 const FORMULE = [
-  {k:"p", nome:"Perimetro della piastrella quadrata", f:"p = 4l", u:"cm", val: 4 * MISURE.l},
-  {k:"A", nome:"Area del pannello di legno", f:"A = b · h", u:"cm²", val: MISURE.b * MISURE.h},
-  {k:"C", nome:`Costo dei sacchi di cemento (${PREZZO} € a sacco + ${FISSO} € di consegna)`, f:`C = ${PREZZO}n + ${FISSO}`, u:"€", val: PREZZO * SACCHI + FISSO}
+  {k:"p", nome:"Perimetro della piastrella quadrata", f:"p = 4<i>l</i>", parti:["p = 4 · ", {s:"l"}], u:"cm", val: 4 * MISURE.l},
+  {k:"A", nome:"Area del pannello di legno", f:"A = <i>b</i> · <i>h</i>", parti:["A = ", {s:"b"}, " · ", {s:"h"}], u:"cm²", val: MISURE.b * MISURE.h},
+  {k:"C", nome:`Costo del cemento: ${PREZZO} € a sacco + ${FISSO} € di consegna`, f:`C = ${PREZZO}<i>n</i> + ${FISSO}`, parti:[`C = ${PREZZO} · `, {s:"n"}, ` + ${FISSO}`], u:"€", val: PREZZO * SACCHI + FISSO}
 ];
+/* i numeri da sostituire: le misure del disegno e, per n, il numero giusto di sacchi insieme a due numeri vicini */
+const GETTONI = mescola([MISURE.l, MISURE.b, MISURE.h, SACCHI - 1, SACCHI, SACCHI + 1]);
 
 /* enigma 2: tre scaffali con parti letterali che si somigliano, e le casse con i monomi */
 const TERNE = [
@@ -372,14 +369,14 @@ const INDIZI = [
   "Qual è l'esponente nel risultato dell'operazione con la stella?"
 ];
 const AIUTI = [
-  "Misura trascinando la maniglia gialla del metro fino alla fine dell'oggetto (puoi anche toccarla e usare le frecce della tastiera). Poi sostituisci le lettere con i numeri: in p = 4l al posto di l metti la misura del lato. Per il cemento conta i sacchi sul bancale: sono il numero n, e 9n vuol dire 9 · n.",
+  "Guarda il disegno del progetto: le quote dicono quanto vale ogni lettera (l, b, h). Per n conta i sacchi sul bancale. Trascina ogni numero sulla sua lettera nella formula, poi fai il calcolo: 4l vuol dire 4 · l, e nel costo prima fai la moltiplicazione e poi l'addizione.",
   "Due monomi sono simili se hanno la stessa parte letterale: stesse lettere con gli stessi esponenti. L'ordine delle lettere non conta (ab = ba) e nemmeno il coefficiente. Se su una cassa c'è un prodotto, prima moltiplica i coefficienti e, per ogni lettera, somma gli esponenti. Il grado è la somma degli esponenti delle lettere.",
   "Somma: solo tra simili, sommi i coefficienti e la parte letterale resta uguale (3m + 2m = 5m). Prodotto: sommi gli esponenti (a² · a³ = a⁵). Quoziente: li sottrai (a⁵ : a² = a³). Potenza: li moltiplichi ((a²)³ = a⁶). Occhio ai segni dei coefficienti!"
 ];
 
 const S = {
   risolto:[false,false,false], aiuto:[false,false,false],
-  metro:{l:0, b:0, h:0}, risposte:{p:"", A:"", C:""}, sbagliate1:new Set(),
+  sost:{l:null, b:null, h:null, n:null}, risposte:{p:"", A:"", C:""}, sbagliate1:new Set(), slotSbagliati:new Set(),
   posto2: MAG.casse.map(() => null), sbagliate2:new Set(), muletto:1, mulettoPrima:1,
   slot3: GRU.ops.map(() => null), sbagliate3:new Set(), gruAlzata:false,
   rotelle:[0,0,0], libero:false, inizio:null, fine:null
@@ -528,113 +525,101 @@ function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textConte
 
 /* ===== enigma 1: il container del capocantiere ===== */
 const SVG_CASCO = '<svg viewBox="0 0 56 42" aria-hidden="true"><path d="M6 32a22 22 0 0144 0z" fill="var(--cantiere)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/><path d="M24 10h8v22h-8z" fill="var(--cantiere-scuro)" stroke="var(--ink)" stroke-width="2"/><rect x="2" y="31" width="52" height="7" rx="3" fill="var(--cantiere)" stroke="var(--ink)" stroke-width="2.5"/></svg>';
-const SVG_SACCO = '<svg class="sacco" viewBox="0 0 44 52" aria-hidden="true"><path d="M6 8q16-6 32 0l3 38q-19 6-38 0z" fill="var(--sacco)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><rect x="11" y="20" width="22" height="12" rx="2" fill="var(--card)" stroke="var(--ink)" stroke-width="1.5"/><path d="M15 25h14M15 28h9" stroke="var(--ink)" stroke-width="1.3"/></svg>';
-/* le postazioni del banco da lavoro: misure in cm, con la posizione dell'oggetto e dei metri */
-const POST = [
-  {id:"post-l", tit:"Piastrella quadrata", alt: () => MISURE.l + 22,
-   oggetti: () => [{cls:"piastrella", x:6, y:4, w:MISURE.l, h:MISURE.l}],
-   metri: [{k:"l", o:"h", x:6, y: () => MISURE.l + 9}]},
-  {id:"post-bh", tit:"Pannello di legno", alt: () => MISURE.h + 22,
-   oggetti: () => [{cls:"pannello", x:14, y:4, w:MISURE.b, h:MISURE.h}],
-   metri: [{k:"b", o:"h", x:14, y: () => MISURE.h + 9}, {k:"h", o:"v", x:5, y: () => 4}]}
-];
+/* il disegno tecnico: carta blu, linee bianche, quote con le frecce (colori fissi, come una vera copia del progetto) */
+function svgProgetto(){
+  const B = "#FFFFFF", T = 'font-family="Nunito, Arial, sans-serif" font-weight="800" fill="#FFFFFF"', L = x => `<tspan font-family="Georgia, Times New Roman, serif" font-style="italic">${x}</tspan>`;
+  const quota = (x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${B}" stroke-width="1.8" marker-start="url(#fr)" marker-end="url(#fr)"/>`;
+  let sacchi = "";
+  for(let i = 0; i < SACCHI; i++){
+    const c = i % 2, r = Math.floor(i / 2), x = 520 + c * 46, y = 176 - r * 34;
+    sacchi += `<path d="M${x} ${y}q19-5 38 0l2 28q-21 5-42 0z" fill="none" stroke="${B}" stroke-width="2"/><path d="M${x + 10} ${y + 12}h20" stroke="${B}" stroke-width="1.5"/>`;
+  }
+  return `<svg viewBox="0 0 640 260" role="img" aria-label="Disegno del progetto: piastrella con lato l = ${MISURE.l} cm, pannello con base b = ${MISURE.b} cm e altezza h = ${MISURE.h} cm, bancale con ${SACCHI} sacchi di cemento">
+    <defs><marker id="fr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${B}"/></marker>
+      <pattern id="griglia" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#FFFFFF" stroke-opacity=".12"/></pattern>
+      <pattern id="tratteggio" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V10" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="2"/></pattern></defs>
+    <rect width="640" height="260" fill="url(#griglia)"/>
+    <text x="16" y="24" ${T} font-size="13" opacity=".8">PROGETTO · NUOVA PALESTRA · TAV. 3</text>
+    <rect x="30" y="50" width="120" height="120" fill="none" stroke="${B}" stroke-width="2.5"/><path d="M30 110h120M90 50v120" stroke="${B}" stroke-opacity=".3"/>
+    ${quota(30, 192, 150, 192)}<text x="90" y="218" text-anchor="middle" ${T} font-size="18">${L("l")} = ${MISURE.l} cm</text>
+    <text x="90" y="44" text-anchor="middle" ${T} font-size="12" opacity=".8">piastrella</text>
+    <rect x="200" y="50" width="230" height="120" fill="url(#tratteggio)" stroke="${B}" stroke-width="2.5"/>
+    ${quota(200, 192, 430, 192)}<text x="315" y="218" text-anchor="middle" ${T} font-size="18">${L("b")} = ${MISURE.b} cm</text>
+    ${quota(450, 50, 450, 170)}<text x="470" y="110" ${T} font-size="18" transform="rotate(-90 470 110)" text-anchor="middle" dy="18">${L("h")} = ${MISURE.h} cm</text>
+    <text x="315" y="44" text-anchor="middle" ${T} font-size="12" opacity=".8">pannello di legno</text>
+    <g id="bancale" role="button" aria-label="Il bancale con i sacchi">${sacchi}<rect x="512" y="208" width="104" height="10" fill="none" stroke="${B}" stroke-width="2"/>
+      <text x="564" y="240" text-anchor="middle" ${T} font-size="16">${L("n")} = ?</text></g>
+    <text x="564" y="44" text-anchor="middle" ${T} font-size="12" opacity=".8">sacchi di cemento</text>
+  </svg>`;
+}
 function disegna1(){
   const sez = $("#e1"), fatto = S.risolto[0];
   sez.className = "enigma" + (fatto ? " risolto" : "");
-  if(fatto) Object.assign(S.metro, {l:MISURE.l, b:MISURE.b, h:MISURE.h});
+  const gettone = (g, lettera) => `<button class="pezzo gettone${lettera && S.slotSbagliati.has(lettera) ? " sbagliato" : ""}" type="button" data-g="${g}" aria-label="${GETTONI[g]}"${fatto ? " disabled" : ""}>${GETTONI[g]}</button>`;
+  const usati = new Set(Object.values(S.sost).filter(v => v !== null));
   sez.innerHTML = testa(0, "Il container del capocantiere") + `
-    <div class="container-top"><p class="consegna">Sul tablet del capocantiere ci sono tre formule. <b>Misura gli oggetti con il metro a nastro</b>, conta i sacchi di cemento, <b>sostituisci le lettere con le misure</b> e calcola il valore di ogni formula.</p>
+    <div class="container-top"><p class="consegna">Sulla scrivania c'è il disegno del progetto con le misure. <b>Trascina ogni numero al posto della sua lettera</b> nelle formule del tablet (per n conta i sacchi!), poi <b>calcola il valore</b> di ogni formula.</p>
       <button class="casco" type="button" id="casco" aria-label="Il casco giallo del capocantiere">${SVG_CASCO}</button></div>
     ${aiutoHtml(0)}
-    <div class="banco-lavoro">
-      ${POST.map(p => `<div class="postazione" id="${p.id}"><span class="tit">${p.tit}</span>
-        ${p.oggetti().map(o => `<div class="oggetto ${o.cls}" data-o='${JSON.stringify(o)}'></div>`).join("")}
-        ${p.metri.map(m => `<div class="metro ${m.o}" data-k="${m.k}"><div class="nastro"></div><button class="maniglia" type="button" aria-label="Metro: ${m.k === "l" ? "lato della piastrella" : m.k === "b" ? "base del pannello" : "altezza del pannello"}"${fatto ? " disabled" : ""}>▸</button><span class="lettura"></span></div>`).join("")}
-      </div>`).join("")}
-      <div class="postazione"><span class="tit">Sacchi di cemento</span><div class="bancale" aria-label="Bancale con i sacchi di cemento">${SVG_SACCO.repeat(SACCHI)}<span class="pallet"></span></div></div>
-    </div>
+    <div class="progetto">${svgProgetto()}</div>
     <div class="tablet"><div class="schermo"><h3>Tablet del capocantiere · Formule</h3>
-      ${FORMULE.map((f, i) => `<div class="formula-r${S.sbagliate1.has(i) ? " sbagliata" : ""}${fatto ? " giusta" : ""}"><span><small>${f.nome}</small><span class="f">${f.f}</span></span>
-        <label>${f.k} = <input type="text" inputmode="numeric" autocomplete="off" data-r="${f.k}" value="${fatto ? f.val : S.risposte[f.k]}" aria-label="${f.nome}"${fatto ? " disabled" : ""}> ${f.u}</label></div>`).join("")}
+      ${FORMULE.map((f, i) => `<div class="formula-r${S.sbagliate1.has(i) ? " sbagliata" : ""}${fatto ? " giusta" : ""}" style="--i:${i}">
+        <span class="nome">${f.nome} · <span class="f">${f.f}</span></span>
+        <span class="sost">${f.parti.map(x => typeof x === "string" ? `<span>${x.replace(/ /g, "&nbsp;")}</span>` :
+          `<span class="lettera-slot zona${S.sost[x.s] !== null ? " pieno" : ""}" data-zona="l-${x.s}" data-l="${x.s}" aria-label="Lettera ${x.s}">${S.sost[x.s] !== null ? gettone(S.sost[x.s], x.s) : ""}</span>`).join("")}
+          <span>&nbsp;=&nbsp;</span><input type="text" inputmode="numeric" autocomplete="off" data-r="${f.k}" value="${fatto ? f.val : S.risposte[f.k]}" aria-label="Risultato: ${f.nome}"${fatto ? " disabled" : ""}><span>${f.u}</span></span></div>`).join("")}
     </div></div>
     ${fatto ? premioHtml(0, `Con ${SACCHI} sacchi: C = ${PREZZO} · ${SACCHI} + ${FISSO} = ${FORMULE[2].val} €. `) : `
+    <p class="etichetta">Numeri da sostituire</p>
+    <div class="banco zona" data-zona="banco1">${GETTONI.map((_, g) => usati.has(g) ? "" : gettone(g, null)).join("")}</div>
     <div class="azioni"><button class="btn blu" type="button" id="controlla1">Calcola sul tablet</button><p class="esito" id="esito0"></p></div>`}`;
-  requestAnimationFrame(disponi1);
   if(fatto) return;
   sez.querySelectorAll("input[data-r]").forEach(inp => inp.addEventListener("input", () => { avvia(); S.risposte[inp.dataset.r] = inp.value; }));
-  sez.querySelectorAll(".metro").forEach(attivaMetro);
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa1));
   $("#controlla1").addEventListener("click", controlla1);
 }
-/* sistema oggetti e metri in pixel: tutte le misure sono in cm, la larghezza della postazione vale MAXCM */
-const ppc = () => ($("#post-l")?.clientWidth || 600) / MAXCM;
-function disponi1(){
-  const k = ppc();
-  POST.forEach(p => {
-    const box = document.getElementById(p.id); if(!box) return;
-    box.style.height = p.alt() * k + "px";
-    box.querySelectorAll(".oggetto").forEach(el => { const o = JSON.parse(el.dataset.o);
-      Object.assign(el.style, {left:o.x * k + "px", top:o.y * k + "px", width:o.w * k + "px", height:o.h * k + "px"}); });
-    p.metri.forEach(m => {
-      const el = box.querySelector(`.metro[data-k="${m.k}"]`);
-      el.style.left = m.x * k + "px"; el.style.top = m.y() * k + "px";
-      aggiornaMetro(el, m.o);
-    });
-  });
+function posa1(el, zona){
+  const g = +el.dataset.g, z = zona.dataset.zona;
+  const da = Object.keys(S.sost).find(k => S.sost[k] === g);
+  if(z === "banco1"){ if(da) S.sost[da] = null; }
+  else if(z.startsWith("l-")){
+    const a = z.slice(2); if(a === da) return;
+    const prima = S.sost[a]; S.sost[a] = g;
+    if(da) S.sost[da] = prima;
+  } else return;
+  S.slotSbagliati.clear(); suona("posa");
+  disegna1();
 }
-function aggiornaMetro(el, o){
-  const k = ppc(), cm = S.metro[el.dataset.k], L = cm * k;
-  const nastro = el.querySelector(".nastro"), man = el.querySelector(".maniglia"), let_ = el.querySelector(".lettura");
-  /* tacche ogni cm, più lunghe ogni 5 e ogni 10 */
-  const t = o === "h" ? "90deg" : "180deg";
-  nastro.style.backgroundImage = `linear-gradient(${t},var(--ink) 0 1px,transparent 1px),linear-gradient(${t},var(--ink) 0 1px,transparent 1px)`;
-  nastro.style.backgroundSize = o === "h" ? `${k}px 5px, ${10 * k}px 12px` : `5px ${k}px, 12px ${10 * k}px`;
-  nastro.style.backgroundRepeat = o === "h" ? "repeat-x" : "repeat-y";
-  if(o === "h"){ nastro.style.width = L + "px"; man.style.left = L + "px"; man.style.top = "-7px"; let_.style.left = Math.max(0, L - 18) + "px"; let_.style.top = "-30px"; }
-  else { nastro.style.height = L + "px"; man.style.top = L + "px"; man.style.left = "-7px"; let_.style.top = L + "px"; let_.style.left = "30px"; }
-  let_.textContent = cm + " cm";
-  man.setAttribute("aria-valuenow", cm);
-}
-function attivaMetro(el){
-  const o = el.classList.contains("h") ? "h" : "v", key = el.dataset.k, man = el.querySelector(".maniglia");
-  const max = () => { const p = POST.find(p => p.metri.some(m => m.k === key)), m = p.metri.find(m => m.k === key);
-    return o === "h" ? MAXCM - m.x - 6 : p.alt() - m.y() - 6; };
-  const imposta = cm => {
-    cm = Math.max(0, Math.min(max(), Math.round(cm)));
-    if(cm === S.metro[key]) return;
-    S.metro[key] = cm; aggiornaMetro(el, o); suona("tacca");
-    if(cm === max() && o === "h") segreto("metro", "Hai srotolato il metro fino all'ultimo centimetro! I metri a nastro del cantiere arrivano anche a 5 metri: 500 cm.");
-  };
-  man.addEventListener("pointerdown", e => {
-    if(e.button > 0) return; avvia(); e.preventDefault();
-    try { man.setPointerCapture(e.pointerId); } catch {}
-    man.classList.add("trascina");
-    const muovi = ev => { const r = el.getBoundingClientRect(); imposta(((o === "h" ? ev.clientX - r.left : ev.clientY - r.top)) / ppc()); };
-    const fine = () => { man.classList.remove("trascina"); man.removeEventListener("pointermove", muovi); man.removeEventListener("pointerup", fine); man.removeEventListener("pointercancel", fine); };
-    man.addEventListener("pointermove", muovi); man.addEventListener("pointerup", fine); man.addEventListener("pointercancel", fine);
-  });
-  man.addEventListener("keydown", e => {
-    const d = {ArrowRight:1, ArrowUp:-1, ArrowLeft:-1, ArrowDown:1}[e.key];
-    if(d === undefined) return; e.preventDefault(); avvia();
-    imposta(S.metro[key] + (o === "h" ? (e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0) : (e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0)) * (e.shiftKey ? 5 : 1));
-  });
-}
-window.addEventListener("resize", () => requestAnimationFrame(disponi1));
 function controlla1(){
-  const vuote = FORMULE.filter(f => !S.risposte[f.k].trim()).length;
-  if(vuote){ esito(0, `Mancano ancora ${vuote} ${vuote === 1 ? "risultato" : "risultati"} sul tablet.`, "no"); suona("no"); return; }
+  const vuoti = Object.values(S.sost).filter(v => v === null).length;
+  if(vuoti){ esito(0, `Mancano ancora ${vuoti} ${vuoti === 1 ? "lettera" : "lettere"} da sostituire.`, "no"); suona("no"); return; }
+  S.slotSbagliati = new Set(Object.keys(S.sost).filter(k => GETTONI[S.sost[k]] !== VALORI_LETTERE[k]));
+  if(S.slotSbagliati.size){
+    S.sbagliate1.clear(); disegna1();
+    esito(0, S.slotSbagliati.size === 1 ? "1 numero è al posto della lettera sbagliata: è colorato di rosso. Guarda le quote del disegno!" : `${S.slotSbagliati.size} numeri sono al posto delle lettere sbagliate: sono colorati di rosso.`, "no"); suona("no"); return;
+  }
   const num = t => +String(t).replace(/[^\d]/g, "");
+  const vuote = FORMULE.filter(f => !String(S.risposte[f.k]).trim()).length;
+  if(vuote){ esito(0, `Le sostituzioni sono giuste! Ora scrivi ${vuote === 1 ? "il risultato che manca" : `i ${vuote} risultati che mancano`}.`, "si"); suona("bip"); return; }
   S.sbagliate1 = new Set(FORMULE.map((f, i) => num(S.risposte[f.k]) === f.val ? -1 : i).filter(i => i >= 0));
   if(S.sbagliate1.size){
     disegna1();
-    esito(0, S.sbagliate1.size === 1 ? "1 risultato è sbagliato: controlla la misura e il calcolo." : `${S.sbagliate1.size} risultati sono sbagliati: controlla le misure e i calcoli.`, "no"); suona("no"); return;
+    esito(0, S.sbagliate1.size === 1 ? "1 calcolo è sbagliato: la riga è colorata di rosso." : `${S.sbagliate1.size} calcoli sono sbagliati: le righe sono colorate di rosso.`, "no"); suona("no"); return;
   }
   risolvi(0);
 }
-let tocchiCasco = 0;
+let tocchiCasco = 0, tocchiBancale = 0;
 document.addEventListener("click", e => {
-  const c = e.target.closest("#casco"); if(!c) return;
-  suona("toc"); c.classList.remove("salta"); void c.offsetWidth; c.classList.add("salta");
-  if(++tocchiCasco >= 3) segreto("casco", "La sicurezza prima di tutto! In cantiere il casco si porta sempre, anche quando si fanno i calcoli.");
+  const c = e.target.closest("#casco");
+  if(c){
+    suona("toc"); c.classList.remove("salta"); void c.offsetWidth; c.classList.add("salta");
+    if(++tocchiCasco >= 3) segreto("casco", "La sicurezza prima di tutto! In cantiere il casco si porta sempre, anche quando si fanno i calcoli.");
+    return;
+  }
+  if(e.target.closest("#bancale")){
+    suona("toc");
+    if(++tocchiBancale >= 3) segreto("sacchi", `Ogni sacco di cemento pesa 25 kg: il peso del bancale è P = 25n, cioè ${25 * SACCHI} kg. Un'altra formula!`);
+  }
 });
 
 /* ===== enigma 2: il magazzino dei monomi ===== */
@@ -817,7 +802,7 @@ document.addEventListener("click", e => {
 });
 
 
-/* segreti: toccare 3 volte il casco, srotolare un metro fino in fondo, scrivere "monomio" sulla tastiera */
+/* segreti: toccare 3 volte il casco, toccare 3 volte il bancale dei sacchi, scrivere "monomio" sulla tastiera */
 const SEGRETI = 3;
 const PAROLE_SEGRETE = [["monomio", () => segreto("monomio", "Monomio viene dal greco: \"mono\" = uno e \"nomos\" = parte. Un monomio è un'espressione fatta di una parte sola!")]];
 tutto();
