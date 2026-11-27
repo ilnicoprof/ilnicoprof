@@ -265,6 +265,30 @@ $("#form-codice").addEventListener("submit", e => {
 /* ===== immagine della bacheca ===== */
 const carica = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
 function rett(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+/* i nomi lunghi dei trofei (es. "La Moneta del Mercante Infinito") non devono uscire dal riquadro:
+   se non stanno su una riga vanno su due righe, e se serve il carattere si rimpicciolisce */
+function adatta(x, testo, peso, max, min, famiglia, larghezza){
+  let px = max;
+  do { x.font = `${peso} ${px}px ${famiglia}`; } while(x.measureText(testo).width > larghezza && --px > min);
+  return px;
+}
+function scriviNome(x, nome, cxm, cy, larghezza){
+  const fam = "'Baloo 2', sans-serif";
+  x.font = `800 40px ${fam}`;
+  if(x.measureText(nome).width <= larghezza){ x.fillText(nome, cxm, cy + 300); return; }
+  /* divido in due righe nel punto che le rende più simili */
+  const parole = nome.split(" ");
+  let meglio = null;
+  for(let i = 1; i < parole.length; i++){
+    const a = parole.slice(0, i).join(" "), b = parole.slice(i).join(" ");
+    const diff = Math.abs(x.measureText(a).width - x.measureText(b).width);
+    if(!meglio || diff < meglio.diff) meglio = {a, b, diff};
+  }
+  if(!meglio){ adatta(x, nome, 800, 40, 22, fam, larghezza); x.fillText(nome, cxm, cy + 300); return; }
+  const px = Math.min(adatta(x, meglio.a, 800, 34, 22, fam, larghezza), adatta(x, meglio.b, 800, 34, 22, fam, larghezza));
+  x.font = `800 ${px}px ${fam}`;
+  x.fillText(meglio.a, cxm, cy + 286); x.fillText(meglio.b, cxm, cy + 320);
+}
 async function creaImmagine(){
   try { await document.fonts.ready; } catch {}
   const s = Trofei.sbloccati(), n = Trofei.nome() || "senza nome";
@@ -300,8 +324,8 @@ async function creaImmagine(){
     const img = await carica("data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgTrofeo(t.id, t.preso ? COLORI_ORO : COLORI_SPENTO)));
     x.drawImage(img, cx + (cw - 230) / 2, cy + 22, 230, 230);
     x.textAlign = "center"; x.fillStyle = t.preso ? "#1E2A44" : "#8A96AB";
-    x.font = "800 40px 'Baloo 2', sans-serif"; x.fillText(t.nome, cx + cw/2, cy + 300);
-    x.font = "700 26px 'Nunito', sans-serif"; x.fillStyle = "#56627A"; x.fillText(t.gioco, cx + cw/2, cy + 340);
+    scriviNome(x, t.nome, cx + cw/2, cy, cw - 44);
+    adatta(x, t.gioco, 700, 24, 18, "'Nunito', sans-serif", cw - 44); x.fillStyle = "#56627A"; x.fillText(t.gioco, cx + cw/2, cy + 352);
     if(t.preso && t.preso.codice){
       x.fillStyle = "#F1F5FB"; rett(x, cx + 70, cy + 362, cw - 140, 54, 12); x.fill();
       x.fillStyle = "#1E2A44"; x.font = "700 40px 'Baloo 2', sans-serif"; x.fillText(t.preso.codice, cx + cw/2, cy + 402);

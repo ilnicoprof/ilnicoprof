@@ -113,7 +113,7 @@ h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker
 .pezzo.scelto{background:var(--marker);transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
 .pezzo.sollevato{opacity:.3}
 .pezzo.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
-.ombra{position:fixed;z-index:20;pointer-events:none;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
+.ombra{position:fixed!important;z-index:50!important;pointer-events:none!important;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
 .scegli .zona{outline:2px dashed var(--accent);outline-offset:-2px}
 .zona.sopra{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
 .banco{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:58px;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
@@ -372,7 +372,9 @@ function pezzo(el, posa){
       if(!ombra){
         if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
         deseleziona();
-        ombra = el.cloneNode(true); ombra.classList.add("ombra"); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
+        ombra = el.cloneNode(true); ombra.classList.add("ombra");
+        /* la copia che segue il dito resta sempre visibile, qualunque stile abbia il pezzo */
+        Object.assign(ombra.style, {position:"fixed", zIndex:"50", pointerEvents:"none", margin:"0", opacity:"1", visibility:"visible"}); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
         document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
       }
       ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
@@ -658,14 +660,16 @@ function disegna3(){
         ${GARA.lanterne.map((_, i) => S.band[i] ? `<div class="bandiera-pos" style="left:${px(S.band[i].x) / WC * 100}%;top:${py(S.band[i].y) / HC * 100}%">${band(i)}</div>` : "").join("")}
         <svg class="omino" id="omino" viewBox="0 0 30 30" aria-hidden="true" style="left:${px(0) / WC * 100}%;top:${py(0) / HC * 100}%;${fatto ? "" : "display:none"}"><circle cx="15" cy="6" r="4" fill="#E5534B" stroke="#1E2A44" stroke-width="1.5"/><path d="M15 10l-2 9 5 9M13 19l-6 6M14 13l-7 2M15 13l8 4" stroke="#1E2A44" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
       </div>
+      <div style="display:grid;gap:10px;align-content:start">
+      ${fatto ? "" : `<p class="etichetta">Bandierine</p>
+      <div class="banco zona" data-zona="banco3">${fuori.length ? fuori.map(band).join("") : '<span class="vuoto">Tutte sulla cartina.</span>'}</div>`}
       <div class="foglio-gara"><h3>FOGLIO DI GARA · SQUADRA 3B</h3>
         <ol>${GARA.lanterne.map(l => `<li>Lanterna: (${l.x}; ${l.y})</li>`).join("")}</ol>
         <div class="coord-input">Rifugio: ( <input type="text" inputmode="numeric" maxlength="2" data-c="x" value="${fatto ? GARA.rif.x : S.rif.x}" aria-label="x del rifugio"${fatto ? " disabled" : ""}> ; <input type="text" inputmode="numeric" maxlength="2" data-c="y" value="${fatto ? GARA.rif.y : S.rif.y}" aria-label="y del rifugio"${fatto ? " disabled" : ""}> )</div>
       </div>
+      </div>
     </div>
     ${fatto ? premioHtml(2, `Il rifugio è nel punto (${GARA.rif.x}; ${GARA.rif.y}). `) : `
-    <p class="etichetta">Bandierine</p>
-    <div class="banco zona" data-zona="banco3">${fuori.length ? fuori.map(band).join("") : '<span class="vuoto">Tutte le bandierine sono sulla cartina.</span>'}</div>
     <div class="azioni"><button class="btn blu" type="button" id="controlla3">Controlla il percorso</button><p class="esito" id="esito2"></p></div>`}`;
   if(fatto){ if(!S.corso){ S.corso = true; corri(); } return; }
   sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa3));
