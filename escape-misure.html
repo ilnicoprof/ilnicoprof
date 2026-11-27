@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La stazione meteo sul tetto</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" sizes="32x32" href="immagini/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="immagini/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="immagini/icon-192.png">
+<link rel="apple-touch-icon" href="immagini/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti del nicoprof; enigma 1 = il diario del meteorologo (metodo scientifico),
+   enigma 2 = il banco degli strumenti (sensibilità, portata, errori, media), enigma 3 = la scala delle equivalenze, poi la porta */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300; --verde:#8EDDB4; --verde-ink:#0B4A2C;
+  --cielo:#CFE6FA; --nuvola:#FFFFFF; --mercurio:#E5534B; --vetro:#E9F5FF; --acqua:#6FB6EC; --metallo2:#AEB9CA; --legno:#C9935A; --legno-scuro:#7A5428;
+  --carta:#FFFCF2; --carta-riga:#D7E3F5; --copertina:#2F6F8F;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --porta:#8C96A6; --porta-scura:#5E6878; --metallo:#D5DCE6;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+  --f-mono:"Courier New",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C;
+  --cielo:#223654; --nuvola:#C9D4E6; --mercurio:#E8625A; --vetro:#24354F; --acqua:#3E7FB8; --metallo2:#5A6680; --legno:#8A6236; --legno-scuro:#5A3E1E;
+  --carta:#232E46; --carta-riga:#2E3A55; --copertina:#1E4A60;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#5A6680; --porta-scura:#3E4A5E; --metallo:#5A6680;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C;
+  --cielo:#223654; --nuvola:#C9D4E6; --mercurio:#E8625A; --vetro:#24354F; --acqua:#3E7FB8; --metallo2:#5A6680; --legno:#8A6236; --legno-scuro:#5A3E1E;
+  --carta:#232E46; --carta-riga:#2E3A55; --copertina:#1E4A60;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#5A6680; --porta-scura:#3E4A5E; --metallo:#5A6680;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:820px;margin:0 auto;padding-block:20px 56px;display:grid;gap:20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap>*{min-width:0}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna svg{width:16px;height:16px}
+header{display:grid;gap:8px}
+.eyebrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:800;font-size:.85rem}
+.tag{font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.storia{margin:0;font-family:var(--f-hand);font-size:1.3rem;line-height:1.35;max-width:60ch}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.indizi{display:flex;gap:8px;flex-wrap:wrap}
+.cifra-mini{display:inline-grid;place-items:center;width:34px;height:40px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.cifra-mini.vuota{border-style:dashed;color:var(--ink-soft);background:transparent}
+
+.enigma{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px;display:grid;gap:14px;min-width:0}
+.enigma>*{min-width:0}
+.enigma.chiuso{box-shadow:none;border-style:dashed;border-color:var(--line);background:transparent}
+.enigma.risolto{border-color:var(--ok);box-shadow:5px 5px 0 var(--ok)}
+.e-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.e-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.1;display:flex;align-items:center;gap:10px}
+.e-head h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);font-size:1.1rem;flex:none}
+.enigma.chiuso h2{color:var(--ink-soft)}
+.enigma.chiuso .e-head h2 .n{background:transparent;color:var(--ink-soft);border-color:var(--line)}
+.consegna{margin:0;font-size:1.02rem;max-width:65ch}
+.consegna b{font-weight:800}
+.nota{margin:0;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+.esito{margin:0;min-height:1.5em;font-weight:800}
+.esito.si{color:var(--ok)} .esito.no{color:var(--errore)}
+.azioni{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+.btn.piccolo{font-size:.92rem;padding:5px 12px;box-shadow:2px 2px 0 var(--ink)}
+.aiuto{margin:0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--giallo) 30%,transparent);border:1.5px dashed var(--giallo-ink);font-family:var(--f-hand);font-size:1.15rem}
+.premio{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:var(--ok-bg);color:var(--ok);font-weight:800}
+.premio .cifra-mini{border-color:var(--ok);flex:none}
+
+/* pezzi che si spostano */
+.pezzo{all:unset;box-sizing:border-box;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-width:40px;height:40px;padding:0 10px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:1.1rem;box-shadow:0 3px 0 var(--ink);font-variant-numeric:tabular-nums}
+.pezzo:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pezzo.scelto{background:var(--marker);transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
+.pezzo.sollevato{opacity:.3}
+.pezzo.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+.ombra{position:fixed!important;z-index:50!important;pointer-events:none!important;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
+.scegli .zona{outline:2px dashed var(--accent);outline-offset:-2px}
+.zona.sopra{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
+.banco{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:58px;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
+.banco .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.1rem}
+.etichetta{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin:0 0 -6px}
+.display{font-family:var(--f-mono);font-weight:700;background:#16241A;color:#7CFFA0;padding:10px 14px;border-radius:10px;border:3px solid var(--ink);font-size:1.15rem;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 6px rgba(124,255,160,.5)}
+.display small{display:block;font-size:.75rem;color:#4FBF73;text-shadow:none}
+
+.c-verde{background:var(--verde);color:var(--verde-ink)}
+.e-head h2 .n{background:var(--verde);color:var(--verde-ink)}
+
+/* enigma 1: il diario */
+.diario{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;padding:10px;border-radius:14px;background:var(--copertina);border:3px solid var(--ink);perspective:1200px}
+@media (max-width:600px){.diario{grid-template-columns:1fr}}
+.facciata{display:grid;gap:10px;padding:10px;background:var(--carta);background-image:repeating-linear-gradient(transparent 0 25px,var(--carta-riga) 25px 26px)}
+.facciata:first-child{border-radius:8px 0 0 8px;border-right:2px solid color-mix(in srgb,var(--ink) 25%,transparent)}
+.facciata:last-child{border-radius:0 8px 8px 0}
+@media (max-width:600px){.facciata:first-child{border-radius:8px 8px 0 0;border-right:none}.facciata:last-child{border-radius:0 0 8px 8px}}
+.tappa{display:grid;align-content:start;gap:4px;min-height:86px;padding:6px;border-radius:8px;border:2px dashed color-mix(in srgb,var(--accent) 60%,transparent);transform-origin:left center}
+.tappa h4{margin:0;display:flex;align-items:center;gap:6px;font-family:var(--f-display);font-size:.98rem;color:var(--accent)}
+.tappa h4 .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:.85rem}
+.tappa.pieno{border-color:transparent}
+.tappa.gira{animation:gira .6s ease both;animation-delay:calc(var(--i) * .35s)}
+@keyframes gira{40%{transform:rotateY(-70deg)}100%{transform:rotateY(0)}}
+.pagina{flex-direction:column;align-items:flex-start;height:auto;width:100%;padding:8px 10px;gap:2px;border-radius:4px;background:#FFFEF6;color:#23262E;border:1.5px solid #C9C3AE;box-shadow:2px 3px 0 rgba(0,0,0,.15);font-family:var(--f-hand);font-weight:400;font-size:1.05rem;line-height:1.25;text-align:left;white-space:normal;position:relative}
+.pagina .stella{position:absolute;top:-10px;right:-6px;font-size:1.3rem;color:var(--giallo);-webkit-text-stroke:1.5px #1E2A44}
+.banco .pagina{max-width:300px}
+.pagina.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+.domanda{margin:0;padding:8px 12px;border-radius:10px;background:var(--pill);font-family:var(--f-hand);font-size:1.2rem}
+
+/* enigma 2: gli strumenti */
+.strumenti{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.strumenti{grid-template-columns:1fr}}
+.strumento{display:grid;gap:8px;align-content:start;padding:10px;border-radius:12px;border:2px solid var(--ink);background:var(--card)}
+.strumento h3{margin:0;font-family:var(--f-display);font-size:1.1rem}
+.strumento svg.disegno{width:100%;height:auto;max-height:260px;border-radius:8px;background:var(--pill)}
+.scelte{display:grid;gap:4px}
+.scelte span{font-weight:800;font-size:.82rem;color:var(--ink-soft)}
+.opzioni{display:flex;flex-wrap:wrap;gap:4px}
+.opz{all:unset;box-sizing:border-box;cursor:pointer;padding:4px 10px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-weight:800;font-size:.9rem}
+.opz[aria-pressed="true"]{background:var(--marker)}
+.opz:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opz:disabled{cursor:default}
+.scelte.sbagliata .opz[aria-pressed="true"]{background:var(--errore-bg);border-color:var(--errore);color:var(--errore)}
+.scelte.giusta .opz[aria-pressed="true"]{background:var(--ok-bg);border-color:var(--ok)}
+.registro{display:grid;gap:10px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:640px){.registro{grid-template-columns:1fr}}
+.riquadro{display:grid;gap:8px;padding:12px;border-radius:12px;border:2px solid var(--ink);background:var(--card)}
+.riquadro h3{margin:0;font-family:var(--f-display);font-size:1.05rem}
+.tempi{display:flex;flex-wrap:wrap;gap:6px;font-family:var(--f-mono);font-weight:700;font-size:1.05rem}
+.tempi span{padding:3px 10px;border-radius:8px;background:var(--pill);border:1.5px solid var(--line)}
+.campo{display:flex;align-items:center;gap:6px;font-weight:800}
+.campo input{width:70px;font:inherit;font-family:var(--f-mono);font-size:1.1rem;padding:5px 8px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+.campo.sbagliata input{border-color:var(--errore);background:var(--errore-bg)}
+.campo.giusta input{border-color:var(--ok);background:var(--ok-bg)}
+.anemometro{all:unset;cursor:pointer;display:inline-grid;place-items:center;width:64px;height:64px}
+.anemometro svg{width:64px;height:64px}
+.anemometro .pale{transform-box:fill-box;transform-origin:center;animation:gira-pale 3s linear infinite}
+.anemometro.veloce .pale{animation-duration:.25s}
+.anemometro:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@keyframes gira-pale{to{transform:rotate(360deg)}}
+.mercurio{transition:height 1.6s cubic-bezier(.3,1.2,.5,1),y 1.6s cubic-bezier(.3,1.2,.5,1)}
+
+/* enigma 3: la scala delle equivalenze */
+.equiv{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:700px){.equiv{grid-template-columns:1fr}}
+.scala{border-radius:12px;border:2px solid var(--ink);background:var(--card);overflow:hidden}
+.scala svg{width:100%;height:auto;display:block}
+.omino-scala{transition:transform .35s cubic-bezier(.3,1.5,.6,1)}
+.conversioni{display:grid;gap:8px}
+.conv{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--pill);border:2px solid transparent;font-family:var(--f-mono);font-weight:700;font-size:1.05rem}
+.conv .stella{color:var(--giallo);-webkit-text-stroke:1.2px var(--ink)}
+.conv input{width:120px;font:inherit;padding:4px 8px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+.conv.sbagliata{border-color:var(--errore);background:var(--errore-bg)}
+.conv.giusta{border-color:var(--ok);background:var(--ok-bg)}
+.schermo-meteo{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:12px 14px;border-radius:12px;border:3px solid var(--ink);background:#0E1A2E;color:#BFE3FF;font-family:var(--f-mono);font-weight:700}
+.schermo-meteo svg{width:64px;height:64px}
+.schermo-meteo.acceso{animation:accendi .8s ease both}
+@keyframes accendi{0%{filter:brightness(0)}30%{filter:brightness(1.8)}100%{filter:brightness(1)}}
+
+/* il lucchetto */
+.porta{display:grid;gap:16px;justify-items:center;text-align:center;background:var(--porta);background-image:repeating-linear-gradient(90deg,transparent 0 46px,var(--porta-scura) 46px 48px);border:3px solid var(--ink);border-radius:18px 18px 6px 6px;padding:22px 14px;box-shadow:5px 5px 0 var(--ink);color:#FFF8EC}
+.porta h2{margin:0;font-family:var(--f-display);font-size:1.5rem}
+.porta.chiuso .lucchetto{opacity:.6}
+.lucchetto{display:flex;gap:10px;padding:16px 18px;border-radius:18px;background:var(--metallo);border:3px solid var(--ink);box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.rotella{display:grid;gap:4px;justify-items:center}
+.rotella button{all:unset;cursor:pointer;width:44px;height:28px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);font-weight:800}
+.rotella button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rotella button:disabled{cursor:default;opacity:.6}
+.rotella output{display:grid;place-items:center;width:52px;height:62px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:2.2rem;font-variant-numeric:tabular-nums}
+.porta .esito{color:#FFF8EC}
+.libero{display:grid;gap:10px;justify-items:center;text-align:center;padding:24px 16px;border-radius:18px;background:var(--ok-bg);border:3px solid var(--ok);color:var(--ink)}
+.libero b{font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--ok)}
+.libero p{margin:0;font-weight:700}
+
+.suoni{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+#segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
+#segreto b{font-family:var(--f-display);font-size:1.1rem}
+@keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
+@keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.scuoti{animation:scuoti .3s ease 2}
+@media (max-width:480px){.enigma{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.firma{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.1);font-family:var(--f-body);font-size:.75rem;color:var(--ink-soft);pointer-events:none}
+.firma img{width:30px;height:30px;border-radius:50%;background:#FFFFFF;border:1px solid var(--line);flex:none}
+.firma b{font-weight:800;color:var(--ink)}
+@media (max-width:480px){.firma{padding:3px}.firma span{display:none}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>ilnicoprof</a>
+  <header>
+    <div class="eyebrow"><span class="tag c-verde">Scienze</span> 1ª media · Metodo, grandezze e misure · escape room</div>
+    <h1>la stazione meteo <span class="hl">sul tetto</span></h1>
+    <p class="storia">Con la classe siete saliti sul tetto della scuola a vedere la stazione meteo. Mentre leggi gli strumenti, un colpo di vento chiude la porta della cabina e il lucchetto scatta: il codice ha 3 cifre. Usa il diario del meteorologo, gli strumenti e la scala delle unità per trovarle!</p>
+    <div class="barra">
+      <span class="pill" id="tempo">Tempo 00:00</span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
+      <div class="indizi" id="indizi" aria-label="Cifre trovate"></div>
+    </div>
+  </header>
+
+  <section class="enigma" id="e1" aria-labelledby="t1"></section>
+  <section class="enigma" id="e2" aria-labelledby="t2"></section>
+  <section class="enigma" id="e3" aria-labelledby="t3"></section>
+  <section id="e4" aria-labelledby="t4"></section>
+  <p class="sr" aria-live="polite" id="annuncio"></p>
+</div>
+
+<div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js?v=acc50a16"></script>
+<script src="oggetto-segreto.js?v=9c38c69a"></script>
+<script>
+/* ===== dati ===== */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mescola = a => { const b = [...a]; for(let i = b.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]] = [b[j],b[i]]; } return b; };
+const pesca = (a, n) => mescola(a).slice(0, n);
+const fmt = n => { const s = String(n); return s.length >= 5 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : s; };
+
+/* enigma 1: un'indagine scelta a caso, con le 4 tappe del metodo scientifico */
+const TAPPE = ["Osservo e mi chiedo", "Formulo un'ipotesi", "Faccio l'esperimento", "Comunico i risultati"];
+const INDAGINI = [
+  {titolo:"Perché d'estate la pozzanghera del cortile sparisce più in fretta?", pagine:[
+    "D'estate la pozzanghera del cortile sparisce in poche ore, d'inverno resta lì per giorni. Come mai?",
+    "Forse l'acqua evapora più in fretta quando fa più caldo.",
+    "Metto due piattini con la stessa quantità d'acqua, uno al sole e uno all'ombra, e ogni ora guardo quanta ne resta.",
+    "Preparo un cartellone per la classe: al sole l'acqua è sparita in 3 ore, all'ombra in 7."]},
+  {titolo:"Perché la zolletta si scioglie prima nel tè caldo?", pagine:[
+    "La zolletta di zucchero sparisce subito nel tè caldo, mentre nel tè freddo ci mette tanto. Perché?",
+    "Forse lo zucchero si scioglie più in fretta quando l'acqua è più calda.",
+    "Metto una zolletta in un bicchiere d'acqua calda e una in acqua fredda e misuro i tempi con il cronometro.",
+    "Scrivo una relazione con la tabella dei tempi e la presento ai compagni."]},
+  {titolo:"Perché la piantina sul davanzale si piega?", pagine:[
+    "La piantina sul davanzale si è piegata tutta verso la finestra. Perché?",
+    "Forse le piante crescono verso la luce.",
+    "Prendo due piantine uguali: una la metto vicino alla finestra, l'altra in un armadio buio, e le fotografo ogni giorno.",
+    "Mostro le foto alla classe: la piantina al buio è diventata gialla e storta, l'altra è verde e dritta."]}
+];
+const INDAGINE = pesca(INDAGINI, 1)[0];
+const ORDINE1 = mescola([0, 1, 2, 3]);      // ordine in cui le pagine compaiono sul banco
+const STELLA1 = rnd(0, 3);                    // la pagina con la stella (indice della tappa)
+
+/* enigma 2: tre strumenti con scale diverse a ogni partita */
+const STR = {
+  righello: {P: pesca([20, 30], 1)[0]},
+  termometro: {s: pesca([1, 2], 1)[0], P: pesca([40, 50], 1)[0]},
+  pluviometro: {s: pesca([5, 10], 1)[0], P: pesca([100, 150, 200], 1)[0]}
+};
+const DOMANDE2 = [
+  {k:"righello-s", str:"righello", q:"Sensibilità", giusta:"1 mm", opz:["1 mm", "1 cm", "5 mm"]},
+  {k:"righello-p", str:"righello", q:"Portata", giusta:`${STR.righello.P} cm`, opz:[`${STR.righello.P} cm`, `${STR.righello.P - 1} cm`, "100 cm"]},
+  {k:"termometro-s", str:"termometro", q:"Sensibilità", giusta:`${STR.termometro.s} °C`, opz:[`${STR.termometro.s} °C`, `${STR.termometro.s === 1 ? 2 : 1} °C`, "10 °C"]},
+  {k:"termometro-p", str:"termometro", q:"Portata", giusta:`${STR.termometro.P} °C`, opz:[`${STR.termometro.P} °C`, "−10 °C", `${STR.termometro.P + 10} °C`]},
+  {k:"pluviometro-s", str:"pluviometro", q:"Sensibilità", giusta:`${STR.pluviometro.s} mm`, opz:[`${STR.pluviometro.s} mm`, `${STR.pluviometro.s * 2} mm`, "1 mm"]},
+  {k:"pluviometro-p", str:"pluviometro", q:"Portata", giusta:`${STR.pluviometro.P} mm`, opz:[`${STR.pluviometro.P} mm`, `${STR.pluviometro.P / 2} mm`, `${STR.pluviometro.P + 50} mm`]},
+  {k:"errore", str:null, q:"Che errore è?", giusta:"Sistematico", opz:["Sistematico", "Accidentale"]}
+].map(d => ({...d, opz: mescola(d.opz)}));
+/* tre compagni cronometrano 10 giri dell'anemometro: la media è sempre un numero intero da 4 a 9 */
+const MEDIA = rnd(4, 9), DELTA = rnd(1, 2);
+const TEMPI = mescola([MEDIA - DELTA, MEDIA, MEDIA + DELTA]);
+
+/* enigma 3: le equivalenze (lunghezze sulla scala; superfici, volumi e tempi a parte) */
+const UNITA = ["km", "hm", "dam", "m", "dm", "cm", "mm"];
+function lunghezza(){
+  for(;;){
+    const a = rnd(0, 6), b = rnd(0, 6), g = Math.abs(a - b);
+    if(g < 1 || g > 4) continue;
+    if(b > a){ const v = rnd(2, 9); return {da:UNITA[a], a:UNITA[b], v, ris: v * 10 ** g, gradini:g, scala:true}; }
+    const ris = rnd(2, 9); return {da:UNITA[a], a:UNITA[b], v: ris * 10 ** g, ris, gradini:g, scala:true};
+  }
+}
+function generaConversioni(){
+  for(;;){
+    const l1 = lunghezza(), l2 = lunghezza();
+    if(l1.da === l2.da && l1.a === l2.a) continue;
+    const sup = pesca([{da:"m²", a:"dm²", f:100}, {da:"dm²", a:"cm²", f:100}, {da:"m²", a:"cm²", f:10000}], 1)[0], vs = rnd(2, 9);
+    const vol = pesca([{da:"L", a:"dm³", f:1}, {da:"dm³", a:"cm³", f:1000}, {da:"m³", a:"dm³", f:1000}], 1)[0], vv = rnd(2, 9);
+    const tem = pesca([{da:"h", a:"min", f:60}, {da:"min", a:"s", f:60}, {da:"h", a:"s", f:3600}], 1)[0], vt = rnd(2, 5);
+    return [l1, l2, {da:sup.da, a:sup.a, v:vs, ris:vs * sup.f}, {da:vol.da, a:vol.a, v:vv, ris:vv * vol.f}, {da:tem.da, a:tem.a, v:vt, ris:vt * tem.f}];
+  }
+}
+const CONV = generaConversioni();
+const STELLA3 = rnd(0, 1);   // la stella è sempre su una lunghezza: si contano i gradini della scala
+
+const CODICE = [STELLA1 + 1, MEDIA, CONV[STELLA3].gradini];
+const INDIZI = [
+  "In che tappa del metodo scientifico va la pagina con la stella?",
+  "Qual è la media dei tre tempi dell'anemometro?",
+  "Quanti gradini della scala separano le unità della conversione con la stella?"
+];
+const AIUTI = [
+  "Lo scienziato prima osserva qualcosa e si fa una domanda; poi prova a dare una risposta possibile (l'ipotesi, che spesso comincia con \"forse\"); poi la mette alla prova con un esperimento; alla fine racconta agli altri quello che ha scoperto.",
+  "La sensibilità è la misura più piccola che lo strumento sa leggere: la distanza tra due tacche vicine. La portata è la misura più grande che può leggere: l'ultimo numero della scala. Un errore che si ripete sempre uguale è sistematico. Per gli errori accidentali si fa la media: si sommano le misure e si divide per quante sono.",
+  "Sulla scala delle lunghezze ogni gradino in giù moltiplica per 10, ogni gradino in su divide per 10. Per le superfici ogni gradino vale 100, per i volumi 1000. 1 L = 1 dm³. Nel tempo si va di 60 in 60: 1 h = 60 min, 1 min = 60 s."
+];
+
+const S = {
+  risolto:[false,false,false], aiuto:[false,false,false],
+  pag: [null, null, null, null], sbagliate1:new Set(), sfogliato:false,
+  scelte2: {}, media:"", sbagliate2:new Set(), alzato:false,
+  conv: CONV.map(() => ""), sbagliate3:new Set(), sceso:false,
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+};
+const $ = s => document.querySelector(s);
+const annuncia = t => { $("#annuncio").textContent = t; };
+
+/* ===== trascina oppure tocca-e-posa ===== */
+let scelto = null;
+function seleziona(el, posa){
+  if(scelto && scelto.el === el){ deseleziona(); return; }
+  deseleziona();
+  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli"); suona("prendi");
+  annuncia(`Hai preso ${el.getAttribute("aria-label") || el.textContent}. Ora tocca dove vuoi metterlo.`);
+}
+function deseleziona(){ if(scelto) scelto.el.classList.remove("scelto"); scelto = null; document.body.classList.remove("scegli"); }
+const zonaSotto = (x,y) => document.elementFromPoint(x,y)?.closest("[data-zona]");
+function pezzo(el, posa){
+  el.addEventListener("pointerdown", e => {
+    if(e.button > 0) return;
+    avvia();
+    const r = el.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
+    let ombra = null, sopra = null;
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    const muovi = ev => {
+      if(!ombra){
+        if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
+        deseleziona();
+        ombra = el.cloneNode(true); ombra.classList.add("ombra");
+        /* la copia che segue il dito resta sempre visibile, qualunque stile abbia il pezzo */
+        Object.assign(ombra.style, {position:"fixed", zIndex:"50", pointerEvents:"none", margin:"0", opacity:"1", visibility:"visible"}); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
+        document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
+      }
+      ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z !== sopra){ sopra?.classList.remove("sopra"); z?.classList.add("sopra"); sopra = z; }
+    };
+    const fine = ev => {
+      el.removeEventListener("pointermove", muovi); el.removeEventListener("pointerup", fine); el.removeEventListener("pointercancel", fine);
+      if(!ombra) return;
+      ombra.remove(); el.classList.remove("sollevato"); sopra?.classList.remove("sopra");
+      el.dataset.trascinato = "1";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z && ev.type === "pointerup") posa(el, z, ev.clientX, ev.clientY);
+    };
+    el.addEventListener("pointermove", muovi); el.addEventListener("pointerup", fine); el.addEventListener("pointercancel", fine);
+  });
+  el.addEventListener("click", e => {
+    e.stopPropagation();
+    if(el.dataset.trascinato){ delete el.dataset.trascinato; return; }
+    avvia(); seleziona(el, posa);
+  });
+}
+document.addEventListener("click", e => {
+  if(!scelto) return;
+  const z = e.target.closest("[data-zona]");
+  if(z){ const s = scelto; deseleziona(); s.posa(s.el, z, e.clientX, e.clientY); }
+  else if(!e.target.closest(".pezzo")) deseleziona();
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") deseleziona(); });
+
+/* ===== tempo e suoni ===== */
+function avvia(){ if(!S.inizio) S.inizio = Date.now(); }
+const mmss = ms => { const s = Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+setInterval(() => { $("#tempo").textContent = "Tempo " + mmss(S.inizio ? (S.fine || Date.now()) - S.inizio : 0); }, 500);
+let audio;
+let suoniOn = true; try { suoniOn = localStorage.getItem("nicoprof:suoni") !== "no"; } catch {}
+/* [frequenza, ritardo, durata, forma, volume] */
+const SUONI = {
+  si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25,"sawtooth",.07]], bip:[[880,0,.06,"triangle",.05]],
+  prendi:[[520,0,.05,"triangle",.08],[780,.04,.06,"triangle",.08]],
+  posa:[[300,0,.07,"triangle",.13],[200,.05,.09,"triangle",.11]],
+  pagina:[[2400,0,.05,"sawtooth",.02],[1800,.03,.06,"sawtooth",.015]],
+  vento:[[300,0,.6,"sawtooth",.025],[420,.15,.6,"sawtooth",.02],[260,.35,.5,"sawtooth",.02]],
+  toc:[[600,0,.05,"triangle",.14],[400,.04,.06,"triangle",.1]],
+  segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[140,0,.5,"sawtooth",.035],[155,.25,.6,"sawtooth",.03]],
+  porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
+};
+function suona(tipo){
+  if(!suoniOn || !SUONI[tipo]) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    SUONI[tipo].forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
+  } catch {}
+}
+function aggiornaSuoni(){ const b = document.querySelector("#suoni"); if(b){ b.textContent = "Suoni: " + (suoniOn ? "sì" : "no"); b.setAttribute("aria-pressed", suoniOn); } }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#suoni")) return;
+  suoniOn = !suoniOn; try { localStorage.setItem("nicoprof:suoni", suoniOn ? "si" : "no"); } catch {}
+  aggiornaSuoni(); suona("bip");
+});
+
+/* ===== coriandoli per la vittoria ===== */
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--verde)", "var(--acqua)"];
+  for(let i = 0; i < 90; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.8 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4500);
+  }
+}
+
+/* ===== segreti nascosti ===== */
+const trovati = new Set();
+function segreto(id, testo){
+  if(trovati.has(id)) return;
+  trovati.add(id); suona("segreto");
+  let t = document.querySelector("#segreto");
+  if(!t){ t = document.createElement("div"); t.id = "segreto"; t.setAttribute("role", "status"); document.body.append(t); }
+  t.innerHTML = `<b>Segreto trovato! (${trovati.size} di ${SEGRETI})</b><span>${testo}</span>`;
+  t.hidden = false; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  clearTimeout(segreto.timer); segreto.timer = setTimeout(() => { t.hidden = true; }, 6500);
+}
+let digitate = "";
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea") || e.key.length !== 1) return;
+  digitate = (digitate + e.key.toLowerCase()).slice(-12);
+  PAROLE_SEGRETE.forEach(([parola, azione]) => { if(digitate.endsWith(parola)) azione(); });
+});
+const fraseSegreti = () => trovati.size === SEGRETI ? "Hai scoperto anche tutti i segreti nascosti!" : `Segreti nascosti trovati: ${trovati.size} su ${SEGRETI}. Gioca di nuovo per scoprirli tutti!`;
+
+/* ===== parti comuni ===== */
+function testa(i, titolo){
+  const chiuso = i > 0 && !S.risolto[i-1];
+  return `<div class="e-head"><h2 id="t${i+1}"><span class="n">${S.risolto[i] ? "✓" : i+1}</span>${titolo}</h2>
+    ${!chiuso && !S.risolto[i] ? `<button class="btn piccolo" type="button" data-aiuto="${i}">${S.aiuto[i] ? "Nascondi aiuto" : "Aiutino"}</button>` : ""}</div>`;
+}
+const chiusoHtml = i => `<p class="nota">Risolvi prima l'enigma ${i} per aprire questo.</p>`;
+const premioHtml = (i, extra = "") => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Cifra n. ${i+1} trovata! ${INDIZI[i]} ${extra}Risposta: ${CODICE[i]}.</span></div>`;
+const aiutoHtml = i => S.aiuto[i] ? `<p class="aiuto">${AIUTI[i]}</p>` : "";
+function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textContent = testo; el.className = "esito "+tipo; } }
+
+
+
+
+
+/* ===== enigma 1: il diario del meteorologo ===== */
+function disegna1(){
+  const sez = $("#e1"), fatto = S.risolto[0];
+  sez.className = "enigma" + (fatto ? " risolto" : "");
+  const pagina = (k, slot) => `<button class="pezzo pagina${slot !== null && S.sbagliate1.has(slot) ? " sbagliato" : ""}" type="button" data-k="${k}" aria-label="Pagina: ${INDAGINE.pagine[k]}"${fatto ? " disabled" : ""}>${k === STELLA1 ? '<span class="stella" aria-hidden="true">★</span>' : ""}${INDAGINE.pagine[k]}</button>`;
+  const fuori = ORDINE1.filter(k => !S.pag.includes(k));
+  const tappa = i => `<div class="tappa zona${S.pag[i] !== null ? " pieno" : ""}" data-zona="t-${i}" style="--i:${i}"><h4><span class="num">${i + 1}</span>${TAPPE[i]}</h4>${S.pag[i] !== null ? pagina(S.pag[i], i) : ""}</div>`;
+  sez.innerHTML = testa(0, "Il diario del meteorologo") + `
+    <p class="consegna">Il meteorologo stava scrivendo un'indagine nel suo diario, ma il vento ha sparpagliato le pagine. <b>Rimetti ogni pagina nella tappa giusta del metodo scientifico.</b></p>
+    <p class="domanda">${INDAGINE.titolo}</p>
+    ${aiutoHtml(0)}
+    <div class="diario" id="diario"><div class="facciata">${tappa(0)}${tappa(1)}</div><div class="facciata">${tappa(2)}${tappa(3)}</div></div>
+    ${fatto ? premioHtml(0, `La pagina con la stella è la tappa ${CODICE[0]}: "${TAPPE[STELLA1]}". `) : `
+    <p class="etichetta">Pagine cadute</p>
+    <div class="banco zona" data-zona="banco1">${fuori.length ? fuori.map(k => pagina(k, null)).join("") : '<span class="vuoto">Tutte le pagine sono nel diario. Ora controlla!</span>'}</div>
+    <div class="azioni"><button class="btn blu" type="button" id="controlla1">Controlla il diario</button><p class="esito" id="esito0"></p></div>`}`;
+  if(fatto){
+    if(!S.sfogliato){ S.sfogliato = true; sez.querySelectorAll(".tappa").forEach(t => t.classList.add("gira")); [0, 1, 2, 3].forEach(i => setTimeout(() => suona("pagina"), 350 * i)); }
+    return;
+  }
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa1));
+  $("#controlla1").addEventListener("click", controlla1);
+}
+function posa1(el, zona){
+  const k = +el.dataset.k, z = zona.dataset.zona, da = S.pag.indexOf(k);
+  if(z === "banco1"){ if(da >= 0) S.pag[da] = null; }
+  else if(z.startsWith("t-")){
+    const a = +z.slice(2); if(a === da) return;
+    const prima = S.pag[a]; S.pag[a] = k;
+    if(da >= 0) S.pag[da] = prima;
+  } else return;
+  S.sbagliate1.clear(); suona("posa");
+  disegna1();
+}
+function controlla1(){
+  const vuote = S.pag.filter(v => v === null).length;
+  if(vuote){ esito(0, `Mancano ancora ${vuote} ${vuote === 1 ? "pagina" : "pagine"} nel diario.`, "no"); suona("no"); return; }
+  S.sbagliate1 = new Set(S.pag.map((k, i) => k === i ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliate1.size){
+    disegna1();
+    esito(0, S.sbagliate1.size === 1 ? "1 pagina è nella tappa sbagliata: è colorata di rosso." : `${S.sbagliate1.size} pagine sono nelle tappe sbagliate: sono colorate di rosso.`, "no"); suona("no"); return;
+  }
+  risolvi(0);
+}
+
+/* ===== enigma 2: il banco degli strumenti ===== */
+function svgRighello(){
+  const P = STR.righello.P, k = 560 / P;
+  let t = "";
+  for(let mm = 0; mm <= P * 10; mm++){ const x = 20 + mm * k / 10, h = mm % 10 === 0 ? 22 : mm % 5 === 0 ? 15 : 9;
+    t += `<line x1="${x.toFixed(1)}" y1="20" x2="${x.toFixed(1)}" y2="${20 + h}" stroke="#1E2A44" stroke-width="${mm % 10 === 0 ? 1.6 : .8}"/>`;
+    if(mm % 10 === 0) t += `<text x="${x.toFixed(1)}" y="${58}" text-anchor="middle" font-size="15" font-weight="700" font-family="Nunito, sans-serif" fill="#1E2A44">${mm / 10}</text>`; }
+  /* la lente d'ingrandimento sul primo centimetro */
+  let lente = "";
+  for(let mm = 0; mm <= 10; mm++){ const x = 440 + mm * 8; lente += `<line x1="${x}" y1="104" x2="${x}" y2="${104 + (mm % 5 === 0 ? 24 : 14)}" stroke="#1E2A44" stroke-width="${mm % 10 === 0 ? 2 : 1.2}"/>`; }
+  return `<svg class="disegno" viewBox="0 0 600 190" role="img" aria-label="Righello da 0 a ${P} cm, con le tacche dei millimetri">
+    <rect x="10" y="14" width="580" height="54" rx="4" fill="#FFE9A8" stroke="#1E2A44" stroke-width="2"/>${t}
+    <text x="588" y="86" text-anchor="end" font-size="13" font-weight="800" fill="#1E2A44" font-family="Nunito, sans-serif">cm</text>
+    <rect x="436" y="100" width="88" height="30" fill="#FFE9A8"/><circle cx="480" cy="124" r="54" fill="none" stroke="#1E2A44" stroke-width="5"/>${lente}
+    <text x="440" y="148" text-anchor="middle" font-size="14" font-weight="800" fill="#1E2A44" font-family="Nunito, sans-serif">0</text><text x="520" y="148" text-anchor="middle" font-size="14" font-weight="800" fill="#1E2A44" font-family="Nunito, sans-serif">1</text>
+    <path d="M442 166l-28 18" stroke="#7A5428" stroke-width="9" stroke-linecap="round"/>
+    <text x="20" y="128" font-size="15" font-weight="700" fill="#56627A" font-family="Nunito, sans-serif">Ingrandimento del primo centimetro →</text>
+  </svg>`;
+}
+function svgTermometro(){
+  const {s, P} = STR.termometro, min = -10, y0 = 230, y1 = 30, k = (y0 - y1) / (P - min);
+  let t = "";
+  for(let v = min; v <= P; v += s){ const y = y0 - (v - min) * k, lungo = v % 10 === 0;
+    t += `<line x1="${lungo ? 62 : 70}" y1="${y.toFixed(1)}" x2="86" y2="${y.toFixed(1)}" stroke="#1E2A44" stroke-width="${lungo ? 1.8 : 1}"/>`;
+    if(lungo) t += `<text x="56" y="${(y + 5).toFixed(1)}" text-anchor="end" font-size="14" font-weight="700" font-family="Nunito, sans-serif" fill="#1E2A44">${v < 0 ? "−" + (-v) : v}</text>`; }
+  const temp = 22, yt = y0 - (temp - min) * k, alto = S.risolto[1] && S.alzato ? yt : y0 - 2;
+  return `<svg class="disegno" viewBox="0 0 160 280" role="img" aria-label="Termometro da −10 a ${P} gradi, una tacca ogni ${s} gradi">
+    <rect x="88" y="20" width="22" height="222" rx="11" fill="var(--vetro)" stroke="#1E2A44" stroke-width="2.5"/>
+    <rect class="mercurio" id="mercurio" x="94" y="${alto.toFixed(1)}" width="10" height="${(246 - alto).toFixed(1)}" fill="var(--mercurio)"/>
+    <circle id="bulbo" cx="99" cy="252" r="16" fill="var(--mercurio)" stroke="#1E2A44" stroke-width="2.5" style="cursor:pointer"/>${t}
+    <text x="122" y="40" font-size="14" font-weight="800" font-family="Nunito, sans-serif" fill="#1E2A44">°C</text>
+  </svg>`;
+}
+function svgPluviometro(){
+  const {s, P} = STR.pluviometro, y0 = 238, y1 = 54, k = (y0 - y1) / P;
+  let t = "";
+  for(let v = 0; v <= P; v += s){ const y = y0 - v * k, lungo = v % 50 === 0;
+    t += `<line x1="54" y1="${y.toFixed(1)}" x2="${lungo ? 74 : 66}" y2="${y.toFixed(1)}" stroke="#1E2A44" stroke-width="${lungo ? 1.8 : 1}"/>`;
+    if(lungo) t += `<text x="80" y="${(y + 5).toFixed(1)}" font-size="13" font-weight="700" font-family="Nunito, sans-serif" fill="#1E2A44">${v}</text>`; }
+  const acqua = Math.round(P * .35 / s) * s, ya = y0 - acqua * k;
+  return `<svg class="disegno" viewBox="0 0 160 280" role="img" aria-label="Pluviometro graduato da 0 a ${P} millimetri, una tacca ogni ${s} millimetri">
+    <path d="M30 20h96l-16 18H46z" fill="var(--metallo2)" stroke="#1E2A44" stroke-width="2"/>
+    <rect x="50" y="38" width="56" height="204" rx="4" fill="var(--vetro)" stroke="#1E2A44" stroke-width="2.5"/>
+    <rect x="52" y="${ya.toFixed(1)}" width="52" height="${(240 - ya).toFixed(1)}" fill="var(--acqua)" opacity=".75"/>${t}
+    <text x="112" y="250" font-size="13" font-weight="800" font-family="Nunito, sans-serif" fill="#1E2A44">mm</text>
+  </svg>`;
+}
+const SVG_ANEMO = '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 34v28" stroke="var(--ink)" stroke-width="3"/><g class="pale"><path d="M32 32L14 14M32 32l22-4M32 32l-2 24" stroke="var(--ink)" stroke-width="2.5"/><circle cx="12" cy="12" r="7" fill="var(--acqua)" stroke="var(--ink)" stroke-width="2"/><circle cx="56" cy="27" r="7" fill="var(--acqua)" stroke="var(--ink)" stroke-width="2"/><circle cx="30" cy="57" r="7" fill="var(--acqua)" stroke="var(--ink)" stroke-width="2"/><circle cx="32" cy="32" r="4" fill="var(--ink)"/></g></svg>';
+function disegna2(){
+  const sez = $("#e2"), chiuso = !S.risolto[0], fatto = S.risolto[1];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(1, "Il banco degli strumenti") + chiusoHtml(1); return; }
+  const scelte = d => `<div class="scelte${S.sbagliate2.has(d.k) ? " sbagliata" : ""}${fatto ? " giusta" : ""}"><span>${d.q}</span><div class="opzioni" role="group" aria-label="${d.q}">${d.opz.map(o => `<button class="opz" type="button" data-k="${d.k}" data-o="${o}" aria-pressed="${(fatto ? d.giusta : S.scelte2[d.k]) === o}"${fatto ? " disabled" : ""}>${o}</button>`).join("")}</div></div>`;
+  const per = str => DOMANDE2.filter(d => d.str === str).map(scelte).join("");
+  sez.innerHTML = testa(1, "Il banco degli strumenti") + `
+    <p class="consegna">Prima di leggere i dati bisogna conoscere gli strumenti della stazione. Per ognuno <b>scegli la sensibilità e la portata</b> guardando le tacche, poi rispondi alle domande del registro.</p>
+    ${aiutoHtml(1)}
+    <div class="strumenti">
+      <div class="strumento" style="grid-column:1/-1"><h3>Il righello</h3>${svgRighello()}<div class="registro">${per("righello")}</div></div>
+      <div class="strumento"><h3>Il termometro</h3>${svgTermometro()}${per("termometro")}</div>
+      <div class="strumento"><h3>Il pluviometro</h3>${svgPluviometro()}${per("pluviometro")}</div>
+      <div class="strumento"><h3>La bilancia</h3><p class="consegna" style="font-size:.95rem">La bilancia della stazione, <b>vuota</b>, segna già <b>1 kg</b>. Ogni cosa che ci appoggi sopra risulta 1 kg più pesante.</p>${DOMANDE2.filter(d => d.k === "errore").map(scelte).join("")}</div>
+    </div>
+    <div class="riquadro"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h3>Il registro dell'anemometro</h3><button class="anemometro" type="button" id="anemometro" aria-label="L'anemometro della stazione">${SVG_ANEMO}</button></div>
+      <p class="consegna" style="font-size:.95rem">Tre compagni hanno cronometrato quanto ci mette l'anemometro a fare 10 giri. Ognuno ha trovato un tempo un po' diverso: sono <b>errori accidentali</b>, quindi si fa la <b>media</b>.</p>
+      <div class="tempi">${TEMPI.map(t => `<span>${t} s</span>`).join("")}</div>
+      <label class="campo${S.sbagliate2.has("media") ? " sbagliata" : ""}${fatto ? " giusta" : ""}">Media = <input type="text" inputmode="numeric" id="media" value="${fatto ? MEDIA : S.media}"${fatto ? " disabled" : ""}> s</label>
+    </div>
+    ${fatto ? premioHtml(1, `(${TEMPI.join(" + ")}) : 3 = ${MEDIA} s. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla2">Controlla il registro</button><p class="esito" id="esito1"></p></div>`}`;
+  if(fatto){
+    if(!S.alzato){ S.alzato = true; requestAnimationFrame(() => requestAnimationFrame(() => {
+      const m = $("#mercurio"); const {P} = STR.termometro, k = 200 / (P + 10), yt = 230 - (22 + 10) * k;
+      if(m){ m.style.y = yt.toFixed(1) + "px"; m.style.height = (246 - yt).toFixed(1) + "px"; }
+      $("#anemometro")?.classList.add("veloce"); suona("vento"); })); }
+    return;
+  }
+  sez.querySelectorAll(".opz").forEach(b => b.addEventListener("click", () => {
+    avvia(); S.scelte2[b.dataset.k] = b.dataset.o; S.sbagliate2.delete(b.dataset.k); suona("bip");
+    b.parentElement.querySelectorAll(".opz").forEach(x => x.setAttribute("aria-pressed", x === b));
+    b.closest(".scelte").classList.remove("sbagliata");
+  }));
+  $("#media").addEventListener("input", e => { avvia(); S.media = e.target.value; });
+  $("#controlla2").addEventListener("click", controlla2);
+}
+function controlla2(){
+  const mancano = DOMANDE2.filter(d => !S.scelte2[d.k]).length + (String(S.media).trim() ? 0 : 1);
+  if(mancano){ esito(1, `Mancano ancora ${mancano} ${mancano === 1 ? "risposta" : "risposte"}.`, "no"); suona("no"); return; }
+  S.sbagliate2 = new Set(DOMANDE2.filter(d => S.scelte2[d.k] !== d.giusta).map(d => d.k));
+  if(+String(S.media).replace(",", ".") !== MEDIA) S.sbagliate2.add("media");
+  if(S.sbagliate2.size){
+    disegna2();
+    esito(1, S.sbagliate2.size === 1 ? "1 risposta è sbagliata: è colorata di rosso." : `${S.sbagliate2.size} risposte sono sbagliate: sono colorate di rosso.`, "no"); suona("no"); return;
+  }
+  risolvi(1);
+}
+let tocchiAnemo = 0, tocchiBulbo = 0;
+document.addEventListener("click", e => {
+  const a = e.target.closest("#anemometro");
+  if(a){ suona("vento"); a.classList.add("veloce"); setTimeout(() => { if(!S.risolto[1]) a.classList.remove("veloce"); }, 1200);
+    if(++tocchiAnemo >= 3) segreto("anemometro", "Che raffica! L'anemometro misura la velocità del vento: più gira veloce, più il vento è forte."); return; }
+  if(e.target.closest("#bulbo")){ suona("bip");
+    if(++tocchiBulbo >= 3) segreto("kelvin", "Lo zero assoluto è 0 kelvin, cioè −273 °C: la temperatura più bassa che possa esistere. Nel Sistema Internazionale la temperatura si misura in kelvin!"); }
+});
+
+/* ===== enigma 3: la scala delle equivalenze ===== */
+const GX0 = 40, GY0 = 30, GW = 66, GH = 34;
+function svgScala(){
+  let g = "";
+  UNITA.forEach((u, i) => {
+    const x = GX0 + i * GW, y = GY0 + i * GH;
+    g += `<rect x="${x}" y="${y}" width="${GW}" height="${300 - y}" fill="${i % 2 ? "var(--pill)" : "var(--card)"}" stroke="var(--ink)" stroke-width="2"/>
+      <text x="${x + GW / 2}" y="${y + 24}" text-anchor="middle" font-size="19" font-weight="800" font-family="Baloo 2, sans-serif" fill="var(--ink)">${u}</text>`;
+  });
+  const st = CONV[STELLA3], a = UNITA.indexOf(st.da);
+  return `<svg viewBox="0 0 520 310" role="img" aria-label="La scala delle unità di lunghezza, dai chilometri ai millimetri">
+    ${g}
+    <path d="M440 40q30 40 0 80" fill="none" stroke="var(--ok)" stroke-width="3" marker-end="url(#fs)"/><text x="470" y="74" font-size="15" font-weight="800" fill="var(--ok)" font-family="Nunito, sans-serif">giù</text><text x="470" y="92" font-size="15" font-weight="800" fill="var(--ok)" font-family="Nunito, sans-serif">× 10</text>
+    <path d="M30 160q-24-40 0-80" fill="none" stroke="var(--errore)" stroke-width="3" marker-end="url(#fs2)"/><text x="4" y="186" font-size="15" font-weight="800" fill="var(--errore)" font-family="Nunito, sans-serif">su : 10</text>
+    <defs><marker id="fs" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ok)"/></marker><marker id="fs2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--errore)"/></marker></defs>
+    <g class="omino-scala" id="omino-scala" style="transform:translate(${GX0 + a * GW + GW / 2}px,${GY0 + a * GH}px)">
+      <circle cx="0" cy="-28" r="6" fill="var(--giallo)" stroke="var(--ink)" stroke-width="2"/><path d="M0 -22v12M0 -10l-6 10M0 -10l6 10M0 -18l-7 5M0 -18l7 5" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </svg>`;
+}
+const SVG_SOLE = '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="13" fill="#FFD43B" stroke="#1E2A44" stroke-width="2"/><g stroke="#FFD43B" stroke-width="4" stroke-linecap="round"><path d="M32 6v8M32 50v8M6 32h8M50 32h8M13 13l6 6M45 45l6 6M13 51l6-6M45 19l6-6"/></g></svg>';
+function disegna3(){
+  const sez = $("#e3"), chiuso = !S.risolto[1], fatto = S.risolto[2];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(2, "La scala delle equivalenze") + chiusoHtml(2); return; }
+  sez.innerHTML = testa(2, "La scala delle equivalenze") + `
+    <p class="consegna">Lo schermo della stazione è spento: i dati sono arrivati nelle unità sbagliate. <b>Converti ogni misura</b> e lo schermo si riaccenderà con le previsioni.</p>
+    ${aiutoHtml(2)}
+    <div class="equiv">
+      <div class="scala">${svgScala()}</div>
+      <div class="conversioni">${CONV.map((c, i) => `<div class="conv${S.sbagliate3.has(i) ? " sbagliata" : ""}${fatto ? " giusta" : ""}">${i === STELLA3 ? '<span class="stella" aria-label="con la stella">★</span>' : ""}<span>${fmt(c.v)} ${c.da} =</span><input type="text" inputmode="numeric" data-i="${i}" value="${fatto ? fmt(c.ris) : S.conv[i]}" aria-label="${fmt(c.v)} ${c.da} in ${c.a}"${fatto ? " disabled" : ""}><span>${c.a}</span></div>`).join("")}
+        <div class="schermo-meteo${fatto ? " acceso" : ""}" id="schermo">${fatto ? `${SVG_SOLE}<span>DOMANI: SERENO<br>MAX 24 °C · VENTO ${MEDIA} km/h<br>PIOGGIA: 0 mm</span>` : `<span style="grid-column:1/-1;opacity:.5">SCHERMO SPENTO · DATI DA CONVERTIRE</span>`}</div>
+      </div>
+    </div>
+    ${fatto ? premioHtml(2, `Da ${CONV[STELLA3].da} a ${CONV[STELLA3].a} ${CODICE[2] === 1 ? "c'è 1 gradino" : `ci sono ${CODICE[2]} gradini`}. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla3">Invia i dati</button><p class="esito" id="esito2"></p></div>`}`;
+  if(fatto){ if(!S.sceso){ S.sceso = true; scendi(); } return; }
+  sez.querySelectorAll("input[data-i]").forEach(inp => inp.addEventListener("input", () => { avvia(); S.conv[+inp.dataset.i] = inp.value; }));
+  $("#controlla3").addEventListener("click", controlla3);
+}
+function controlla3(){
+  const vuote = S.conv.filter(v => !String(v).trim()).length;
+  if(vuote){ esito(2, `Mancano ancora ${vuote} ${vuote === 1 ? "conversione" : "conversioni"}.`, "no"); suona("no"); return; }
+  const num = t => +String(t).replace(/[.\s]/g, "").replace(",", ".");
+  S.sbagliate3 = new Set(CONV.map((c, i) => num(S.conv[i]) === c.ris ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliate3.size){
+    disegna3();
+    esito(2, S.sbagliate3.size === 1 ? "1 conversione è sbagliata: è colorata di rosso." : `${S.sbagliate3.size} conversioni sono sbagliate: sono colorate di rosso.`, "no"); suona("no"); return;
+  }
+  risolvi(2);
+}
+/* effetto finale: l'omino percorre i gradini della conversione con la stella */
+function scendi(){
+  const om = $("#omino-scala"); if(!om) return;
+  const st = CONV[STELLA3], a = UNITA.indexOf(st.da), b = UNITA.indexOf(st.a), dir = b > a ? 1 : -1;
+  for(let i = 1; i <= Math.abs(b - a); i++){
+    const u = a + i * dir;
+    setTimeout(() => { om.style.transform = `translate(${GX0 + u * GW + GW / 2}px,${GY0 + u * GH}px)`; suona("toc"); }, 400 + i * 450);
+  }
+}
+
+/* ===== il lucchetto ===== */
+function disegna4(){
+  const sez = $("#e4"), pronto = S.risolto.every(Boolean);
+  if(S.libero){
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta della cabina è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato il metodo scientifico, sensibilità e portata degli strumenti, gli errori e la media, le equivalenze tra le unità di misura.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone()}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    $("#ricomincia").addEventListener("click", () => location.reload());
+    $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("misure"));
+    return;
+  }
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
+    <h2 id="t4">La porta della cabina</h2>
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
+      <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
+      <output aria-label="Cifra ${i+1}">${v}</output>
+      <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
+    <p class="esito" id="esito3"></p></div></div>`;
+  sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
+    b.parentElement.querySelector("output").textContent = S.rotelle[i];
+  }));
+  $("#apri")?.addEventListener("click", () => {
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
+    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+  });
+}
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
+}
+
+function disegnaIndizi(){
+  $("#indizi").innerHTML = CODICE.map((c,i) => `<span class="cifra-mini${S.risolto[i] ? "" : " vuota"}" title="${INDIZI[i]}">${S.risolto[i] ? c : "?"}</span>`).join("");
+}
+function risolvi(i){
+  S.risolto[i] = true; suona("si");
+  annuncia(`Enigma ${i+1} risolto! La cifra numero ${i+1} è ${CODICE[i]}.`);
+  tutto();
+  const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
+  setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
+}
+function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-aiuto]"); if(!b) return;
+  const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
+  [disegna1, disegna2, disegna3][i]();
+});
+
+
+/* segreti: scrivere "galileo", toccare 3 volte l'anemometro, toccare 3 volte il bulbo del termometro */
+const SEGRETI = 3;
+const PAROLE_SEGRETE = [["galileo", () => segreto("galileo", "Galileo Galilei è il padre del metodo scientifico: non si fidava delle opinioni, voleva prove e misure. Con un piano inclinato e un orologio ad acqua studiò come cadono gli oggetti!")]];
+tutto();
+aggiornaSuoni();
+</script>
+</body>
+</html>

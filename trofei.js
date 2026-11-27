@@ -8,6 +8,8 @@ const TROFEI = [
   {id:"relativi", nome:"La Piuma del Grifone delle Nevi", gioco:"Il drone sotto zero", link:"escape-relativi.html", argomento:"Numeri relativi"},
   {id:"naturali", nome:"La Moneta del Mercante Infinito", gioco:"Il supermercato chiuso", link:"escape-numeri.html", argomento:"Numeri naturali e decimali"},
   {id:"letterale", nome:"La Pergamena delle Rune", gioco:"Il cantiere bloccato", link:"escape-letterale.html", argomento:"Espressioni letterali e monomi"},
+  {id:"misure", nome:"La Clessidra del Custode delle Misure", gioco:"La stazione meteo sul tetto", link:"escape-misure.html", argomento:"Metodo, grandezze e misure"},
+  {id:"segmenti", nome:"La Locomotiva di Cristallo", gioco:"Il plastico ferroviario", link:"escape-segmenti.html", argomento:"I segmenti"},
   {id:"elementi", nome:"La Bussola delle Stelle", gioco:"La casetta del guardiaparco", link:"escape-elementi.html", argomento:"I primi elementi della geometria"},
   {id:"materia", nome:"Il Cristallo dell'Alchimista", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"Atomi, tavola periodica e legami"}
 ];
@@ -77,6 +79,8 @@ const COLORI_TROFEO = {
   materia:  {oro:"#C39BF5", oroScuro:"#7A47D6", linea:"#1E2A44", base:"#5E4A8A", extra:"#FFE066"},
   letterale:{oro:"#F2E1B6", oroScuro:"#C9A66B", linea:"#1E2A44", base:"#8A6A3E", extra:"#2F9E5B"},
   elementi: {oro:"#3A5A9E", oroScuro:"#D5DCE6", linea:"#1E2A44", base:"#4A5A7A", extra:"#FFE066"},
+  misure:   {oro:"#D6F1FF", oroScuro:"#3FA9E0", linea:"#1E2A44", base:"#8A6A3E", extra:"#FFE066"},
+  segmenti: {oro:"#BFF0E6", oroScuro:"#2FB59B", linea:"#1E2A44", base:"#5A6A7A", extra:"#FFE066"},
   gran:     {oro:"#F5C542", oroScuro:"#D9A21B", linea:"#1E2A44", base:"#B98042", extra:"#E5534B"}
 };
 function svgTrofeo(id, colori){
@@ -118,6 +122,20 @@ function svgTrofeo(id, colori){
                <circle cx="50" cy="46" r="26" fill="${oro}" stroke="${linea}" stroke-width="3.5"/><circle cx="50" cy="46" r="20" fill="none" stroke="${oroScuro}" stroke-width="1.5" stroke-dasharray="2 4"/>
                <path d="M50 24l6 22-6 22-6-22z" fill="${oroScuro}" stroke="${linea}" stroke-width="2" stroke-linejoin="round"/><path d="M50 24l6 22h-12z" fill="${extra}" stroke="${linea}" stroke-width="2" stroke-linejoin="round"/>
                <circle cx="50" cy="46" r="3" fill="${linea}"/>${scintilla(20, 22, 5)}${scintilla(82, 70, 5)}<path d="M50 72v2" stroke="${linea}" stroke-width="4"/>`,
+    /* la clessidra del custode delle misure: la sabbia azzurra scorre verso l'alto */
+    misure:   `<rect x="24" y="6" width="52" height="7" rx="2" fill="${base}" stroke="${linea}" stroke-width="2.5"/><rect x="24" y="61" width="52" height="7" rx="2" fill="${base}" stroke="${linea}" stroke-width="2.5"/>
+               <path d="M29 13v48M71 13v48" stroke="${base}" stroke-width="4"/><path d="M29 13v48M71 13v48" stroke="${linea}" stroke-width="1.2"/>
+               <path d="M34 13h32l-14 24 14 24H34l14-24z" fill="${oro}" stroke="${linea}" stroke-width="2.5" stroke-linejoin="round"/>
+               <path d="M38 16h24l-7 10h-10z" fill="${oroScuro}"/><path d="M42 58h16l-4-5h-8z" fill="${oroScuro}"/>
+               <circle cx="50" cy="44" r="1.6" fill="${oroScuro}"/><circle cx="50" cy="38" r="1.6" fill="${oroScuro}"/><circle cx="50" cy="32" r="1.6" fill="${oroScuro}"/>
+               ${scintilla(16, 30, 5)}${scintilla(84, 46, 6)}<path d="M50 68v6" stroke="${linea}" stroke-width="4"/>`,
+    /* la locomotiva di cristallo, su un binario che non finisce mai */
+    segmenti: `<path d="M8 62h84" stroke="${linea}" stroke-width="3"/><path d="M12 66h4M26 66h4M40 66h4M54 66h4M68 66h4M82 66h4" stroke="${base}" stroke-width="3"/>
+               <path d="M20 26h30v28H20z" fill="${oro}" stroke="${linea}" stroke-width="3" stroke-linejoin="round"/><path d="M24 31h22v10H24z" fill="${oroScuro}" opacity=".6"/>
+               <path d="M50 36h28a6 6 0 016 6v12H50z" fill="${oro}" stroke="${linea}" stroke-width="3" stroke-linejoin="round"/>
+               <path d="M62 36V22h8v14" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5"/><path d="M66 18c-6-6 2-10-4-14" fill="none" stroke="${oroScuro}" stroke-width="2.5" stroke-linecap="round"/>
+               <circle cx="30" cy="58" r="6" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5"/><circle cx="56" cy="58" r="6" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5"/><circle cx="76" cy="58" r="5" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5"/>
+               ${scintilla(14, 16, 5)}${scintilla(88, 24, 5)}<path d="M50 68v6" stroke="${linea}" stroke-width="4"/>`,
     /* la corona del gran maestro: una gemma per ogni regno */
     gran:     `<path d="M18 58l-4-34 18 16 18-26 18 26 18-16-4 34z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
                <rect x="17" y="56" width="66" height="12" rx="3" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
