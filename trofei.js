@@ -7,6 +7,7 @@ const TROFEI = [
   {id:"insiemi", nome:"Gli anelli di Venn", gioco:"L'aula chiusa", link:"escape-insiemi.html", argomento:"Insiemi, tabelle e grafici"},
   {id:"relativi", nome:"Il drone d'oro", gioco:"Il drone sotto zero", link:"escape-relativi.html", argomento:"Numeri relativi"},
   {id:"naturali", nome:"Il carrello d'oro", gioco:"Il supermercato chiuso", link:"escape-numeri.html", argomento:"Numeri naturali e decimali"},
+  {id:"letterale", nome:"La gru d'oro", gioco:"Il cantiere bloccato", link:"escape-letterale.html", argomento:"Espressioni letterali e monomi"},
   {id:"materia", nome:"L'atomo d'oro", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"Atomi, tavola periodica e legami"}
 ];
 
@@ -80,6 +81,12 @@ function svgTrofeo(id, colori){
                <path d="M24 26h60l-9 24H31z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
                <path d="M38 26l2 24M52 26v24M66 26l-3 24M27 38h53" stroke="${linea}" stroke-width="2"/>
                <circle cx="38" cy="66" r="6" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/><circle cx="66" cy="66" r="6" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>`,
+    letterale: `<path d="M34 72V20M44 72V20" stroke="${linea}" stroke-width="4"/><path d="M34 30l10 10M44 40l-10 10M34 50l10 10" stroke="${linea}" stroke-width="2.5"/>
+               <path d="M14 18h76" stroke="${linea}" stroke-width="9" stroke-linecap="round"/><path d="M14 18h76" stroke="${oro}" stroke-width="5" stroke-linecap="round"/>
+               <path d="M39 18V6L14 18M39 6l51 12" fill="none" stroke="${linea}" stroke-width="2.5"/>
+               <rect x="12" y="21" width="14" height="10" rx="2" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5"/>
+               <path d="M76 21v26" stroke="${linea}" stroke-width="2.5"/><path d="M76 47v4a3 3 0 1 1-4 3" fill="none" stroke="${linea}" stroke-width="3" stroke-linecap="round"/>
+               <rect x="62" y="56" width="28" height="8" rx="1.5" fill="${oro}" stroke="${linea}" stroke-width="2.5"/>`,
     materia: `<g fill="none" stroke-linecap="round">
                <ellipse cx="50" cy="40" rx="31" ry="11" stroke="${linea}" stroke-width="9"/><ellipse cx="50" cy="40" rx="31" ry="11" stroke="${oro}" stroke-width="4.5"/>
                <ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(60 50 40)" stroke="${linea}" stroke-width="9"/><ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(60 50 40)" stroke="${oro}" stroke-width="4.5"/>

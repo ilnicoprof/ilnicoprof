@@ -20,6 +20,9 @@ const GIOCHI = [
    capitolo:["I numeri relativi", "Le operazioni con i numeri relativi"],
    descr:"Escape room: sistema gli oggetti ai piani del palazzo, guida il drone sopra i tetti fino al pacco e collega le operazioni ai risultati.",
    link:"escape-relativi.html"},
+  {titolo:"Il cantiere bloccato", tipo:"escape", materia:"algebra", classe:"3ª", capitolo:"Il calcolo letterale",
+   descr:"Escape room: misura con il metro e calcola le formule, porta i monomi simili sugli scaffali con il muletto e sblocca la gru con le operazioni tra monomi.",
+   link:"escape-letterale.html"},
   {titolo:"Il laboratorio sigillato", tipo:"escape", materia:"scienze", classe:"2ª", capitolo:"Dentro la materia",
    descr:"Escape room: costruisci un atomo, rimetti a posto la tavola periodica caduta e riconosci i legami chimici per uscire dal laboratorio.",
    link:"escape-chimica.html"}

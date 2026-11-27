@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Il cantiere bloccato</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" sizes="32x32" href="immagini/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="immagini/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="immagini/icon-192.png">
+<link rel="apple-touch-icon" href="immagini/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti del nicoprof; enigma 1 = il container del capocantiere (metro a nastro e formule),
+   enigma 2 = il magazzino dei monomi (muletto e scaffali), enigma 3 = il quadro comandi della gru, poi il cancello */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300; --viola:#C9B8FF; --viola-ink:#35207A;
+  --cantiere:#F5B700; --cantiere-scuro:#C98F00; --nastro:#FFD43B; --cemento:#D8D4CC; --cemento-scuro:#A8A296;
+  --legno:#D9A066; --legno-scuro:#9A6A36; --piastrella:#BFD9F2; --sacco:#E8E2D4; --cielo:#DCEBFA; --terra:#C9A27A;
+  --cassa:#E3B97A; --cassa-scura:#A8783E; --scaffale:#7D8796; --muletto:#F59E0B;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --porta:#8C96A6; --porta-scura:#5E6878; --metallo:#D5DCE6;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+  --f-mono:"Courier New",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --viola:#B3A0F5;
+  --cantiere:#E0A800; --cantiere-scuro:#9A6E00; --nastro:#E8C23A; --cemento:#4A4740; --cemento-scuro:#6E6A60;
+  --legno:#8A6236; --legno-scuro:#5A3E1E; --piastrella:#2E4E6E; --sacco:#5A5548; --cielo:#1F2E46; --terra:#5A4630;
+  --cassa:#8A6236; --cassa-scura:#5A3E1E; --scaffale:#5A6680; --muletto:#D08A0A;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#5A6680; --porta-scura:#3E4A5E; --metallo:#5A6680;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --viola:#B3A0F5;
+  --cantiere:#E0A800; --cantiere-scuro:#9A6E00; --nastro:#E8C23A; --cemento:#4A4740; --cemento-scuro:#6E6A60;
+  --legno:#8A6236; --legno-scuro:#5A3E1E; --piastrella:#2E4E6E; --sacco:#5A5548; --cielo:#1F2E46; --terra:#5A4630;
+  --cassa:#8A6236; --cassa-scura:#5A3E1E; --scaffale:#5A6680; --muletto:#D08A0A;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#5A6680; --porta-scura:#3E4A5E; --metallo:#5A6680;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:820px;margin:0 auto;padding-block:20px 56px;display:grid;gap:20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap>*{min-width:0}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna svg{width:16px;height:16px}
+header{display:grid;gap:8px}
+.eyebrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:800;font-size:.85rem}
+.tag{font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.storia{margin:0;font-family:var(--f-hand);font-size:1.3rem;line-height:1.35;max-width:60ch}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.indizi{display:flex;gap:8px;flex-wrap:wrap}
+.cifra-mini{display:inline-grid;place-items:center;width:34px;height:40px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.cifra-mini.vuota{border-style:dashed;color:var(--ink-soft);background:transparent}
+
+.enigma{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px;display:grid;gap:14px;min-width:0}
+.enigma>*{min-width:0}
+.enigma.chiuso{box-shadow:none;border-style:dashed;border-color:var(--line);background:transparent}
+.enigma.risolto{border-color:var(--ok);box-shadow:5px 5px 0 var(--ok)}
+.e-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.e-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.1;display:flex;align-items:center;gap:10px}
+.e-head h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);font-size:1.1rem;flex:none}
+.enigma.chiuso h2{color:var(--ink-soft)}
+.enigma.chiuso .e-head h2 .n{background:transparent;color:var(--ink-soft);border-color:var(--line)}
+.consegna{margin:0;font-size:1.02rem;max-width:65ch}
+.consegna b{font-weight:800}
+.nota{margin:0;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+.esito{margin:0;min-height:1.5em;font-weight:800}
+.esito.si{color:var(--ok)} .esito.no{color:var(--errore)}
+.azioni{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+.btn.piccolo{font-size:.92rem;padding:5px 12px;box-shadow:2px 2px 0 var(--ink)}
+.aiuto{margin:0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--giallo) 30%,transparent);border:1.5px dashed var(--giallo-ink);font-family:var(--f-hand);font-size:1.15rem}
+.premio{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:var(--ok-bg);color:var(--ok);font-weight:800}
+.premio .cifra-mini{border-color:var(--ok);flex:none}
+
+/* pezzi che si spostano */
+.pezzo{all:unset;box-sizing:border-box;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-width:40px;height:40px;padding:0 10px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:1.1rem;box-shadow:0 3px 0 var(--ink);font-variant-numeric:tabular-nums}
+.pezzo:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pezzo.scelto{background:var(--marker);transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
+.pezzo.sollevato{opacity:.3}
+.pezzo.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+.ombra{position:fixed;z-index:20;pointer-events:none;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
+.scegli .zona{outline:2px dashed var(--accent);outline-offset:-2px}
+.zona.sopra{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
+.banco{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:58px;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
+.banco .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.1rem}
+.etichetta{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin:0 0 -6px}
+.display{font-family:var(--f-mono);font-weight:700;background:#16241A;color:#7CFFA0;padding:10px 14px;border-radius:10px;border:3px solid var(--ink);font-size:1.15rem;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 6px rgba(124,255,160,.5)}
+.display small{display:block;font-size:.75rem;color:#4FBF73;text-shadow:none}
+
+.c-viola{background:var(--viola);color:var(--viola-ink)}
+.nascosto{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* enigma 1: il container del capocantiere */
+.container-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.casco{all:unset;cursor:pointer;display:inline-grid;place-items:center;width:58px;height:46px;border-radius:10px}
+.casco svg{width:56px;height:42px}
+.casco:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.casco.salta{animation:salta .35s ease}
+@keyframes salta{50%{transform:translateY(-10px) rotate(-8deg)}}
+.banco-lavoro{display:grid;gap:12px;padding:12px;border-radius:14px;background:var(--legno);border:3px solid var(--legno-scuro);box-shadow:inset 0 -6px 0 rgba(0,0,0,.12)}
+.postazione{position:relative;border-radius:10px;background:color-mix(in srgb,var(--card) 82%,var(--legno));border:2px solid var(--legno-scuro);overflow:hidden;touch-action:pan-y}
+.postazione .tit{position:absolute;right:8px;top:6px;font-weight:800;font-size:.8rem;color:var(--ink-soft);background:var(--card);padding:1px 8px;border-radius:999px;border:1.5px solid var(--line);z-index:3}
+.oggetto{position:absolute;border:2px solid var(--ink);border-radius:3px}
+.oggetto.piastrella{background:var(--piastrella);background-image:linear-gradient(135deg,rgba(255,255,255,.45) 0 18%,transparent 18%)}
+.oggetto.pannello{background:var(--legno);background-image:repeating-linear-gradient(90deg,transparent 0 9px,rgba(0,0,0,.08) 9px 11px)}
+.metro{position:absolute;z-index:2}
+.metro .nastro{position:absolute;left:0;top:0;background-color:var(--nastro);border:1.5px solid var(--ink);border-radius:2px}
+.metro.h .nastro{height:16px}
+.metro.v .nastro{width:16px}
+.metro .maniglia{all:unset;position:absolute;width:30px;height:30px;border-radius:8px;background:var(--cantiere);border:2px solid var(--ink);box-shadow:0 2px 0 var(--ink);cursor:grab;touch-action:none;display:grid;place-items:center;font-weight:800;font-size:.7rem;color:var(--ink)}
+.metro .maniglia:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.metro .maniglia.trascina{cursor:grabbing}
+.metro .lettura{position:absolute;white-space:nowrap;font-family:var(--f-mono);font-weight:700;font-size:.85rem;padding:1px 6px;border-radius:6px;background:var(--ink);color:var(--paper);pointer-events:none}
+.bancale{display:flex;align-items:flex-end;gap:4px;flex-wrap:wrap;padding:10px 12px 0;min-height:86px;position:relative}
+.bancale svg.sacco{width:44px;height:52px}
+.bancale .pallet{position:absolute;left:8px;right:8px;bottom:0;height:10px;background:var(--legno-scuro);border-radius:2px}
+.tablet{display:grid;gap:10px;padding:14px;border-radius:18px;background:var(--ink);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--cantiere-scuro)}
+.tablet .schermo{display:grid;gap:8px;padding:12px;border-radius:10px;background:var(--card)}
+.tablet h3{margin:0;font-family:var(--f-display);font-size:1.05rem}
+.formula-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding:6px 8px;border-radius:8px;background:var(--pill)}
+.formula-r .f{font-family:var(--f-mono);font-weight:700;font-size:1.1rem}
+.formula-r small{display:block;font-family:var(--f-body);font-weight:700;font-size:.78rem;color:var(--ink-soft)}
+.formula-r label{display:flex;align-items:center;gap:6px;font-weight:800}
+.formula-r input{width:96px;font:inherit;font-family:var(--f-mono);font-weight:700;font-size:1.1rem;padding:5px 8px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+.formula-r.sbagliata{background:var(--errore-bg)}
+.formula-r.sbagliata input{border-color:var(--errore)}
+.formula-r.giusta input{border-color:var(--ok);background:var(--ok-bg)}
+
+/* enigma 2: il magazzino dei monomi */
+.magazzino{position:relative;display:grid;gap:8px;padding:12px 12px 70px;border-radius:14px;background:var(--cemento);border:3px solid var(--cemento-scuro)}
+.scaffali{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.scaffale{display:grid;align-content:start;gap:8px;min-height:190px;padding:8px;border:4px solid var(--scaffale);border-top-width:8px;border-radius:4px;background:color-mix(in srgb,var(--card) 70%,var(--cemento));position:relative}
+.scaffale .targa{justify-self:center;font-family:var(--f-mono);font-weight:700;font-size:1.2rem;padding:2px 12px;border-radius:6px;background:var(--giallo);color:var(--giallo-ink);border:2px solid var(--ink)}
+.scaffale .targa small{display:block;font-family:var(--f-body);font-size:.65rem;font-weight:800;text-align:center;line-height:1}
+.scaffale .stella{position:absolute;top:-14px;right:-8px;font-size:1.5rem;color:var(--giallo);-webkit-text-stroke:1.5px var(--ink);z-index:1}
+.scaffale .dentro{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.cassa{height:auto;min-height:44px;padding:4px 10px;border-radius:6px;background:var(--cassa);color:#2A1A08;border-color:var(--cassa-scura);box-shadow:0 3px 0 var(--cassa-scura);font-family:var(--f-mono);font-size:1.05rem;background-image:linear-gradient(rgba(0,0,0,.14) 0 4px,transparent 4px calc(100% - 4px),rgba(0,0,0,.14) calc(100% - 4px))}
+.cassa.sbagliato{background-color:var(--errore-bg);background-image:none;color:var(--errore)}
+.muletto{position:absolute;bottom:6px;width:88px;margin-left:-44px;transition:left .8s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.muletto svg{width:88px;height:56px}
+@media (max-width:600px){.scaffali{grid-template-columns:1fr}.scaffale{min-height:110px}.muletto{display:none}.magazzino{padding-bottom:12px}}
+
+/* enigma 3: la gru */
+.cantiere3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start}
+@media (max-width:640px){.cantiere3{grid-template-columns:1fr}}
+.gru{width:100%;max-width:360px;justify-self:center;border-radius:14px;border:2px solid var(--ink);background:linear-gradient(var(--cielo),var(--card) 80%,var(--terra) 80%);overflow:hidden}
+.gru svg{width:100%;height:auto;display:block}
+.gru .cavo{transform-box:fill-box;transform-origin:top;transition:transform 2.2s cubic-bezier(.45,0,.3,1)}
+.gru .carico{transition:transform 2.2s cubic-bezier(.45,0,.3,1)}
+.gru.solleva .cavo{transform:scaleY(.36)}
+.gru.solleva .carico{transform:translateY(-66px)}
+.gru .braccio{transform-box:view-box;transform-origin:62px 42px;transition:transform 1s ease}
+.gru.solleva .braccio{animation:ruota 2.2s ease}
+@keyframes ruota{30%{transform:rotate(-2deg)}70%{transform:rotate(1deg)}}
+.tab-wrap{overflow-x:auto}
+table{border-collapse:collapse;min-width:260px;width:100%}
+th,td{border:2px solid var(--ink);padding:6px 10px;text-align:left}
+th{background:var(--pill);font-family:var(--f-display);font-weight:700}
+td.op{font-family:var(--f-mono);font-weight:700;font-size:1.1rem;white-space:nowrap}
+td.op .stella{color:var(--giallo);-webkit-text-stroke:1.2px var(--ink);margin-right:4px}
+.slot{display:grid;place-items:center;min-width:86px;min-height:44px;border-radius:10px;border:2px dashed var(--line);margin:-2px auto;cursor:pointer}
+.slot.pieno{border-color:transparent}
+.pezzo.ris{font-family:var(--f-mono)}
+
+/* il lucchetto */
+.porta{display:grid;gap:16px;justify-items:center;text-align:center;background:var(--porta);background-image:repeating-linear-gradient(90deg,transparent 0 46px,var(--porta-scura) 46px 48px);border:3px solid var(--ink);border-radius:18px 18px 6px 6px;padding:22px 14px;box-shadow:5px 5px 0 var(--ink);color:#FFF8EC}
+.porta h2{margin:0;font-family:var(--f-display);font-size:1.5rem}
+.porta.chiuso .lucchetto{opacity:.6}
+.lucchetto{display:flex;gap:10px;padding:16px 18px;border-radius:18px;background:var(--metallo);border:3px solid var(--ink);box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.rotella{display:grid;gap:4px;justify-items:center}
+.rotella button{all:unset;cursor:pointer;width:44px;height:28px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);font-weight:800}
+.rotella button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rotella button:disabled{cursor:default;opacity:.6}
+.rotella output{display:grid;place-items:center;width:52px;height:62px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:2.2rem;font-variant-numeric:tabular-nums}
+.porta .esito{color:#FFF8EC}
+.libero{display:grid;gap:10px;justify-items:center;text-align:center;padding:24px 16px;border-radius:18px;background:var(--ok-bg);border:3px solid var(--ok);color:var(--ink)}
+.libero b{font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--ok)}
+.libero p{margin:0;font-weight:700}
+
+.suoni{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+#segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
+#segreto b{font-family:var(--f-display);font-size:1.1rem}
+@keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
+@keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.scuoti{animation:scuoti .3s ease 2}
+@media (max-width:480px){.enigma{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.firma{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.1);font-family:var(--f-body);font-size:.75rem;color:var(--ink-soft);pointer-events:none}
+.firma img{width:30px;height:30px;border-radius:50%;background:#FFFFFF;border:1px solid var(--line);flex:none}
+.firma b{font-weight:800;color:var(--ink)}
+@media (max-width:480px){.firma{padding:3px}.firma span{display:none}}
+
+/* il cancello del cantiere scorre di lato invece di girare */
+.uscita{overflow:hidden;border-radius:18px 18px 6px 6px}
+.porta{background:var(--porta);background-image:repeating-linear-gradient(90deg,transparent 0 30px,var(--porta-scura) 30px 36px),linear-gradient(transparent 0 18px,var(--cantiere) 18px 30px,transparent 30px);transform-origin:center;transition:transform 1.6s cubic-bezier(.55,0,.3,1)}
+.uscita.aperta .porta{transform:translateX(104%)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>ilnicoprof</a>
+  <header>
+    <div class="eyebrow"><span class="tag c-viola">Algebra</span> 3ª media · Il calcolo letterale: espressioni letterali e monomi · escape room</div>
+    <h1>il cantiere <span class="hl">bloccato</span></h1>
+    <p class="storia">Stai visitando il cantiere della nuova palestra della scuola quando scatta la chiusura automatica: il cancello è bloccato e il lucchetto ha un codice di 3 cifre. Usa il metro, le formule, il muletto e la gru del cantiere per trovarle!</p>
+    <div class="barra">
+      <span class="pill" id="tempo">Tempo 00:00</span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
+      <div class="indizi" id="indizi" aria-label="Cifre trovate"></div>
+    </div>
+  </header>
+
+  <section class="enigma" id="e1" aria-labelledby="t1"></section>
+  <section class="enigma" id="e2" aria-labelledby="t2"></section>
+  <section class="enigma" id="e3" aria-labelledby="t3"></section>
+  <section id="e4" aria-labelledby="t4"></section>
+  <p class="sr" aria-live="polite" id="annuncio"></p>
+</div>
+
+<div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js?v=ae314f74"></script>
+<script src="oggetto-segreto.js?v=9c38c69a"></script>
+<script>
+/* ===== dati ===== */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mescola = a => { const b = [...a]; for(let i = b.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]] = [b[j],b[i]]; } return b; };
+const pesca = (a, n) => mescola(a).slice(0, n);
+const MENO = "−";
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+const sup = n => String(n).split("").map(d => SUP[d]).join("");
+const pot = (l, e) => e === 1 ? l : l + sup(e);
+/* un monomio: coefficiente c e parte letterale [[lettera, esponente], ...] */
+function scrivi(c, lett, inverti = false){
+  let parti = lett.filter(([, e]) => e > 0).map(([l, e]) => pot(l, e));
+  if(inverti) parti = parti.reverse();
+  const L = parti.join("");
+  const coef = L && c === 1 ? "" : L && c === -1 ? MENO : c < 0 ? MENO + (-c) : String(c);
+  return coef + L;
+}
+const grado = lett => lett.reduce((t, [, e]) => t + e, 0);
+const chiave = lett => lett.filter(([, e]) => e > 0).map(([l, e]) => l + e).join("");
+const coefCasuale = () => (rnd(0, 3) ? 1 : -1) * rnd(1, 9);
+
+/* enigma 1: le misure (in cm) e le formule del cantiere */
+const MAXCM = 130;
+const MISURE = {l: 5 * rnd(4, 9), b: 10 * rnd(6, 11), h: 5 * rnd(5, 10)};
+const SACCHI = rnd(3, 8);
+const PREZZO = pesca([7, 8, 9, 12], 1)[0], FISSO = pesca([10, 15, 20], 1)[0];
+const FORMULE = [
+  {k:"p", nome:"Perimetro della piastrella quadrata", f:"p = 4l", u:"cm", val: 4 * MISURE.l},
+  {k:"A", nome:"Area del pannello di legno", f:"A = b · h", u:"cm²", val: MISURE.b * MISURE.h},
+  {k:"C", nome:`Costo dei sacchi di cemento (${PREZZO} € a sacco + ${FISSO} € di consegna)`, f:`C = ${PREZZO}n + ${FISSO}`, u:"€", val: PREZZO * SACCHI + FISSO}
+];
+
+/* enigma 2: tre scaffali con parti letterali che si somigliano, e le casse con i monomi */
+const TERNE = [
+  [[["a",1],["b",1]], [["a",2],["b",1]], [["a",1],["b",2]]],
+  [[["x",2],["y",1]], [["x",1],["y",2]], [["x",3]]],
+  [[["a",2]], [["a",2],["b",1]], [["a",1],["b",1]]],
+  [[["a",3],["b",2]], [["a",2],["b",3]], [["a",3],["b",1]]],
+  [[["x",1],["y",1]], [["x",2],["y",1]], [["x",1],["y",3]]]
+];
+function generaMagazzino(){
+  for(;;){
+    const parti = mescola(pesca(TERNE, 1)[0]);
+    const casse = [];
+    parti.forEach((lett, s) => {
+      for(let i = 0, n = rnd(2, 3); i < n; i++){
+        const forme = ["normale", "normale"];
+        if(lett.length > 1) forme.push("scambiata");
+        if(grado(lett) >= 2) forme.push("prodotto", "prodotto");
+        const forma = pesca(forme, 1)[0];
+        if(forma === "prodotto"){
+          /* divido la parte letterale in due fattori, entrambi con almeno una lettera */
+          let a, b;
+          do {
+            a = lett.map(([l, e]) => [l, rnd(0, e)]); b = lett.map(([l, e], k) => [l, e - a[k][1]]);
+          } while(!grado(a) || !grado(b));
+          const c1 = rnd(2, 4), c2 = (rnd(0, 2) ? 1 : -1) * rnd(1, 3);
+          const f2 = scrivi(c2, b);
+          casse.push({s, testo: `${scrivi(c1, a)} · ${c2 < 0 ? "(" + f2 + ")" : f2}`, forma});
+        } else casse.push({s, testo: scrivi(coefCasuale(), lett, forma === "scambiata"), forma});
+      }
+    });
+    const testi = casse.map(c => c.testo);
+    if(new Set(testi).size === testi.length && casse.some(c => c.forma === "prodotto") && casse.length <= 8)
+      return {parti, casse: mescola(casse)};
+  }
+}
+const MAG = generaMagazzino();
+const STELLA2 = rnd(0, 2);
+
+/* enigma 3: le operazioni con i monomi, ognuna con il suo risultato giusto e quello dell'errore tipico */
+function generaOperazioni(){
+  for(;;){
+    const L = pesca(["a", "b", "x", "y", "m", "t"], 5);
+    const ops = [];
+    { const e = rnd(1, 2), c1 = rnd(2, 7), c2 = rnd(2, 6);
+      ops.push({testo:`${c1}${pot(L[0], e)} + ${c2}${pot(L[0], e)}`, giusto:`${c1 + c2}${pot(L[0], e)}`, trappola:`${c1 + c2}${pot(L[0], 2 * e)}`, esp:e, nome:"somma"}); }
+    { let p, q; do { p = rnd(2, 4); q = rnd(2, 5); } while(p + q > 9 || p * q === p + q);
+      ops.push({testo:`${pot(L[1], p)} · ${pot(L[1], q)}`, giusto:pot(L[1], p + q), trappola:pot(L[1], p * q), esp:p + q, nome:"prodotto"}); }
+    { let p, q; do { q = rnd(2, 3); p = q * rnd(2, 3); } while(p - q === p / q);
+      ops.push({testo:`${pot(L[2], p)} : ${pot(L[2], q)}`, giusto:pot(L[2], p - q), trappola:pot(L[2], p / q), esp:p - q, nome:"quoziente"}); }
+    { let p, q; do { p = rnd(2, 4); q = rnd(2, 3); } while(p * q > 9 || p * q === p + q);
+      ops.push({testo:`(${pot(L[3], p)})${sup(q)}`, giusto:pot(L[3], p * q), trappola:pot(L[3], p + q), esp:p * q, nome:"potenza"}); }
+    { const c1 = rnd(2, 5), c2 = rnd(2, 4), p = rnd(1, 3), q = rnd(1, 3);
+      ops.push({testo:`${c1}${pot(L[4], p)} · (${MENO}${c2}${pot(L[4], q)})`, giusto:`${MENO}${c1 * c2}${pot(L[4], p + q)}`, trappola:`${c1 * c2}${pot(L[4], p + q)}`, esp:p + q, nome:"segni"}); }
+    const giusti = ops.map(o => o.giusto), trappole = ops.map(o => o.trappola);
+    if(new Set([...giusti, ...trappole]).size === 10) return {ops: mescola(ops), risultati: mescola([...giusti, ...pesca(trappole, 4)])};
+  }
+}
+const GRU = generaOperazioni();
+const STELLA3 = rnd(0, 4);
+
+const CODICE = [FORMULE[2].val % 10, grado(MAG.parti[STELLA2]), GRU.ops[STELLA3].esp];
+const INDIZI = [
+  "Qual è la cifra delle unità del costo del cemento?",
+  "Qual è il grado dei monomi sullo scaffale con la stella?",
+  "Qual è l'esponente nel risultato dell'operazione con la stella?"
+];
+const AIUTI = [
+  "Misura trascinando la maniglia gialla del metro fino alla fine dell'oggetto (puoi anche toccarla e usare le frecce della tastiera). Poi sostituisci le lettere con i numeri: in p = 4l al posto di l metti la misura del lato. Per il cemento conta i sacchi sul bancale: sono il numero n, e 9n vuol dire 9 · n.",
+  "Due monomi sono simili se hanno la stessa parte letterale: stesse lettere con gli stessi esponenti. L'ordine delle lettere non conta (ab = ba) e nemmeno il coefficiente. Se su una cassa c'è un prodotto, prima moltiplica i coefficienti e, per ogni lettera, somma gli esponenti. Il grado è la somma degli esponenti delle lettere.",
+  "Somma: solo tra simili, sommi i coefficienti e la parte letterale resta uguale (3m + 2m = 5m). Prodotto: sommi gli esponenti (a² · a³ = a⁵). Quoziente: li sottrai (a⁵ : a² = a³). Potenza: li moltiplichi ((a²)³ = a⁶). Occhio ai segni dei coefficienti!"
+];
+
+const S = {
+  risolto:[false,false,false], aiuto:[false,false,false],
+  metro:{l:0, b:0, h:0}, risposte:{p:"", A:"", C:""}, sbagliate1:new Set(),
+  posto2: MAG.casse.map(() => null), sbagliate2:new Set(), muletto:1, mulettoPrima:1,
+  slot3: GRU.ops.map(() => null), sbagliate3:new Set(), gruAlzata:false,
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+};
+const $ = s => document.querySelector(s);
+const annuncia = t => { $("#annuncio").textContent = t; };
+
+/* ===== trascina oppure tocca-e-posa ===== */
+let scelto = null;
+function seleziona(el, posa){
+  if(scelto && scelto.el === el){ deseleziona(); return; }
+  deseleziona();
+  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli"); suona("prendi");
+  annuncia(`Hai preso ${el.getAttribute("aria-label") || el.textContent}. Ora tocca dove vuoi metterlo.`);
+}
+function deseleziona(){ if(scelto) scelto.el.classList.remove("scelto"); scelto = null; document.body.classList.remove("scegli"); }
+const zonaSotto = (x,y) => document.elementFromPoint(x,y)?.closest("[data-zona]");
+function pezzo(el, posa){
+  el.addEventListener("pointerdown", e => {
+    if(e.button > 0) return;
+    avvia();
+    const r = el.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
+    let ombra = null, sopra = null;
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    const muovi = ev => {
+      if(!ombra){
+        if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
+        deseleziona();
+        ombra = el.cloneNode(true); ombra.classList.add("ombra"); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
+        document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
+      }
+      ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z !== sopra){ sopra?.classList.remove("sopra"); z?.classList.add("sopra"); sopra = z; }
+    };
+    const fine = ev => {
+      el.removeEventListener("pointermove", muovi); el.removeEventListener("pointerup", fine); el.removeEventListener("pointercancel", fine);
+      if(!ombra) return;
+      ombra.remove(); el.classList.remove("sollevato"); sopra?.classList.remove("sopra");
+      el.dataset.trascinato = "1";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z && ev.type === "pointerup") posa(el, z, ev.clientX, ev.clientY);
+    };
+    el.addEventListener("pointermove", muovi); el.addEventListener("pointerup", fine); el.addEventListener("pointercancel", fine);
+  });
+  el.addEventListener("click", e => {
+    e.stopPropagation();
+    if(el.dataset.trascinato){ delete el.dataset.trascinato; return; }
+    avvia(); seleziona(el, posa);
+  });
+}
+document.addEventListener("click", e => {
+  if(!scelto) return;
+  const z = e.target.closest("[data-zona]");
+  if(z){ const s = scelto; deseleziona(); s.posa(s.el, z, e.clientX, e.clientY); }
+  else if(!e.target.closest(".pezzo")) deseleziona();
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") deseleziona(); });
+
+/* ===== tempo e suoni ===== */
+function avvia(){ if(!S.inizio) S.inizio = Date.now(); }
+const mmss = ms => { const s = Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+setInterval(() => { $("#tempo").textContent = "Tempo " + mmss(S.inizio ? (S.fine || Date.now()) - S.inizio : 0); }, 500);
+let audio;
+let suoniOn = true; try { suoniOn = localStorage.getItem("nicoprof:suoni") !== "no"; } catch {}
+/* [frequenza, ritardo, durata, forma, volume] */
+const SUONI = {
+  si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25,"sawtooth",.07]], bip:[[880,0,.06,"triangle",.05]],
+  prendi:[[520,0,.05,"triangle",.08],[780,.04,.06,"triangle",.08]],
+  posa:[[300,0,.07,"triangle",.13],[200,.05,.09,"triangle",.11]],
+  tacca:[[1600,0,.015,"square",.025]],
+  toc:[[180,0,.06,"triangle",.18],[140,.05,.06,"triangle",.14]],
+  muletto:[[990,0,.12,"square",.035],[990,.28,.12,"square",.035]],
+  gru:[[90,0,1.9,"sawtooth",.05],[120,.1,1.8,"sawtooth",.03],[523,2,.1],[784,2.1,.25]],
+  segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[220,0,.9,"sawtooth",.03],[180,.3,.9,"sawtooth",.025]],
+  porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
+};
+function suona(tipo){
+  if(!suoniOn || !SUONI[tipo]) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    SUONI[tipo].forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
+  } catch {}
+}
+function aggiornaSuoni(){ const b = document.querySelector("#suoni"); if(b){ b.textContent = "Suoni: " + (suoniOn ? "sì" : "no"); b.setAttribute("aria-pressed", suoniOn); } }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#suoni")) return;
+  suoniOn = !suoniOn; try { localStorage.setItem("nicoprof:suoni", suoniOn ? "si" : "no"); } catch {}
+  aggiornaSuoni(); suona("bip");
+});
+
+/* ===== coriandoli per la vittoria ===== */
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--viola)", "var(--cantiere)"];
+  for(let i = 0; i < 90; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.8 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4500);
+  }
+}
+
+/* ===== segreti nascosti ===== */
+const trovati = new Set();
+function segreto(id, testo){
+  if(trovati.has(id)) return;
+  trovati.add(id); suona("segreto");
+  let t = document.querySelector("#segreto");
+  if(!t){ t = document.createElement("div"); t.id = "segreto"; t.setAttribute("role", "status"); document.body.append(t); }
+  t.innerHTML = `<b>Segreto trovato! (${trovati.size} di ${SEGRETI})</b><span>${testo}</span>`;
+  t.hidden = false; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  clearTimeout(segreto.timer); segreto.timer = setTimeout(() => { t.hidden = true; }, 6500);
+}
+let digitate = "";
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea") || e.key.length !== 1) return;
+  digitate = (digitate + e.key.toLowerCase()).slice(-12);
+  PAROLE_SEGRETE.forEach(([parola, azione]) => { if(digitate.endsWith(parola)) azione(); });
+});
+const fraseSegreti = () => trovati.size === SEGRETI ? "Hai scoperto anche tutti i segreti nascosti!" : `Segreti nascosti trovati: ${trovati.size} su ${SEGRETI}. Gioca di nuovo per scoprirli tutti!`;
+
+/* ===== parti comuni ===== */
+function testa(i, titolo){
+  const chiuso = i > 0 && !S.risolto[i-1];
+  return `<div class="e-head"><h2 id="t${i+1}"><span class="n">${S.risolto[i] ? "✓" : i+1}</span>${titolo}</h2>
+    ${!chiuso && !S.risolto[i] ? `<button class="btn piccolo" type="button" data-aiuto="${i}">${S.aiuto[i] ? "Nascondi aiuto" : "Aiutino"}</button>` : ""}</div>`;
+}
+const chiusoHtml = i => `<p class="nota">Risolvi prima l'enigma ${i} per aprire questo.</p>`;
+const premioHtml = (i, extra = "") => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Cifra n. ${i+1} trovata! ${INDIZI[i]} ${extra}Risposta: ${CODICE[i]}.</span></div>`;
+const aiutoHtml = i => S.aiuto[i] ? `<p class="aiuto">${AIUTI[i]}</p>` : "";
+function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textContent = testo; el.className = "esito "+tipo; } }
+
+
+
+
+
+/* ===== enigma 1: il container del capocantiere ===== */
+const SVG_CASCO = '<svg viewBox="0 0 56 42" aria-hidden="true"><path d="M6 32a22 22 0 0144 0z" fill="var(--cantiere)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/><path d="M24 10h8v22h-8z" fill="var(--cantiere-scuro)" stroke="var(--ink)" stroke-width="2"/><rect x="2" y="31" width="52" height="7" rx="3" fill="var(--cantiere)" stroke="var(--ink)" stroke-width="2.5"/></svg>';
+const SVG_SACCO = '<svg class="sacco" viewBox="0 0 44 52" aria-hidden="true"><path d="M6 8q16-6 32 0l3 38q-19 6-38 0z" fill="var(--sacco)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><rect x="11" y="20" width="22" height="12" rx="2" fill="var(--card)" stroke="var(--ink)" stroke-width="1.5"/><path d="M15 25h14M15 28h9" stroke="var(--ink)" stroke-width="1.3"/></svg>';
+/* le postazioni del banco da lavoro: misure in cm, con la posizione dell'oggetto e dei metri */
+const POST = [
+  {id:"post-l", tit:"Piastrella quadrata", alt: () => MISURE.l + 22,
+   oggetti: () => [{cls:"piastrella", x:6, y:4, w:MISURE.l, h:MISURE.l}],
+   metri: [{k:"l", o:"h", x:6, y: () => MISURE.l + 9}]},
+  {id:"post-bh", tit:"Pannello di legno", alt: () => MISURE.h + 22,
+   oggetti: () => [{cls:"pannello", x:14, y:4, w:MISURE.b, h:MISURE.h}],
+   metri: [{k:"b", o:"h", x:14, y: () => MISURE.h + 9}, {k:"h", o:"v", x:5, y: () => 4}]}
+];
+function disegna1(){
+  const sez = $("#e1"), fatto = S.risolto[0];
+  sez.className = "enigma" + (fatto ? " risolto" : "");
+  if(fatto) Object.assign(S.metro, {l:MISURE.l, b:MISURE.b, h:MISURE.h});
+  sez.innerHTML = testa(0, "Il container del capocantiere") + `
+    <div class="container-top"><p class="consegna">Sul tablet del capocantiere ci sono tre formule. <b>Misura gli oggetti con il metro a nastro</b>, conta i sacchi di cemento, <b>sostituisci le lettere con le misure</b> e calcola il valore di ogni formula.</p>
+      <button class="casco" type="button" id="casco" aria-label="Il casco giallo del capocantiere">${SVG_CASCO}</button></div>
+    ${aiutoHtml(0)}
+    <div class="banco-lavoro">
+      ${POST.map(p => `<div class="postazione" id="${p.id}"><span class="tit">${p.tit}</span>
+        ${p.oggetti().map(o => `<div class="oggetto ${o.cls}" data-o='${JSON.stringify(o)}'></div>`).join("")}
+        ${p.metri.map(m => `<div class="metro ${m.o}" data-k="${m.k}"><div class="nastro"></div><button class="maniglia" type="button" aria-label="Metro: ${m.k === "l" ? "lato della piastrella" : m.k === "b" ? "base del pannello" : "altezza del pannello"}"${fatto ? " disabled" : ""}>▸</button><span class="lettura"></span></div>`).join("")}
+      </div>`).join("")}
+      <div class="postazione"><span class="tit">Sacchi di cemento</span><div class="bancale" aria-label="Bancale con i sacchi di cemento">${SVG_SACCO.repeat(SACCHI)}<span class="pallet"></span></div></div>
+    </div>
+    <div class="tablet"><div class="schermo"><h3>Tablet del capocantiere · Formule</h3>
+      ${FORMULE.map((f, i) => `<div class="formula-r${S.sbagliate1.has(i) ? " sbagliata" : ""}${fatto ? " giusta" : ""}"><span><small>${f.nome}</small><span class="f">${f.f}</span></span>
+        <label>${f.k} = <input type="text" inputmode="numeric" autocomplete="off" data-r="${f.k}" value="${fatto ? f.val : S.risposte[f.k]}" aria-label="${f.nome}"${fatto ? " disabled" : ""}> ${f.u}</label></div>`).join("")}
+    </div></div>
+    ${fatto ? premioHtml(0, `Con ${SACCHI} sacchi: C = ${PREZZO} · ${SACCHI} + ${FISSO} = ${FORMULE[2].val} €. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla1">Calcola sul tablet</button><p class="esito" id="esito0"></p></div>`}`;
+  requestAnimationFrame(disponi1);
+  if(fatto) return;
+  sez.querySelectorAll("input[data-r]").forEach(inp => inp.addEventListener("input", () => { avvia(); S.risposte[inp.dataset.r] = inp.value; }));
+  sez.querySelectorAll(".metro").forEach(attivaMetro);
+  $("#controlla1").addEventListener("click", controlla1);
+}
+/* sistema oggetti e metri in pixel: tutte le misure sono in cm, la larghezza della postazione vale MAXCM */
+const ppc = () => ($("#post-l")?.clientWidth || 600) / MAXCM;
+function disponi1(){
+  const k = ppc();
+  POST.forEach(p => {
+    const box = document.getElementById(p.id); if(!box) return;
+    box.style.height = p.alt() * k + "px";
+    box.querySelectorAll(".oggetto").forEach(el => { const o = JSON.parse(el.dataset.o);
+      Object.assign(el.style, {left:o.x * k + "px", top:o.y * k + "px", width:o.w * k + "px", height:o.h * k + "px"}); });
+    p.metri.forEach(m => {
+      const el = box.querySelector(`.metro[data-k="${m.k}"]`);
+      el.style.left = m.x * k + "px"; el.style.top = m.y() * k + "px";
+      aggiornaMetro(el, m.o);
+    });
+  });
+}
+function aggiornaMetro(el, o){
+  const k = ppc(), cm = S.metro[el.dataset.k], L = cm * k;
+  const nastro = el.querySelector(".nastro"), man = el.querySelector(".maniglia"), let_ = el.querySelector(".lettura");
+  /* tacche ogni cm, più lunghe ogni 5 e ogni 10 */
+  const t = o === "h" ? "90deg" : "180deg";
+  nastro.style.backgroundImage = `linear-gradient(${t},var(--ink) 0 1px,transparent 1px),linear-gradient(${t},var(--ink) 0 1px,transparent 1px)`;
+  nastro.style.backgroundSize = o === "h" ? `${k}px 5px, ${10 * k}px 12px` : `5px ${k}px, 12px ${10 * k}px`;
+  nastro.style.backgroundRepeat = o === "h" ? "repeat-x" : "repeat-y";
+  if(o === "h"){ nastro.style.width = L + "px"; man.style.left = L + "px"; man.style.top = "-7px"; let_.style.left = Math.max(0, L - 18) + "px"; let_.style.top = "-30px"; }
+  else { nastro.style.height = L + "px"; man.style.top = L + "px"; man.style.left = "-7px"; let_.style.top = L + "px"; let_.style.left = "30px"; }
+  let_.textContent = cm + " cm";
+  man.setAttribute("aria-valuenow", cm);
+}
+function attivaMetro(el){
+  const o = el.classList.contains("h") ? "h" : "v", key = el.dataset.k, man = el.querySelector(".maniglia");
+  const max = () => { const p = POST.find(p => p.metri.some(m => m.k === key)), m = p.metri.find(m => m.k === key);
+    return o === "h" ? MAXCM - m.x - 6 : p.alt() - m.y() - 6; };
+  const imposta = cm => {
+    cm = Math.max(0, Math.min(max(), Math.round(cm)));
+    if(cm === S.metro[key]) return;
+    S.metro[key] = cm; aggiornaMetro(el, o); suona("tacca");
+    if(cm === max() && o === "h") segreto("metro", "Hai srotolato il metro fino all'ultimo centimetro! I metri a nastro del cantiere arrivano anche a 5 metri: 500 cm.");
+  };
+  man.addEventListener("pointerdown", e => {
+    if(e.button > 0) return; avvia(); e.preventDefault();
+    try { man.setPointerCapture(e.pointerId); } catch {}
+    man.classList.add("trascina");
+    const muovi = ev => { const r = el.getBoundingClientRect(); imposta(((o === "h" ? ev.clientX - r.left : ev.clientY - r.top)) / ppc()); };
+    const fine = () => { man.classList.remove("trascina"); man.removeEventListener("pointermove", muovi); man.removeEventListener("pointerup", fine); man.removeEventListener("pointercancel", fine); };
+    man.addEventListener("pointermove", muovi); man.addEventListener("pointerup", fine); man.addEventListener("pointercancel", fine);
+  });
+  man.addEventListener("keydown", e => {
+    const d = {ArrowRight:1, ArrowUp:-1, ArrowLeft:-1, ArrowDown:1}[e.key];
+    if(d === undefined) return; e.preventDefault(); avvia();
+    imposta(S.metro[key] + (o === "h" ? (e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0) : (e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0)) * (e.shiftKey ? 5 : 1));
+  });
+}
+window.addEventListener("resize", () => requestAnimationFrame(disponi1));
+function controlla1(){
+  const vuote = FORMULE.filter(f => !S.risposte[f.k].trim()).length;
+  if(vuote){ esito(0, `Mancano ancora ${vuote} ${vuote === 1 ? "risultato" : "risultati"} sul tablet.`, "no"); suona("no"); return; }
+  const num = t => +String(t).replace(/[^\d]/g, "");
+  S.sbagliate1 = new Set(FORMULE.map((f, i) => num(S.risposte[f.k]) === f.val ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliate1.size){
+    disegna1();
+    esito(0, S.sbagliate1.size === 1 ? "1 risultato è sbagliato: controlla la misura e il calcolo." : `${S.sbagliate1.size} risultati sono sbagliati: controlla le misure e i calcoli.`, "no"); suona("no"); return;
+  }
+  risolvi(0);
+}
+let tocchiCasco = 0;
+document.addEventListener("click", e => {
+  const c = e.target.closest("#casco"); if(!c) return;
+  suona("toc"); c.classList.remove("salta"); void c.offsetWidth; c.classList.add("salta");
+  if(++tocchiCasco >= 3) segreto("casco", "La sicurezza prima di tutto! In cantiere il casco si porta sempre, anche quando si fanno i calcoli.");
+});
+
+/* ===== enigma 2: il magazzino dei monomi ===== */
+const SVG_MULETTO = '<svg viewBox="0 0 88 56" aria-hidden="true"><path d="M70 6v40" stroke="var(--ink)" stroke-width="4"/><path d="M70 44h16" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/><path d="M8 26h34l8-16h16v32H8z" fill="var(--muletto)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/><path d="M44 12h20v14H44z" fill="var(--cielo)" stroke="var(--ink)" stroke-width="2"/><circle cx="20" cy="46" r="8" fill="var(--ink)"/><circle cx="56" cy="46" r="8" fill="var(--ink)"/><circle cx="20" cy="46" r="3" fill="var(--metallo)"/><circle cx="56" cy="46" r="3" fill="var(--metallo)"/></svg>';
+function disegna2(){
+  const sez = $("#e2"), chiuso = !S.risolto[0], fatto = S.risolto[1];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(1, "Il magazzino dei monomi") + chiusoHtml(1); return; }
+  const cassa = i => `<button class="pezzo cassa${S.sbagliate2.has(i) ? " sbagliato" : ""}" type="button" data-c="${i}" aria-label="Cassa ${MAG.casse[i].testo}"${fatto ? " disabled" : ""}>${MAG.casse[i].testo}</button>`;
+  const fuori = MAG.casse.map((_, i) => i).filter(i => S.posto2[i] === null);
+  sez.innerHTML = testa(1, "Il magazzino dei monomi") + `
+    <p class="consegna">Nel magazzino le casse sono state scaricate alla rinfusa. Su ogni scaffale c'è una targa con una parte letterale: <b>porta ogni cassa sullo scaffale dei suoi monomi simili</b>. Attenzione: alcune casse non sono in forma normale!</p>
+    ${aiutoHtml(1)}
+    <div class="magazzino">
+      <div class="scaffali">${MAG.parti.map((lett, s) => `<div class="scaffale zona" data-zona="s-${s}" aria-label="Scaffale ${scrivi(1, lett)}${s === STELLA2 ? ", con la stella" : ""}">${s === STELLA2 ? '<span class="stella" aria-hidden="true">★</span>' : ""}
+        <span class="targa"><small>parte letterale</small>${scrivi(1, lett)}</span>
+        <div class="dentro">${MAG.casse.map((_, i) => i).filter(i => S.posto2[i] === s).map(cassa).join("")}</div></div>`).join("")}</div>
+      <div class="muletto" id="muletto" style="left:${(S.mulettoPrima + .5) / 3 * 100}%">${SVG_MULETTO}</div>
+    </div>
+    ${fatto ? premioHtml(1, `Sullo scaffale con la stella c'erano i monomi simili a ${scrivi(1, MAG.parti[STELLA2])}: grado ${CODICE[1]}. `) : `
+    <p class="etichetta">Zona di scarico</p>
+    <div class="banco zona" data-zona="banco2">${fuori.length ? fuori.map(cassa).join("") : '<span class="vuoto">Tutte le casse sono sugli scaffali. Ora controlla!</span>'}</div>
+    <div class="azioni"><button class="btn blu" type="button" id="controlla2">Controlla il magazzino</button><p class="esito" id="esito1"></p></div>`}`;
+  /* il muletto parte dallo scaffale di prima e va verso quello nuovo */
+  if(S.muletto !== S.mulettoPrima){ const m = $("#muletto"); requestAnimationFrame(() => requestAnimationFrame(() => { m.style.left = (S.muletto + .5) / 3 * 100 + "%"; })); suona("muletto"); S.mulettoPrima = S.muletto; }
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa2));
+  $("#controlla2").addEventListener("click", controlla2);
+}
+function posa2(el, zona){
+  const i = +el.dataset.c, z = zona.dataset.zona;
+  if(z === "banco2") S.posto2[i] = null;
+  else if(z.startsWith("s-")){ S.posto2[i] = +z.slice(2); S.muletto = S.posto2[i]; }
+  else return;
+  S.sbagliate2.delete(i); suona("posa");
+  disegna2();
+}
+function controlla2(){
+  const fuori = S.posto2.filter(v => v === null).length;
+  if(fuori){ esito(1, `Nella zona di scarico ci sono ancora ${fuori} ${fuori === 1 ? "cassa" : "casse"}.`, "no"); suona("no"); return; }
+  S.sbagliate2 = new Set(MAG.casse.map((c, i) => S.posto2[i] === c.s ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliate2.size){
+    disegna2();
+    esito(1, S.sbagliate2.size === 1 ? "1 cassa è sullo scaffale sbagliato: è colorata di rosso." : `${S.sbagliate2.size} casse sono sugli scaffali sbagliati: sono colorate di rosso.`, "no"); suona("no"); return;
+  }
+  risolvi(1);
+}
+
+/* ===== enigma 3: la gru ===== */
+const svgGru = () => `<svg viewBox="0 0 320 230" role="img" aria-label="La gru del cantiere">
+  <g stroke="var(--ink)" stroke-width="2.5" fill="none">
+    <path d="M52 220V46M72 220V46" /><path d="M52 60l20 20M72 80l-20 20M52 100l20 20M72 120l-20 20M52 140l20 20M72 160l-20 20M52 180l20 20M72 200l-20 20" stroke-width="1.8"/>
+  </g>
+  <g class="braccio">
+    <path d="M20 42h282" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/><path d="M20 42h282" stroke="var(--cantiere)" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M62 42L62 14M62 14L20 42M62 14L300 42" stroke="var(--ink)" stroke-width="2"/>
+    <rect x="16" y="44" width="28" height="18" rx="2" fill="var(--cemento-scuro)" stroke="var(--ink)" stroke-width="2"/>
+    <rect x="74" y="44" width="24" height="20" rx="3" fill="var(--cantiere)" stroke="var(--ink)" stroke-width="2"/><rect x="79" y="48" width="14" height="9" fill="var(--cielo)" stroke="var(--ink)" stroke-width="1.5"/>
+    <rect x="222" y="40" width="20" height="8" rx="2" fill="var(--ink)"/>
+    <line class="cavo" x1="232" y1="48" x2="232" y2="150" stroke="var(--ink)" stroke-width="2"/>
+    <g class="carico">
+      <path d="M232 150v6a5 5 0 1 1-6 5" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M226 164l-26 16M238 164l26 16" stroke="var(--ink)" stroke-width="1.8"/>
+      <rect x="182" y="180" width="100" height="16" rx="2" fill="var(--legno-scuro)" stroke="var(--ink)" stroke-width="2.5"/>
+      ${S.risolto[2] ? `<g><rect x="218" y="196" width="28" height="26" rx="3" fill="var(--giallo)" stroke="var(--ink)" stroke-width="2"/><text x="232" y="216" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="20" fill="var(--ink)">${CODICE[2]}</text></g>` : ""}
+    </g>
+  </g>
+  <rect x="40" y="214" width="44" height="10" fill="var(--cemento-scuro)" stroke="var(--ink)" stroke-width="2"/>
+</svg>`;
+function disegna3(){
+  const sez = $("#e3"), chiuso = !S.risolto[1], fatto = S.risolto[2];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(2, "Il quadro comandi della gru") + chiusoHtml(2); return; }
+  const tess = (t, riga) => `<button class="pezzo ris${riga !== null && S.sbagliate3.has(riga) ? " sbagliato" : ""}" type="button" data-t="${t}"${fatto ? " disabled" : ""}>${GRU.risultati[t]}</button>`;
+  const usate = new Set(S.slot3.filter(v => v !== null));
+  sez.innerHTML = testa(2, "Il quadro comandi della gru") + `
+    <p class="consegna">La gru deve sollevare la trave con l'ultima cifra, ma il quadro comandi è in blocco. <b>Collega ogni operazione con i monomi al suo risultato.</b> Tra i risultati ci sono anche quelli che vengono sbagliando le regole!</p>
+    ${aiutoHtml(2)}
+    <div class="cantiere3">
+      <div class="gru${fatto && S.gruAlzata ? " solleva" : ""}" id="gru">${svgGru()}</div>
+      <div class="tab-wrap"><table>
+        <thead><tr><th>Operazione</th><th>Risultato</th></tr></thead>
+        <tbody>${GRU.ops.map((o, i) => `<tr><td class="op">${i === STELLA3 ? '<span class="stella" aria-label="con la stella">★</span>' : ""}${o.testo}</td><td><div class="slot zona${S.slot3[i] !== null ? " pieno" : ""}" data-zona="r-${i}" aria-label="Risultato di ${o.testo}">${S.slot3[i] !== null ? tess(S.slot3[i], i) : ""}</div></td></tr>`).join("")}</tbody>
+      </table></div>
+    </div>
+    ${fatto ? premioHtml(2, `L'operazione con la stella era ${GRU.ops[STELLA3].testo} = ${GRU.ops[STELLA3].giusto}: esponente ${CODICE[2]}. `) : `
+    <p class="etichetta">Risultati</p>
+    <div class="banco zona" data-zona="banco3">${GRU.risultati.map((_, t) => usate.has(t) ? "" : tess(t, null)).join("")}</div>
+    <div class="azioni"><button class="btn blu" type="button" id="controlla3">Avvia la gru</button><p class="esito" id="esito2"></p></div>`}`;
+  if(fatto){
+    if(!S.gruAlzata){ S.gruAlzata = true; requestAnimationFrame(() => requestAnimationFrame(() => { $("#gru")?.classList.add("solleva"); suona("gru"); })); }
+    return;
+  }
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa3));
+  $("#controlla3").addEventListener("click", controlla3);
+}
+function posa3(el, zona){
+  const t = +el.dataset.t, z = zona.dataset.zona, da = S.slot3.indexOf(t);
+  if(z === "banco3"){ if(da >= 0) S.slot3[da] = null; }
+  else if(z.startsWith("r-")){
+    const a = +z.slice(2); if(a === da) return;
+    const prima = S.slot3[a]; S.slot3[a] = t;
+    if(da >= 0) S.slot3[da] = prima;
+  } else return;
+  S.sbagliate3.clear(); suona("posa");
+  disegna3();
+}
+function controlla3(){
+  const vuoti = S.slot3.filter(v => v === null).length;
+  if(vuoti){ esito(2, `Mancano ancora ${vuoti} ${vuoti === 1 ? "risultato" : "risultati"}.`, "no"); suona("no"); return; }
+  S.sbagliate3 = new Set(GRU.ops.map((o, i) => GRU.risultati[S.slot3[i]] === o.giusto ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliate3.size){
+    disegna3();
+    esito(2, S.sbagliate3.size === 1 ? "1 risultato è sbagliato: la gru non parte!" : `${S.sbagliate3.size} risultati sono sbagliati: la gru non parte!`, "no"); suona("no"); return;
+  }
+  risolvi(2);
+}
+
+/* ===== il lucchetto del cancello ===== */
+function disegna4(){
+  const sez = $("#e4"), pronto = S.risolto.every(Boolean);
+  if(S.libero){
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>Il cancello del cantiere è aperto: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato formule e valore numerico, monomi simili, forma normale e grado, e le operazioni con i monomi.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone()}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    $("#ricomincia").addEventListener("click", () => location.reload());
+    $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("letterale"));
+    return;
+  }
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
+    <h2 id="t4">Il cancello del cantiere</h2>
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
+      <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
+      <output aria-label="Cifra ${i+1}">${v}</output>
+      <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${pronto ? `<button class="btn" type="button" id="apri">Apri il cancello</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
+    <p class="esito" id="esito3"></p></div></div>`;
+  sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
+    b.parentElement.querySelector("output").textContent = S.rotelle[i];
+  }));
+  $("#apri")?.addEventListener("click", () => {
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
+    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+  });
+}
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
+}
+
+function disegnaIndizi(){
+  $("#indizi").innerHTML = CODICE.map((c,i) => `<span class="cifra-mini${S.risolto[i] ? "" : " vuota"}" title="${INDIZI[i]}">${S.risolto[i] ? c : "?"}</span>`).join("");
+}
+function risolvi(i){
+  S.risolto[i] = true; suona("si");
+  annuncia(`Enigma ${i+1} risolto! La cifra numero ${i+1} è ${CODICE[i]}.`);
+  tutto();
+  const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
+  setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
+}
+function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-aiuto]"); if(!b) return;
+  const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
+  [disegna1, disegna2, disegna3][i]();
+});
+
+
+/* segreti: toccare 3 volte il casco, srotolare un metro fino in fondo, scrivere "monomio" sulla tastiera */
+const SEGRETI = 3;
+const PAROLE_SEGRETE = [["monomio", () => segreto("monomio", "Monomio viene dal greco: \"mono\" = uno e \"nomos\" = parte. Un monomio è un'espressione fatta di una parte sola!")]];
+tutto();
+aggiornaSuoni();
+</script>
+</body>
+</html>
