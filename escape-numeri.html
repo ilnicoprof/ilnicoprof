@@ -258,7 +258,7 @@ h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker
 
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
 <script src="trofei.js?v=614d90f4"></script>
-<script src="oggetto-segreto.js?v=9c38c69a"></script>
+<script src="oggetto-segreto.js?v=d803f674"></script>
 <script>
 /* ===== dati ===== */
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
@@ -652,7 +652,7 @@ function controlla3(){
 function disegna4(){
   const sez = $("#e4"), pronto = S.risolto.every(Boolean);
   if(S.libero){
-    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta sul retro è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato il valore posizionale delle cifre, il confronto tra numeri decimali, numeri ordinali e arrotondamento per difetto e per eccesso.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone()}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta sul retro è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato il valore posizionale delle cifre, il confronto tra numeri decimali, numeri ordinali e arrotondamento per difetto e per eccesso.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("naturali")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
     $("#ricomincia").addEventListener("click", () => location.reload());
     $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("naturali"));
     return;

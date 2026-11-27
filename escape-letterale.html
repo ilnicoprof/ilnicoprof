@@ -266,7 +266,7 @@ td.op .stella{color:var(--giallo);-webkit-text-stroke:1.2px var(--ink);margin-ri
 
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
 <script src="trofei.js?v=614d90f4"></script>
-<script src="oggetto-segreto.js?v=9c38c69a"></script>
+<script src="oggetto-segreto.js?v=d803f674"></script>
 <script>
 /* ===== dati ===== */
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
@@ -744,7 +744,7 @@ function controlla3(){
 function disegna4(){
   const sez = $("#e4"), pronto = S.risolto.every(Boolean);
   if(S.libero){
-    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>Il cancello del cantiere è aperto: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato formule e valore numerico, monomi simili, forma normale e grado, e le operazioni con i monomi.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone()}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>Il cancello del cantiere è aperto: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato formule e valore numerico, monomi simili, forma normale e grado, e le operazioni con i monomi.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("letterale")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
     $("#ricomincia").addEventListener("click", () => location.reload());
     $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("letterale"));
     return;

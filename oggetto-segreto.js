@@ -5,7 +5,11 @@
    Richiede trofei.js. */
 const OggettoSegreto = (() => {
   const OGGETTI = ["diario", "barattolo", "scatola", "mappamondo"];
-  const scelto = OGGETTI[Math.floor(Math.random() * OGGETTI.length)];
+  /* ogni escape room ha il suo oggetto, legato alla sua storia; gli altri 4 restano per le escape room nuove */
+  const PER_STANZA = {insiemi:"astuccio", naturali:"grattaevinci", relativi:"pacco", materia:"provetta", letterale:"attrezzi",
+                      elementi:"pergamena", misure:"orologio", segmenti:"biglietto", stati:"ghiaccio"};
+  let scelto = OGGETTI[Math.floor(Math.random() * OGGETTI.length)];
+  const scegli = id => { if(id && PER_STANZA[id]) scelto = PER_STANZA[id]; };
   let codice = null, trovato = false, idTrofeo = null;
   const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const suono = t => { try { if(typeof suona === "function") suona(t); } catch {} };
@@ -16,12 +20,34 @@ const OggettoSegreto = (() => {
     scatola:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 20l24-10 24 10v28L32 58 8 48z" fill="#B98042" stroke="#1E2A44" stroke-width="3" stroke-linejoin="round"/><path d="M8 20l24 10 24-10M32 30v28" fill="none" stroke="#1E2A44" stroke-width="3"/><text x="19" y="46" font-family="Georgia,serif" font-weight="700" font-size="16" fill="#1E2A44">?</text></svg>',
     mappamondo:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 52v6M22 60h20" stroke="#1E2A44" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="28" r="20" fill="#7DBDF0" stroke="#1E2A44" stroke-width="3"/><path d="M20 20c4-3 8 0 7 4s-6 3-8 7M38 14c4 2 6 6 3 9s1 8 4 10" fill="#8EDDB4" stroke="#1E2A44" stroke-width="2"/><path d="M50 14a24 24 0 0 1-6 34" fill="none" stroke="#1E2A44" stroke-width="3"/></svg>'
   };
-  const NOMI = {diario:"un vecchio diario", barattolo:"un barattolo", scatola:"una scatola misteriosa", mappamondo:"un piccolo mappamondo"};
+  Object.assign(ICONE, {
+    astuccio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="20" width="52" height="28" rx="12" fill="#5B8DEF" stroke="#1E2A44" stroke-width="3"/><path d="M12 30h40" stroke="#1E2A44" stroke-width="2" stroke-dasharray="3 2"/><rect x="40" y="25" width="8" height="10" rx="2" fill="#D5DCE6" stroke="#1E2A44" stroke-width="2"/></svg>',
+    grattaevinci:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="14" width="52" height="36" rx="5" fill="#FFD966" stroke="#1E2A44" stroke-width="3"/><rect x="14" y="24" width="36" height="16" rx="3" fill="#AEB9CA" stroke="#1E2A44" stroke-width="2"/><circle cx="46" cy="44" r="7" fill="#E0A065" stroke="#1E2A44" stroke-width="2"/></svg>',
+    pacco:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="18" width="44" height="34" rx="3" fill="#C9935A" stroke="#1E2A44" stroke-width="3"/><path d="M10 28h44M32 18v34" stroke="#1E2A44" stroke-width="2"/><rect x="36" y="34" width="14" height="10" fill="#FFF8EC" stroke="#1E2A44" stroke-width="1.5"/><path d="M22 6h20v8H22z" fill="#AEB9CA" stroke="#1E2A44" stroke-width="2"/></svg>',
+    provetta:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M24 6h16M26 6v42a6 6 0 0 0 12 0V6" fill="#FFFFFF" stroke="#1E2A44" stroke-width="3"/><path d="M27 28h10v20a5 5 0 0 1-10 0z" fill="#B58CF0"/><circle cx="32" cy="38" r="2" fill="#fff"/></svg>',
+    attrezzi:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M24 18v-6h16v6" fill="none" stroke="#1E2A44" stroke-width="3"/><rect x="6" y="18" width="52" height="36" rx="4" fill="#E5534B" stroke="#1E2A44" stroke-width="3"/><path d="M6 30h52" stroke="#1E2A44" stroke-width="2.5"/><circle cx="12" cy="24" r="2.5" fill="#D5DCE6" stroke="#1E2A44"/><circle cx="52" cy="24" r="2.5" fill="#D5DCE6" stroke="#1E2A44"/></svg>',
+    pergamena:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="14" y="14" width="36" height="38" fill="#F2E1B6" stroke="#1E2A44" stroke-width="3"/><rect x="10" y="8" width="44" height="10" rx="5" fill="#C9A66B" stroke="#1E2A44" stroke-width="3"/><path d="M20 28l8 8 6-6 10 10" fill="none" stroke="#A8783E" stroke-width="2" stroke-dasharray="3 3"/><path d="M40 36l6 6M46 36l-6 6" stroke="#E5534B" stroke-width="2.5"/></svg>',
+    orologio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="28" y="4" width="8" height="8" rx="2" fill="#E0B53A" stroke="#1E2A44" stroke-width="2"/><circle cx="32" cy="36" r="22" fill="#F5C542" stroke="#1E2A44" stroke-width="3"/><circle cx="32" cy="36" r="16" fill="#E0B53A" stroke="#1E2A44" stroke-width="1.5"/><path d="M24 30q8-6 16 0" fill="none" stroke="#FFF8EC" stroke-width="2"/></svg>',
+    biglietto:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 20h52v8a4 4 0 0 0 0 8v8H6v-8a4 4 0 0 0 0-8z" fill="#FFF3B0" stroke="#1E2A44" stroke-width="3"/><path d="M14 28h22M14 34h16" stroke="#1E2A44" stroke-width="2.5"/><path d="M44 24v16" stroke="#1E2A44" stroke-width="2" stroke-dasharray="2 2"/></svg>',
+    ghiaccio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="12" width="40" height="40" rx="8" fill="#DDF3FF" stroke="#1E2A44" stroke-width="3"/><path d="M18 18l10 0" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="24" y="28" width="18" height="12" fill="#FFF8EC" stroke="#1E2A44" stroke-width="1.5" opacity=".7"/></svg>'
+  });
+  const NOMI = {diario:"un vecchio diario", barattolo:"un barattolo", scatola:"una scatola misteriosa", mappamondo:"un piccolo mappamondo",
+    astuccio:"un astuccio dimenticato", grattaevinci:"un gratta e vinci del supermercato", pacco:"il pacco del drone", provetta:"una provetta misteriosa",
+    attrezzi:"la cassetta degli attrezzi", pergamena:"una cartina arrotolata", orologio:"un vecchio orologio da taschino", biglietto:"un biglietto del treno", ghiaccio:"un cubetto di ghiaccio"};
   const ISTRUZIONI = {
     diario:"Sfoglia il diario pagina per pagina: da qualche parte qualcuno ha scritto il codice.",
     barattolo:"Dentro il barattolo c'è un bigliettino. Scuotilo forte (anche trascinandolo a destra e a sinistra) finché il tappo salta!",
     scatola:"Gira la scatola da tutti i lati: il codice è inciso su uno di essi.",
-    mappamondo:"Fai girare il mappamondo (trascinalo o usa le frecce) e cerca l'isola con il codice."
+    mappamondo:"Fai girare il mappamondo (trascinalo o usa le frecce) e cerca l'isola con il codice.",
+    astuccio:"Apri la cerniera dell'astuccio: trascina il cursore fino in fondo (o usa il pulsante) e guarda cosa c'è dentro.",
+    grattaevinci:"Gratta la parte argentata con il dito o con il mouse: sotto c'è il premio!",
+    pacco:"Gira il pacco del drone da tutti i lati: il codice è su una delle etichette.",
+    provetta:"Agita la provetta (anche trascinandola a destra e a sinistra): il liquido reagisce e compare il codice.",
+    attrezzi:"Il coperchio è avvitato: svita le 4 viti toccandole una alla volta.",
+    pergamena:"La cartina è arrotolata: trascinala verso il basso (o usa il pulsante) per srotolarla e trova la X.",
+    orologio:"L'orologio è chiuso: carica la corona in alto toccandola, finché il coperchio scatta.",
+    biglietto:"Prima di partire il biglietto va timbrato: trascinalo nella macchinetta obliteratrice (o usa il pulsante).",
+    ghiaccio:"Dentro il cubetto c'è un bigliettino congelato: scaldalo strofinandoci sopra il dito (o con il pulsante) finché si scioglie."
   };
 
   const CSS = `
@@ -83,13 +109,66 @@ const OggettoSegreto = (() => {
 .os-striscia{position:absolute;top:0;left:0;height:100%;width:880px;display:block}
 .os-isola{position:absolute;display:grid;place-items:center;border:2px solid #1E2A44;background:#8EDDB4;border-radius:46% 54% 40% 60%/55% 45% 55% 45%;color:#1E2A44;font-weight:800;font-size:.8rem;text-align:center}
 .os-trovato{display:grid;gap:10px;justify-items:center;padding:12px;border-radius:14px;background:var(--ok-bg,#D7F5E5);border:2px solid var(--ok,#0B6B3F);width:100%;animation:os-apri .5s ease both}
+/* astuccio */
+.os-astuccio{position:relative;width:300px;max-width:100%;height:150px;border-radius:40px;border:4px solid #1E2A44;background:#FFF8EC;overflow:hidden;box-shadow:4px 5px 0 #1E2A44}
+.os-dentro{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 20px}
+.os-matita{width:14px;height:96px;border-radius:3px;border:2px solid #1E2A44}
+.os-gomma{display:grid;place-items:center;padding:8px 10px;border-radius:8px;border:2px solid #1E2A44;background:#F2B8C6;color:#1E2A44;font-family:"Courier New",monospace;font-weight:700;font-size:1.05rem;transform:rotate(-6deg)}
+.os-telo{position:absolute;top:0;bottom:0;right:0;background:#5B8DEF;background-image:repeating-linear-gradient(90deg,transparent 0 10px,rgba(255,255,255,.12) 10px 12px)}
+.os-cerniera{position:absolute;top:50%;left:0;right:0;border-top:3px dashed #1E2A44}
+.os-cursore{position:absolute;top:50%;width:26px;height:44px;margin:-22px 0 0 -13px;border-radius:6px;border:3px solid #1E2A44;background:#D5DCE6;cursor:grab;touch-action:none;z-index:2}
+/* gratta e vinci */
+.os-gratta{position:relative;width:300px;max-width:100%;height:170px;border-radius:12px;border:4px solid #1E2A44;background:#FFD966;padding:10px;box-shadow:4px 5px 0 #1E2A44}
+.os-gratta-tit{font-family:var(--f-display);font-weight:800;color:#1E2A44}
+.os-premio-sotto{position:absolute;left:24px;right:24px;top:52px;height:96px;display:grid;place-items:center;border-radius:8px;background:#FFFFFF;border:2px solid #1E2A44;color:#1E2A44;font-family:var(--f-display);font-weight:800;font-size:1.6rem;letter-spacing:.1em}
+.os-gratta canvas{position:absolute;left:24px;top:52px;width:calc(100% - 48px);height:96px;border-radius:8px;touch-action:none;cursor:crosshair}
+/* provetta */
+.os-tubo{width:120px;height:230px;cursor:grab;touch-action:none}
+.os-tubo.scuoti{animation:os-scuoti .45s ease}
+.os-liquido{transition:fill 1s ease}
+/* cassetta degli attrezzi */
+.os-cassa{position:relative;width:280px;max-width:100%;height:200px}
+.os-coperchio{transition:transform .9s cubic-bezier(.4,0,.2,1)}
+.os-coperchio.alza{transform:translateY(-150px) rotate(-10deg)}
+.os-vite{cursor:pointer}
+.os-vite.via{animation:os-svita .7s ease forwards}
+@keyframes os-svita{40%{transform:rotate(360deg)}100%{transform:rotate(540deg) translateY(30px);opacity:0}}
+.os-vite{transform-box:fill-box;transform-origin:center}
+/* cartina arrotolata */
+.os-rotolo{position:relative;width:280px;max-width:100%;touch-action:none;cursor:grab}
+.os-carta{overflow:hidden;transition:height .35s ease;border-left:3px solid #1E2A44;border-right:3px solid #1E2A44;background:#F2E1B6;margin:0 10px}
+.os-carta svg{display:block;width:100%;height:200px}
+.os-asta{height:22px;border-radius:11px;border:3px solid #1E2A44;background:#C9A66B}
+/* orologio da taschino */
+.os-orologio{width:220px;height:240px}
+.os-orologio svg{width:100%;height:100%;overflow:visible}
+.os-lancette{transform-box:view-box;transform-origin:110px 140px}
+.os-lancette.carica{animation:os-carica .6s ease}
+@keyframes os-carica{to{transform:rotate(180deg)}}
+.os-sportello{transform-box:view-box;transform-origin:110px 62px;transition:transform .8s cubic-bezier(.3,1.3,.5,1)}
+.os-sportello.apre{transform:scaleY(-.55)}
+.os-corona{cursor:pointer}
+/* biglietto del treno */
+.os-stazione{position:relative;width:320px;max-width:100%;height:230px}
+.os-oblit{position:absolute;right:6px;top:10px;width:110px;height:170px;border-radius:12px;border:4px solid #1E2A44;background:#E5534B;display:grid;justify-items:center;align-content:start;gap:6px;padding-top:12px;color:#FFFFFF;font-family:var(--f-display);font-weight:800;font-size:.8rem}
+.os-oblit .fessura{width:70px;height:10px;border-radius:5px;background:#1E2A44}
+.os-oblit.timbra{animation:os-timbra .4s ease}
+@keyframes os-timbra{50%{transform:translateY(4px) scale(.97)}}
+.os-ticket{position:absolute;left:6px;top:70px;width:170px;padding:10px 12px;border:3px solid #1E2A44;border-radius:6px;background:#FFF3B0;color:#1E2A44;font-family:"Courier New",monospace;font-weight:700;font-size:.85rem;line-height:1.3;box-shadow:3px 4px 0 #1E2A44;cursor:grab;touch-action:none;z-index:2;text-align:left}
+.os-ticket.timbrato{cursor:default}
+.os-timbro{display:inline-block;margin-top:6px;padding:2px 8px;border:3px solid #C2410C;border-radius:6px;color:#C2410C;font-size:1.05rem;letter-spacing:.08em;transform:rotate(-6deg);animation:os-apri .4s ease both}
+/* cubetto di ghiaccio */
+.os-freezer{position:relative;width:260px;max-width:100%;height:230px;display:grid;place-items:center;touch-action:none}
+.os-cubetto{position:relative;display:grid;place-items:center;border-radius:22px;border:4px solid #1E2A44;background:linear-gradient(135deg,#F4FBFF,#BFE6FF);box-shadow:inset 8px 8px 0 rgba(255,255,255,.7);transition:width .4s ease,height .4s ease;cursor:pointer}
+.os-gelato{padding:6px 10px;background:#FFF8EC;border:2px solid #1E2A44;color:#1E2A44;font-family:var(--f-display);font-weight:800;font-size:1.2rem;letter-spacing:.08em;transition:filter .4s ease}
+.os-pozza{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);height:18px;border-radius:50%;background:#8EC5F0;opacity:.8;transition:width .4s ease}
 @media (prefers-reduced-motion:reduce){.os-cade,.os-cade svg,.os-pag.gira,.os-vaso.scuoti,.os-cubo.gira,.os-bigliettino,.os-aperto,.os-trovato{animation:none!important}.os-tappo{transition:none}}
 `;
   let stile = false;
   function aggiungiStile(){ if(stile) return; stile = true; const s = document.createElement("style"); s.textContent = CSS; document.head.append(s); }
 
-  function bottone(){
-    aggiungiStile();
+  function bottone(id){
+    scegli(id); aggiungiStile();
     return `<button class="os-cade" type="button" id="os-cade">${ICONE[scelto]}<span>Aprendo la porta è caduto ${NOMI[scelto]}! Toccalo per esplorarlo.</span></button>`;
   }
 
@@ -102,7 +181,7 @@ const OggettoSegreto = (() => {
     return fin;
   }
   function apri(id){
-    aggiungiStile(); idTrofeo = id;
+    scegli(id); aggiungiStile(); idTrofeo = id;
     const f = finestra();
     if(!Trofei.nome()) passoNome(); else passoEsplora();
     if(!f.open) f.showModal();
@@ -135,7 +214,7 @@ const OggettoSegreto = (() => {
       <div class="os-scena" id="os-scena"></div>
       <div class="os-riga" id="os-comandi"></div>
       <div id="os-premio" style="width:100%"></div></div>`;
-    ({diario, barattolo, scatola, mappamondo})[scelto]();
+    ({diario, barattolo, scatola, mappamondo, astuccio, grattaevinci, pacco, provetta, attrezzi, pergamena, orologio, biglietto, ghiaccio})[scelto]();
     if(trovato) mostraCodice();
   }
   function mostraCodice(){
@@ -273,6 +352,228 @@ const OggettoSegreto = (() => {
     globo.addEventListener("pointermove", e => { if(x0 === null) return; metti(pos - (e.clientX - x0)); x0 = e.clientX; });
     const stop = () => { x0 = null; };
     globo.addEventListener("pointerup", stop); globo.addEventListener("pointercancel", stop);
+  }
+
+
+  /* ---- l'astuccio (L'aula chiusa): si apre la cerniera, il codice è scritto sulla gomma ---- */
+  function astuccio(){
+    let aperto = 0;
+    scena().innerHTML = `<div class="os-astuccio" id="os-astuccio" role="img" aria-label="Astuccio con la cerniera">
+      <div class="os-dentro"><span class="os-matita" style="background:#E5534B"></span><span class="os-matita" style="background:#4CB782"></span><span class="os-matita" style="background:#F5C542"></span>
+        <span class="os-gomma" aria-label="Sulla gomma c'è scritto ${codice}">${codice}</span><span class="os-matita" style="background:#5B8DEF"></span></div>
+      <div class="os-telo" id="os-telo"><div class="os-cerniera"></div></div><div class="os-cursore" id="os-cursore" tabindex="0" role="slider" aria-label="Cursore della cerniera" aria-valuemin="0" aria-valuemax="100"></div></div>`;
+    const box = fin.querySelector("#os-astuccio"), telo = fin.querySelector("#os-telo"), cur = fin.querySelector("#os-cursore");
+    const metti = v => {
+      aperto = Math.max(0, Math.min(1, v));
+      telo.style.left = aperto * 100 + "%"; cur.style.left = Math.max(4, aperto * 100) + "%"; cur.setAttribute("aria-valuenow", Math.round(aperto * 100));
+      if(aperto >= .97){ suono("sblocco"); setTimeout(mostraCodice, 300); }
+    };
+    metti(0);
+    comandi(`<button class="os-btn blu" type="button" id="os-apri">Apri un po' la cerniera ▶</button>`);
+    fin.querySelector("#os-apri").addEventListener("click", () => { suono("prendi"); metti(aperto + .25); });
+    cur.addEventListener("keydown", e => { if(e.key === "ArrowRight"){ e.preventDefault(); metti(aperto + .1); } if(e.key === "ArrowLeft"){ e.preventDefault(); metti(aperto - .1); } });
+    cur.addEventListener("pointerdown", e => {
+      e.preventDefault(); try { cur.setPointerCapture(e.pointerId); } catch {}
+      const muovi = ev => { const r = box.getBoundingClientRect(); metti((ev.clientX - r.left) / r.width); };
+      const fine = () => { cur.removeEventListener("pointermove", muovi); cur.removeEventListener("pointerup", fine); suono("prendi"); };
+      cur.addEventListener("pointermove", muovi); cur.addEventListener("pointerup", fine);
+    });
+  }
+
+  /* ---- il gratta e vinci (Il supermercato chiuso): si gratta la parte argentata ---- */
+  function grattaevinci(){
+    scena().innerHTML = `<div class="os-gratta"><div class="os-gratta-tit">GRATTA E VINCI · SUPERMERCATO</div>
+      <div class="os-premio-sotto" aria-label="Sotto la patina: ${codice}">${codice}</div><canvas id="os-tela" width="252" height="96" aria-hidden="true"></canvas></div>`;
+    const c = fin.querySelector("#os-tela"), x = c.getContext("2d");
+    x.fillStyle = "#AEB9CA"; x.fillRect(0, 0, c.width, c.height);
+    x.fillStyle = "#8A96AB"; for(let i = 0; i < 60; i++) x.fillRect(Math.random() * c.width, Math.random() * c.height, 3, 3);
+    x.fillStyle = "#56627A"; x.font = "bold 16px sans-serif"; x.textAlign = "center"; x.fillText("GRATTA QUI", c.width / 2, c.height / 2 + 6);
+    let fatto = false;
+    const gratta = (px, py, r = 16) => { x.globalCompositeOperation = "destination-out"; x.beginPath(); x.arc(px, py, r, 0, Math.PI * 2); x.fill(); x.globalCompositeOperation = "source-over"; };
+    const controlla = () => {
+      if(fatto) return;
+      const d = x.getImageData(0, 0, c.width, c.height).data; let vuoti = 0;
+      for(let i = 3; i < d.length; i += 16) if(d[i] === 0) vuoti++;
+      if(vuoti / (d.length / 16) > .5){ fatto = true; x.clearRect(0, 0, c.width, c.height); comandi(""); mostraCodice(); }
+    };
+    let giu = false, ultimo = null;
+    const pos = e => { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * c.width, (e.clientY - r.top) / r.height * c.height]; };
+    /* gratto lungo tutta la linea dal punto precedente, così non restano buchi anche se il dito va veloce */
+    const linea = (a, b) => { x.globalCompositeOperation = "destination-out"; x.lineWidth = 30; x.lineCap = "round"; x.beginPath(); x.moveTo(...a); x.lineTo(...b); x.stroke(); x.globalCompositeOperation = "source-over"; };
+    c.addEventListener("pointerdown", e => { giu = true; try { c.setPointerCapture(e.pointerId); } catch {} ultimo = pos(e); gratta(...ultimo); });
+    c.addEventListener("pointermove", e => { if(!giu) return; const p = pos(e); linea(ultimo, p); ultimo = p; if(Math.random() < .15) suono("bip"); });
+    c.addEventListener("pointerup", () => { giu = false; ultimo = null; controlla(); });
+    comandi(`<button class="os-btn blu" type="button" id="os-moneta">Gratta con la moneta</button>`);
+    fin.querySelector("#os-moneta").addEventListener("click", () => { suono("prendi"); for(let i = 0; i < 14; i++) gratta(Math.random() * c.width, Math.random() * c.height, 22); controlla(); });
+  }
+
+  /* ---- il pacco del drone (Il drone sotto zero): si gira, il codice è sull'etichetta ---- */
+  function pacco(){
+    const FACCE = [
+      `<span class="os-faccia">DRONE EXPRESS<br>consegna sul tetto<br>(0; 0)</span>`,
+      `<span class="os-faccia">⬆ QUESTO LATO IN ALTO ⬆<br>non far cadere sotto zero!</span>`,
+      `<span><span class="os-faccia">Etichetta di spedizione</span><br><span class="os-inciso">${codice}</span></span>`,
+      `<span class="os-faccia">FRAGILE<br>contiene un premio</span>`
+    ];
+    let f = 0;
+    const disegna = gira => { scena().innerHTML = `<div class="os-cubo${gira ? " gira" : ""}" style="background-color:#C9935A" role="img" aria-label="Lato ${f+1} di 4 del pacco">${FACCE[f]}</div>`; if(f === 2) setTimeout(mostraCodice, 500); };
+    disegna(false);
+    comandi(`<button class="os-btn" type="button" id="os-sx">◀ Gira</button><span class="os-nota" id="os-lato">lato 1 di 4</span><button class="os-btn" type="button" id="os-dx">Gira ▶</button>`);
+    const gira = d => { f = (f + d + 4) % 4; fin.querySelector("#os-lato").textContent = `lato ${f+1} di 4`; suono("prendi"); disegna(true); };
+    fin.querySelector("#os-sx").addEventListener("click", () => gira(-1));
+    fin.querySelector("#os-dx").addEventListener("click", () => gira(1));
+  }
+
+  /* ---- la provetta (Il laboratorio sigillato): agitandola il liquido cambia colore e compare il codice ---- */
+  function provetta(){
+    const COLORI = ["#B58CF0", "#8E7BE8", "#5BA8E8", "#4CB782", "#F5C542"];
+    let scosse = 0;
+    scena().innerHTML = `<svg class="os-tubo" id="os-tubo" viewBox="0 0 120 230" role="img" aria-label="Provetta con un liquido viola">
+      <path d="M38 10h44" stroke="#1E2A44" stroke-width="5" stroke-linecap="round"/>
+      <path d="M44 10v170a16 16 0 0 0 32 0V10" fill="#FFFFFF" fill-opacity=".6" stroke="#1E2A44" stroke-width="4"/>
+      <path class="os-liquido" id="os-liquido" d="M46 90h28v90a14 14 0 0 1-28 0z" fill="${COLORI[0]}"/>
+      <text id="os-cod-tubo" x="60" y="140" text-anchor="middle" font-family="Courier New, monospace" font-weight="700" font-size="12" fill="#1E2A44" opacity="0" transform="rotate(-90 60 140)">${codice}</text>
+      <circle cx="54" cy="160" r="3" fill="#fff" opacity=".7"/><circle cx="64" cy="130" r="2" fill="#fff" opacity=".7"/></svg>`;
+    const tubo = fin.querySelector("#os-tubo");
+    const agita = () => {
+      if(scosse >= 4) return;
+      scosse++; tubo.classList.remove("scuoti"); void tubo.getBoundingClientRect(); tubo.classList.add("scuoti"); suono("prendi");
+      fin.querySelector("#os-liquido").setAttribute("fill", COLORI[scosse]);
+      if(scosse === 4){ fin.querySelector("#os-cod-tubo").setAttribute("opacity", "1"); suono("sblocco"); setTimeout(mostraCodice, 700); comandi(""); }
+    };
+    comandi(`<button class="os-btn blu" type="button" id="os-agita">Agita la provetta</button>`);
+    fin.querySelector("#os-agita").addEventListener("click", agita);
+    let ultimoX = null, verso = 0, strada = 0;
+    tubo.addEventListener("pointerdown", e => { ultimoX = e.clientX; try { tubo.setPointerCapture(e.pointerId); } catch {} });
+    tubo.addEventListener("pointermove", e => { if(ultimoX === null) return; const d = e.clientX - ultimoX; ultimoX = e.clientX; const v = Math.sign(d); strada += Math.abs(d); if(v && v !== verso && strada > 40){ verso = v; strada = 0; agita(); } });
+    tubo.addEventListener("pointerup", () => { ultimoX = null; });
+  }
+
+  /* ---- la cassetta degli attrezzi (Il cantiere bloccato): si svitano 4 viti ---- */
+  function attrezzi(){
+    let tolte = 0;
+    const viti = [[40, 70], [240, 70], [40, 108], [240, 108]].map(([x, y], i) => `<g class="os-vite" data-v="${i}" role="button" tabindex="0" aria-label="Vite ${i + 1}"><circle cx="${x}" cy="${y}" r="11" fill="#D5DCE6" stroke="#1E2A44" stroke-width="2.5"/><path d="M${x - 6} ${y}h12M${x} ${y - 6}v12" stroke="#1E2A44" stroke-width="2.5"/></g>`).join("");
+    scena().innerHTML = `<svg class="os-cassa" viewBox="0 0 280 200" role="img" aria-label="Cassetta degli attrezzi avvitata">
+      <rect x="20" y="90" width="240" height="100" rx="8" fill="#C0392B" stroke="#1E2A44" stroke-width="4"/>
+      <rect x="40" y="112" width="200" height="60" rx="6" fill="#2A2F3A"/><rect x="58" y="132" width="164" height="22" rx="3" fill="#F5C542" stroke="#1E2A44" stroke-width="2"/>
+      <text x="140" y="148" text-anchor="middle" font-family="Courier New, monospace" font-weight="700" font-size="16" fill="#1E2A44">${codice}</text>
+      <g class="os-coperchio" id="os-coperchio"><path d="M108 58V38h64v20" fill="none" stroke="#1E2A44" stroke-width="7"/><rect x="20" y="56" width="240" height="66" rx="8" fill="#E5534B" stroke="#1E2A44" stroke-width="4"/>${viti}</g></svg>`;
+    comandi(`<span class="os-nota" id="os-viti">Viti tolte: 0 su 4</span>`);
+    fin.querySelectorAll(".os-vite").forEach(v => {
+      const togli = () => {
+        if(v.classList.contains("via")) return;
+        v.classList.add("via"); tolte++; suono("clic"); fin.querySelector("#os-viti").textContent = `Viti tolte: ${tolte} su 4`;
+        if(tolte === 4) setTimeout(() => { fin.querySelector("#os-coperchio").classList.add("alza"); suono("sblocco"); setTimeout(mostraCodice, 800); }, 600);
+      };
+      v.addEventListener("click", togli);
+      v.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); togli(); } });
+    });
+  }
+
+  /* ---- la cartina arrotolata (La casetta del guardiaparco): si srotola e si trova la X ---- */
+  function pergamena(){
+    let srotolata = 0;
+    scena().innerHTML = `<div class="os-rotolo" id="os-rotolo" role="img" aria-label="Cartina arrotolata"><div class="os-asta"></div>
+      <div class="os-carta" id="os-carta" style="height:0"><svg viewBox="0 0 260 200" aria-hidden="true">
+        <path d="M20 30q40 20 70 10t60 30 40 40 40 60" fill="none" stroke="#A8783E" stroke-width="3" stroke-dasharray="6 5"/>
+        <path d="M30 150l14-20 14 20zM60 160l12-18 12 18z" fill="#5E9E5A" stroke="#1E2A44" stroke-width="1.5"/>
+        <ellipse cx="200" cy="50" rx="34" ry="16" fill="#8EC5F0" stroke="#1E2A44" stroke-width="1.5"/>
+        <path d="M212 160l16 16M228 160l-16 16" stroke="#E5534B" stroke-width="5" stroke-linecap="round"/>
+        <rect x="120" y="172" width="110" height="24" rx="4" fill="#FFF8EC" stroke="#1E2A44" stroke-width="1.5"/>
+        <text x="175" y="189" text-anchor="middle" font-family="Courier New, monospace" font-weight="700" font-size="14" fill="#1E2A44">${codice}</text>
+      </svg></div><div class="os-asta"></div></div>`;
+    const carta = fin.querySelector("#os-carta"), rot = fin.querySelector("#os-rotolo");
+    const metti = v => { srotolata = Math.max(0, Math.min(1, v)); carta.style.height = srotolata * 200 + "px"; if(srotolata >= .97) setTimeout(mostraCodice, 400); };
+    comandi(`<button class="os-btn blu" type="button" id="os-srotola">Srotola ▼</button>`);
+    fin.querySelector("#os-srotola").addEventListener("click", () => { suono("prendi"); metti(srotolata + .34); });
+    let y0 = null;
+    rot.addEventListener("pointerdown", e => { y0 = e.clientY; try { rot.setPointerCapture(e.pointerId); } catch {} });
+    rot.addEventListener("pointermove", e => { if(y0 === null) return; metti(srotolata + (e.clientY - y0) / 200); y0 = e.clientY; });
+    rot.addEventListener("pointerup", () => { y0 = null; });
+  }
+
+  /* ---- l'orologio da taschino (La stazione meteo): si carica la corona e il coperchio si apre ---- */
+  function orologio(){
+    let cariche = 0;
+    scena().innerHTML = `<div class="os-orologio"><svg viewBox="0 0 220 240" role="img" aria-label="Orologio da taschino chiuso">
+      <path d="M110 6a14 14 0 1 1 0 28" fill="none" stroke="#C9A12E" stroke-width="5"/>
+      <g class="os-corona" id="os-corona" role="button" tabindex="0" aria-label="Corona dell'orologio"><rect x="98" y="34" width="24" height="22" rx="4" fill="#E0B53A" stroke="#1E2A44" stroke-width="3"/><path d="M102 38v14M110 38v14M118 38v14" stroke="#1E2A44" stroke-width="1.5"/></g>
+      <circle cx="110" cy="140" r="78" fill="#F5C542" stroke="#1E2A44" stroke-width="5"/>
+      <circle cx="110" cy="140" r="66" fill="#FFFDF5" stroke="#1E2A44" stroke-width="2"/>
+      ${Array.from({length:12}, (_, i) => { const a = i * Math.PI / 6; return `<line x1="${110 + 56 * Math.sin(a)}" y1="${140 - 56 * Math.cos(a)}" x2="${110 + 62 * Math.sin(a)}" y2="${140 - 62 * Math.cos(a)}" stroke="#1E2A44" stroke-width="2.5"/>`; }).join("")}
+      <text x="110" y="182" text-anchor="middle" font-family="Courier New, monospace" font-weight="700" font-size="15" fill="#8A6A3E">${codice}</text>
+      <g class="os-lancette" id="os-lancette"><path d="M110 140V96" stroke="#1E2A44" stroke-width="4" stroke-linecap="round"/><path d="M110 140h34" stroke="#1E2A44" stroke-width="3" stroke-linecap="round"/><circle cx="110" cy="140" r="5" fill="#1E2A44"/></g>
+      <g class="os-sportello" id="os-sportello"><circle cx="110" cy="140" r="78" fill="#E0B53A" stroke="#1E2A44" stroke-width="5"/><circle cx="110" cy="140" r="58" fill="none" stroke="#C9A12E" stroke-width="3"/><path d="M80 120q30-26 60 0" fill="none" stroke="#FFF3B0" stroke-width="5" stroke-linecap="round"/></g>
+    </svg></div>`;
+    const corona = fin.querySelector("#os-corona");
+    const carica = () => {
+      if(cariche >= 3) return;
+      cariche++; suono("clic");
+      const l = fin.querySelector("#os-lancette"); l.classList.remove("carica"); void l.getBoundingClientRect(); l.classList.add("carica");
+      fin.querySelector("#os-cariche").textContent = `Carica: ${cariche} su 3`;
+      if(cariche === 3) setTimeout(() => { fin.querySelector("#os-sportello").classList.add("apre"); suono("sblocco"); setTimeout(mostraCodice, 800); }, 500);
+    };
+    comandi(`<button class="os-btn blu" type="button" id="os-carica">Carica la corona</button><span class="os-nota" id="os-cariche">Carica: 0 su 3</span>`);
+    fin.querySelector("#os-carica").addEventListener("click", carica);
+    corona.addEventListener("click", carica);
+    corona.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); carica(); } });
+  }
+
+  /* ---- il biglietto del treno (Il plastico ferroviario): si timbra nell'obliteratrice ---- */
+  function biglietto(){
+    let timbrato = false;
+    scena().innerHTML = `<div class="os-stazione" id="os-stazione">
+      <div class="os-oblit" id="os-oblit">OBLITERATRICE<span class="fessura"></span><span style="font-size:1.6rem">⇩</span><span>inserisci qui</span></div>
+      <div class="os-ticket" id="os-ticket" role="img" aria-label="Biglietto del treno">MUSEO DEI TRASPORTI<br>Biglietto di corsa semplice<br>A ➝ B · 2ª classe<div id="os-timbro-box"></div></div></div>`;
+    const t = fin.querySelector("#os-ticket"), ob = fin.querySelector("#os-oblit");
+    const timbra = () => {
+      if(timbrato) return; timbrato = true;
+      t.style.transition = "transform .35s ease"; t.style.transform = "translate(0,0)"; t.classList.add("timbrato");
+      ob.classList.add("timbra"); suono("clic"); setTimeout(() => suono("sblocco"), 200);
+      fin.querySelector("#os-timbro-box").innerHTML = `<span class="os-timbro" aria-label="Timbro: ${codice}">${codice}</span>`;
+      setTimeout(mostraCodice, 600); comandi("");
+    };
+    comandi(`<button class="os-btn blu" type="button" id="os-timbra">Timbra il biglietto</button>`);
+    fin.querySelector("#os-timbra").addEventListener("click", timbra);
+    t.addEventListener("pointerdown", e => {
+      if(timbrato) return; e.preventDefault();
+      const x0 = e.clientX, y0 = e.clientY; t.style.transition = "none";
+      try { t.setPointerCapture(e.pointerId); } catch {}
+      suono("prendi");
+      const muovi = ev => { t.style.transform = `translate(${ev.clientX - x0}px,${ev.clientY - y0}px) rotate(-4deg)`; };
+      const fine = ev => {
+        t.removeEventListener("pointermove", muovi); t.removeEventListener("pointerup", fine);
+        const a = t.getBoundingClientRect(), b = ob.getBoundingClientRect();
+        const sopra = a.right > b.left + 10 && a.left < b.right && a.bottom > b.top && a.top < b.bottom;
+        if(sopra) timbra(); else { t.style.transition = "transform .35s ease"; t.style.transform = "translate(0,0)"; }
+      };
+      t.addEventListener("pointermove", muovi); t.addEventListener("pointerup", fine);
+    });
+  }
+
+  /* ---- il cubetto di ghiaccio (Il rifugio nella bufera): si scalda e si scioglie, il bigliettino si libera ---- */
+  function ghiaccio(){
+    let caldo = 0;
+    scena().innerHTML = `<div class="os-freezer" id="os-freezer"><div class="os-pozza" id="os-pozza" style="width:20px"></div>
+      <div class="os-cubetto" id="os-cubetto" style="width:180px;height:180px" role="img" aria-label="Cubetto di ghiaccio con un bigliettino dentro"><span class="os-gelato" id="os-gelato" style="filter:blur(6px)">${codice}</span></div></div>`;
+    const cubo = fin.querySelector("#os-cubetto");
+    const scalda = q => {
+      if(caldo >= 1) return;
+      caldo = Math.min(1, caldo + q);
+      const lato = 180 - caldo * 70;
+      cubo.style.width = cubo.style.height = lato + "px";
+      cubo.style.opacity = 1 - caldo * .55;
+      fin.querySelector("#os-gelato").style.filter = `blur(${Math.max(0, 6 - caldo * 7)}px)`;
+      fin.querySelector("#os-pozza").style.width = 20 + caldo * 180 + "px";
+      fin.querySelector("#os-sciolto").textContent = `Sciolto: ${Math.round(caldo * 100)}%`;
+      if(caldo >= 1){ suono("sblocco"); cubo.style.borderColor = "transparent"; cubo.style.background = "none"; cubo.style.boxShadow = "none"; setTimeout(mostraCodice, 400); comandi(""); }
+    };
+    comandi(`<button class="os-btn blu" type="button" id="os-scalda">Scalda con le mani</button><span class="os-nota" id="os-sciolto">Sciolto: 0%</span>`);
+    fin.querySelector("#os-scalda").addEventListener("click", () => { suono("bip"); scalda(.2); });
+    let ultimo = null;
+    cubo.addEventListener("pointerdown", e => { ultimo = [e.clientX, e.clientY]; try { cubo.setPointerCapture(e.pointerId); } catch {} });
+    cubo.addEventListener("pointermove", e => { if(!ultimo) return; const d = Math.hypot(e.clientX - ultimo[0], e.clientY - ultimo[1]); ultimo = [e.clientX, e.clientY]; scalda(d / 1500); });
+    cubo.addEventListener("pointerup", () => { ultimo = null; });
   }
 
   return {bottone, apri};

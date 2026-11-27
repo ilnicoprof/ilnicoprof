@@ -243,7 +243,7 @@ h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker
 
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
 <script src="trofei.js?v=614d90f4"></script>
-<script src="oggetto-segreto.js?v=9c38c69a"></script>
+<script src="oggetto-segreto.js?v=d803f674"></script>
 <script>
 /* ===== dati ===== */
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
@@ -667,7 +667,7 @@ document.addEventListener("click", e => {
 function disegna4(){
   const sez = $("#e4"), pronto = S.risolto.every(Boolean);
   if(S.libero){
-    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta della sala del plastico è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato segmenti consecutivi e adiacenti, spezzate, somma di segmenti, punto medio, sottomultipli e i problemi con somma, differenza e multipli.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone()}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta della sala del plastico è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato segmenti consecutivi e adiacenti, spezzate, somma di segmenti, punto medio, sottomultipli e i problemi con somma, differenza e multipli.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("segmenti")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
     $("#ricomincia").addEventListener("click", () => location.reload());
     $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("segmenti"));
     return;
