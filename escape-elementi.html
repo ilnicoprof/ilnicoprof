@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La casetta del guardiaparco</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" sizes="32x32" href="immagini/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="immagini/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="immagini/icon-192.png">
+<link rel="apple-touch-icon" href="immagini/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti del nicoprof; enigma 1 = la bacheca delle foto (enti geometrici),
+   enigma 2 = la mappa di sughero con puntine e fili (regole di Euclide), enigma 3 = la cartina dell'orienteering (piano cartesiano), poi la porta */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300; --azzurro:#9FD0FF; --azzurro-ink:#0D3B6E;
+  --bosco:#5E9E5A; --prato:#B9DFA0; --lago:#8EC5F0; --sentiero:#C9A27A; --roccia:#AEB4BE; --notte:#1F2E52;
+  --sughero:#D9AE7E; --sughero-scuro:#A8783E; --filo:#D7263D; --puntina:#E5534B; --legno:#B98042; --legno-scuro:#7A5428;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --porta:#A0703F; --porta-scura:#6E4A27; --metallo:#D5DCE6;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+  --f-mono:"Courier New",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --azzurro:#86BEF5;
+  --bosco:#3F7A3C; --prato:#3E5A32; --lago:#2E5A86; --sentiero:#7A5E40; --roccia:#5A6070; --notte:#0E1630;
+  --sughero:#7A5A38; --sughero-scuro:#4E3519; --filo:#FF5A6E; --puntina:#E8625A; --legno:#7A5530; --legno-scuro:#4E3519;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#7A5530; --porta-scura:#4E3519; --metallo:#5A6680;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --azzurro:#86BEF5;
+  --bosco:#3F7A3C; --prato:#3E5A32; --lago:#2E5A86; --sentiero:#7A5E40; --roccia:#5A6070; --notte:#0E1630;
+  --sughero:#7A5A38; --sughero-scuro:#4E3519; --filo:#FF5A6E; --puntina:#E8625A; --legno:#7A5530; --legno-scuro:#4E3519;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#7A5530; --porta-scura:#4E3519; --metallo:#5A6680;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:820px;margin:0 auto;padding-block:20px 56px;display:grid;gap:20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap>*{min-width:0}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna svg{width:16px;height:16px}
+header{display:grid;gap:8px}
+.eyebrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:800;font-size:.85rem}
+.tag{font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.storia{margin:0;font-family:var(--f-hand);font-size:1.3rem;line-height:1.35;max-width:60ch}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.indizi{display:flex;gap:8px;flex-wrap:wrap}
+.cifra-mini{display:inline-grid;place-items:center;width:34px;height:40px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.cifra-mini.vuota{border-style:dashed;color:var(--ink-soft);background:transparent}
+
+.enigma{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px;display:grid;gap:14px;min-width:0}
+.enigma>*{min-width:0}
+.enigma.chiuso{box-shadow:none;border-style:dashed;border-color:var(--line);background:transparent}
+.enigma.risolto{border-color:var(--ok);box-shadow:5px 5px 0 var(--ok)}
+.e-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.e-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.1;display:flex;align-items:center;gap:10px}
+.e-head h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);font-size:1.1rem;flex:none}
+.enigma.chiuso h2{color:var(--ink-soft)}
+.enigma.chiuso .e-head h2 .n{background:transparent;color:var(--ink-soft);border-color:var(--line)}
+.consegna{margin:0;font-size:1.02rem;max-width:65ch}
+.consegna b{font-weight:800}
+.nota{margin:0;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+.esito{margin:0;min-height:1.5em;font-weight:800}
+.esito.si{color:var(--ok)} .esito.no{color:var(--errore)}
+.azioni{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+.btn.piccolo{font-size:.92rem;padding:5px 12px;box-shadow:2px 2px 0 var(--ink)}
+.aiuto{margin:0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--giallo) 30%,transparent);border:1.5px dashed var(--giallo-ink);font-family:var(--f-hand);font-size:1.15rem}
+.premio{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:var(--ok-bg);color:var(--ok);font-weight:800}
+.premio .cifra-mini{border-color:var(--ok);flex:none}
+
+/* pezzi che si spostano */
+.pezzo{all:unset;box-sizing:border-box;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-width:40px;height:40px;padding:0 10px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:1.1rem;box-shadow:0 3px 0 var(--ink);font-variant-numeric:tabular-nums}
+.pezzo:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pezzo.scelto{background:var(--marker);transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
+.pezzo.sollevato{opacity:.3}
+.pezzo.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+.ombra{position:fixed;z-index:20;pointer-events:none;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
+.scegli .zona{outline:2px dashed var(--accent);outline-offset:-2px}
+.zona.sopra{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
+.banco{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:58px;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
+.banco .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.1rem}
+.etichetta{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin:0 0 -6px}
+.display{font-family:var(--f-mono);font-weight:700;background:#16241A;color:#7CFFA0;padding:10px 14px;border-radius:10px;border:3px solid var(--ink);font-size:1.15rem;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 6px rgba(124,255,160,.5)}
+.display small{display:block;font-size:.75rem;color:#4FBF73;text-shadow:none}
+
+.c-azzurro{background:var(--azzurro);color:var(--azzurro-ink)}
+.e-head h2 .n{background:var(--azzurro);color:var(--azzurro-ink)}
+
+/* enigma 1: la bacheca delle foto */
+.cassette{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.cassette{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cassetta{position:relative;display:grid;align-content:start;gap:6px;min-height:170px;padding:8px;border-radius:12px;border:3px solid var(--legno-scuro);background:color-mix(in srgb,var(--legno) 22%,var(--card))}
+.cassetta h3{margin:0;display:flex;align-items:center;gap:6px;font-family:var(--f-display);font-size:1.05rem;line-height:1.1}
+.cassetta h3 svg{width:36px;height:24px;flex:none}
+.cassetta small{font-size:.75rem;font-weight:700;color:var(--ink-soft);line-height:1.2}
+.cassetta .stella{position:absolute;top:-14px;right:-8px;font-size:1.5rem;color:var(--giallo);-webkit-text-stroke:1.5px var(--ink)}
+.cassetta .dentro{display:grid;gap:6px}
+.foto{flex-direction:column;height:auto;width:100%;max-width:150px;padding:4px 4px 6px;gap:2px;border-radius:6px;background:#FFFFFF;color:#1E2A44;border-color:#1E2A44;box-shadow:2px 3px 0 rgba(0,0,0,.25);font-family:var(--f-body);font-size:.72rem;font-weight:700;line-height:1.15;text-align:center;justify-self:center}
+.foto svg{width:100%;height:auto;aspect-ratio:4/3;border-radius:3px}
+.banco .foto{width:140px}
+.foto.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+
+/* enigma 2: le puntine e i fili */
+.tavolo2{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:start}
+@media (max-width:600px){.tavolo2{grid-template-columns:1fr}}
+.sughero{border-radius:12px;border:6px solid var(--legno-scuro);background:var(--sughero);background-image:radial-gradient(rgba(0,0,0,.12) 1px,transparent 1.5px),radial-gradient(rgba(255,255,255,.18) 1px,transparent 1.5px);background-size:9px 9px,13px 13px;overflow:hidden;touch-action:manipulation}
+.sughero svg{width:100%;height:auto;display:block}
+.puntina{cursor:pointer}
+.puntina:focus{outline:none}
+.puntina:focus-visible circle.testa{stroke:var(--accent);stroke-width:4}
+.puntina.scelta circle.testa{fill:var(--giallo)}
+.puntina.scelta circle.alone{opacity:1}
+.puntina circle.alone{opacity:0;transition:opacity .2s}
+.filo-nuovo{stroke-dasharray:600;stroke-dashoffset:600;animation:tendi .5s ease forwards}
+@keyframes tendi{to{stroke-dashoffset:0}}
+.contatore{display:flex;align-items:center;gap:8px;font-weight:800}
+.contatore b{font-family:var(--f-display);font-size:1.6rem}
+.sgabello{all:unset;cursor:pointer;display:grid;justify-items:center;gap:2px;font-size:.75rem;font-weight:700;color:var(--ink-soft)}
+.sgabello svg{width:64px;height:64px}
+.sgabello:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sgabello.trema svg{animation:trema .3s ease}
+@keyframes trema{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+
+/* enigma 3: la cartina dell'orienteering */
+.orient{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:640px){.orient{grid-template-columns:1fr}}
+.cartina{position:relative;border-radius:10px;border:3px solid var(--ink);overflow:hidden;background:var(--prato);touch-action:manipulation}
+.cartina svg.sfondo{width:100%;height:auto;display:block}
+.bandiera-pos{position:absolute;transform:translate(-20%,-92%);z-index:2}
+.bandierina{all:unset;box-sizing:border-box;cursor:grab;touch-action:none;display:inline-grid;place-items:center;width:38px;height:42px;padding:0}
+.bandierina svg{width:34px;height:40px}
+.bandierina:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.bandierina.scelto{transform:translateY(-3px);filter:drop-shadow(0 0 4px var(--giallo))}
+.bandierina.sbagliato svg .drappo{fill:var(--errore)}
+.banco .bandierina{width:44px;height:46px}
+.foglio-gara{display:grid;gap:8px;padding:12px;border-radius:10px;background:#FFFEF6;color:#23262E;border:1px solid #D8D1BA;box-shadow:0 4px 10px rgba(0,0,0,.12);font-family:var(--f-mono)}
+.foglio-gara h3{margin:0;font-size:1rem;letter-spacing:.05em}
+.foglio-gara li{font-weight:700}
+.foglio-gara ol{margin:0;padding-left:22px;display:grid;gap:4px}
+.coord-input{display:flex;align-items:center;gap:4px;font-family:var(--f-mono);font-weight:700;font-size:1.2rem}
+.coord-input input{width:48px;font:inherit;text-align:center;padding:4px;border-radius:8px;border:2px solid #23262E;background:#FFFFFF;color:#23262E}
+.coord-input input:disabled{background:#D7F5E5}
+.omino{position:absolute;width:30px;height:30px;transform:translate(-50%,-80%);transition:left .6s ease-in-out,top .6s ease-in-out;z-index:3;pointer-events:none}
+
+/* il lucchetto */
+.porta{display:grid;gap:16px;justify-items:center;text-align:center;background:var(--porta);background-image:repeating-linear-gradient(90deg,transparent 0 46px,var(--porta-scura) 46px 48px);border:3px solid var(--ink);border-radius:18px 18px 6px 6px;padding:22px 14px;box-shadow:5px 5px 0 var(--ink);color:#FFF8EC}
+.porta h2{margin:0;font-family:var(--f-display);font-size:1.5rem}
+.porta.chiuso .lucchetto{opacity:.6}
+.lucchetto{display:flex;gap:10px;padding:16px 18px;border-radius:18px;background:var(--metallo);border:3px solid var(--ink);box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.rotella{display:grid;gap:4px;justify-items:center}
+.rotella button{all:unset;cursor:pointer;width:44px;height:28px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);font-weight:800}
+.rotella button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rotella button:disabled{cursor:default;opacity:.6}
+.rotella output{display:grid;place-items:center;width:52px;height:62px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:2.2rem;font-variant-numeric:tabular-nums}
+.porta .esito{color:#FFF8EC}
+.libero{display:grid;gap:10px;justify-items:center;text-align:center;padding:24px 16px;border-radius:18px;background:var(--ok-bg);border:3px solid var(--ok);color:var(--ink)}
+.libero b{font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--ok)}
+.libero p{margin:0;font-weight:700}
+
+.suoni{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+#segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
+#segreto b{font-family:var(--f-display);font-size:1.1rem}
+@keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
+@keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.scuoti{animation:scuoti .3s ease 2}
+@media (max-width:480px){.enigma{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.firma{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.1);font-family:var(--f-body);font-size:.75rem;color:var(--ink-soft);pointer-events:none}
+.firma img{width:30px;height:30px;border-radius:50%;background:#FFFFFF;border:1px solid var(--line);flex:none}
+.firma b{font-weight:800;color:var(--ink)}
+@media (max-width:480px){.firma{padding:3px}.firma span{display:none}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>ilnicoprof</a>
+  <header>
+    <div class="eyebrow"><span class="tag c-azzurro">Geometria</span> 1ª media · I primi elementi della geometria · escape room</div>
+    <h1>la casetta del <span class="hl">guardiaparco</span></h1>
+    <p class="storia">Durante la gara di orienteering della gita al parco scoppia un temporale: ti ripari nella casetta del guardiaparco, ma la porta si chiude alle tue spalle! Il lucchetto ha un codice di 3 cifre. Per trovarle usa la bacheca delle foto, la mappa di sughero e la cartina della gara.</p>
+    <div class="barra">
+      <span class="pill" id="tempo">Tempo 00:00</span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
+      <div class="indizi" id="indizi" aria-label="Cifre trovate"></div>
+    </div>
+  </header>
+
+  <section class="enigma" id="e1" aria-labelledby="t1"></section>
+  <section class="enigma" id="e2" aria-labelledby="t2"></section>
+  <section class="enigma" id="e3" aria-labelledby="t3"></section>
+  <section id="e4" aria-labelledby="t4"></section>
+  <p class="sr" aria-live="polite" id="annuncio"></p>
+</div>
+
+<div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js?v=e61aff63"></script>
+<script src="oggetto-segreto.js?v=9c38c69a"></script>
+<script>
+/* ===== dati ===== */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mescola = a => { const b = [...a]; for(let i = b.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]] = [b[j],b[i]]; } return b; };
+const pesca = (a, n) => mescola(a).slice(0, n);
+
+/* enigma 1: le foto del parco e l'ente geometrico che ognuna rappresenta (disegni 80x60) */
+const CIELO = '<rect width="80" height="60" fill="#CFE6FA"/>', NOTTE = '<rect width="80" height="60" fill="#1F2E52"/>', ERBA = '<rect y="40" width="80" height="20" fill="#9FD08A"/>';
+const FOTO = [
+  {id:"vetta", cat:"punto", t:"La vetta del monte sulla cartina", d:'<rect width="80" height="60" fill="#F4ECD8"/><path d="M8 52l22-30 10 12 10-20 24 38z" fill="#C9B79A" stroke="#7A6A50" stroke-width="1.5"/><circle cx="50" cy="14" r="3.5" fill="#E5534B" stroke="#1E2A44"/><text x="55" y="12" font-size="8" font-family="sans-serif" font-weight="700" fill="#1E2A44">V</text>'},
+  {id:"stella", cat:"punto", t:"La stella polare nel cielo di notte", d: NOTTE + '<circle cx="12" cy="10" r="1" fill="#fff"/><circle cx="66" cy="46" r="1" fill="#fff"/><circle cx="24" cy="44" r=".8" fill="#fff"/><circle cx="44" cy="24" r="2.4" fill="#FFE066"/><path d="M44 18v12M38 24h12" stroke="#FFE066" stroke-width=".8"/>'},
+  {id:"paese", cat:"punto", t:"Il paese segnato sulla cartina dei sentieri", d:'<rect width="80" height="60" fill="#F4ECD8"/><path d="M0 40q20-12 40-4t40-6" fill="none" stroke="#8EC5F0" stroke-width="3"/><path d="M10 10l60 40" stroke="#C9A27A" stroke-width="2" stroke-dasharray="4 3"/><circle cx="40" cy="30" r="3.5" fill="#1E2A44"/><text x="45" y="27" font-size="8" font-family="sans-serif" font-weight="700" fill="#1E2A44">P</text>'},
+  {id:"fiume", cat:"linea", t:"Il fiume che scende a valle", d: CIELO + ERBA + '<path d="M-2 22q14 6 22 0t22 4 20 8 20 24" fill="none" stroke="#4F8FD6" stroke-width="5" stroke-linecap="round"/>'},
+  {id:"anello", cat:"linea", t:"Il sentiero ad anello intorno al lago", d:'<rect width="80" height="60" fill="#9FD08A"/><ellipse cx="40" cy="30" rx="18" ry="10" fill="#8EC5F0"/><ellipse cx="40" cy="30" rx="30" ry="20" fill="none" stroke="#A8783E" stroke-width="3" stroke-dasharray="5 3"/>'},
+  {id:"recinto", cat:"linea", t:"Il recinto del pascolo delle mucche", d:'<rect width="80" height="60" fill="#9FD08A"/><path d="M12 14l50 -4 8 36-56 6z" fill="none" stroke="#7A5428" stroke-width="2.5"/><g fill="#7A5428"><rect x="10" y="10" width="3" height="8"/><rect x="60" y="6" width="3" height="8"/><rect x="68" y="42" width="3" height="8"/><rect x="12" y="48" width="3" height="8"/></g><ellipse cx="38" cy="32" rx="7" ry="4" fill="#fff" stroke="#1E2A44"/>'},
+  {id:"scia", cat:"linea", t:"La scia di un aereo nel cielo", d: CIELO + '<path d="M4 50q30-40 66-38" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/><path d="M70 12l6-2-3 4z" fill="#56627A"/>'},
+  {id:"sole", cat:"semiretta", t:"Il raggio di sole che entra dalla finestra", d:'<rect width="80" height="60" fill="#E9DCC6"/><rect x="4" y="6" width="18" height="22" fill="#CFE6FA" stroke="#7A5428" stroke-width="2"/><path d="M13 6v22M4 17h18" stroke="#7A5428" stroke-width="1.5"/><path d="M14 16L82 58" stroke="#FFD43B" stroke-width="4" opacity=".85"/><circle cx="14" cy="16" r="2.2" fill="#E5534B"/>'},
+  {id:"torcia", cat:"semiretta", t:"Il fascio della torcia nella notte", d: NOTTE + '<rect x="6" y="36" width="16" height="7" rx="2" fill="#AEB4BE" transform="rotate(-20 14 40)"/><path d="M22 34L82 8" stroke="#FFF3B0" stroke-width="5" opacity=".9"/><circle cx="22" cy="34" r="2" fill="#E5534B"/>'},
+  {id:"lago", cat:"piano", t:"La superficie del lago calmo", d: CIELO + '<path d="M0 30h80v30H0z" fill="#5FA5E6"/><path d="M8 38h18M44 46h22M20 52h14" stroke="#fff" stroke-width="1.2" opacity=".7"/>'},
+  {id:"prato", cat:"piano", t:"Il prato pianeggiante della radura", d: CIELO + '<path d="M0 26h80v34H0z" fill="#7CC36A"/><path d="M0 26q20-8 40 0t40 0" fill="#5E9E5A"/>'},
+  {id:"tavolo", cat:"piano", t:"Il ripiano del tavolo da picnic", d:'<rect width="80" height="60" fill="#9FD08A"/><path d="M14 22h56l-8 14H6z" fill="#C9935A" stroke="#7A5428" stroke-width="2"/><path d="M12 36v16M60 36v16" stroke="#7A5428" stroke-width="3"/>'}
+];
+const CATEGORIE = [
+  {k:"punto", nome:"Punto", descr:"nessuna dimensione, si indica con una lettera maiuscola", ico:'<svg viewBox="0 0 36 24" aria-hidden="true"><circle cx="14" cy="14" r="3.5" fill="currentColor"/><text x="20" y="11" font-size="10" font-weight="800" fill="currentColor" font-family="sans-serif">A</text></svg>'},
+  {k:"linea", nome:"Linea", descr:"una dimensione: aperta o chiusa", ico:'<svg viewBox="0 0 36 24" aria-hidden="true"><path d="M2 18q8-14 16-4t16-8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>'},
+  {k:"semiretta", nome:"Semiretta", descr:"ha un'origine e non finisce mai", ico:'<svg viewBox="0 0 36 24" aria-hidden="true"><circle cx="5" cy="12" r="3" fill="currentColor"/><path d="M5 12h28M28 8l5 4-5 4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>'},
+  {k:"piano", nome:"Piano", descr:"due dimensioni, senza bordi: α", ico:'<svg viewBox="0 0 36 24" aria-hidden="true"><path d="M8 4h26l-6 16H2z" fill="none" stroke="currentColor" stroke-width="2.2"/><text x="14" y="16" font-size="10" font-style="italic" fill="currentColor" font-family="serif">α</text></svg>'}
+];
+function scegliFoto(){
+  const per = k => FOTO.filter(f => f.cat === k);
+  const n = {punto: rnd(1, 2), linea: rnd(2, 3), semiretta: rnd(1, 2), piano: rnd(1, 2)};
+  return mescola(Object.entries(n).flatMap(([k, q]) => pesca(per(k), q)));
+}
+const FOTOS = scegliFoto();
+const STELLA1 = pesca(CATEGORIE, 1)[0].k;
+
+/* enigma 2: le puntine sulla mappa di sughero (alcune disposizioni hanno 3 o 4 puntine allineate) */
+const W2 = 400, H2 = 260;
+const DISPOSIZIONI = [
+  [[90,70],[310,60],[330,200],[110,190]],
+  [[70,200],[200,130],[330,60],[110,60]],
+  [[60,210],[170,150],[280,90],[90,70],[320,210]],
+  [[50,200],[150,160],[250,120],[350,80],[200,50]]
+];
+function generaPuntine(){
+  const d = pesca(DISPOSIZIONI, 1)[0], spec = rnd(0, 1);
+  return mescola(d.map(([x, y]) => [spec ? W2 - x : x, y]));
+}
+const PUNTINE = generaPuntine();
+const LETTERE = "ABCDE";
+const allineati = (p, q, r) => Math.abs((q[0]-p[0]) * (r[1]-p[1]) - (q[1]-p[1]) * (r[0]-p[0])) < 1e-6;
+/* la retta per i e j: tutte le puntine allineate con loro (la retta è una sola!) */
+const retta = (i, j) => PUNTINE.map((_, k) => k).filter(k => k === i || k === j || allineati(PUNTINE[i], PUNTINE[j], PUNTINE[k]));
+const chiaveRetta = r => r.join("-");
+function tutteLeRette(){
+  const s = new Set();
+  for(let i = 0; i < PUNTINE.length; i++) for(let j = i + 1; j < PUNTINE.length; j++) s.add(chiaveRetta(retta(i, j)));
+  return s;
+}
+const RETTE = tutteLeRette();
+
+/* enigma 3: la cartina 8 x 6 dell'orienteering, 3 lanterne e il rifugio */
+const GX = 8, GY = 6;
+function generaGara(){
+  for(;;){
+    const usati = new Set(), lanterne = [];
+    while(lanterne.length < 3){
+      const x = rnd(1, GX - 1), y = rnd(1, GY - 1);
+      /* la coordinata scambiata deve stare nella cartina: lì metto un albero-trappola */
+      if(x === y || y > GY || x > GY || usati.has(x + "," + y) || usati.has(y + "," + x)) continue;
+      usati.add(x + "," + y); usati.add(y + "," + x); lanterne.push({x, y});
+    }
+    const rif = {x: rnd(1, GX), y: rnd(1, GY)};
+    if(usati.has(rif.x + "," + rif.y) || rif.x === rif.y) continue;
+    return {lanterne, rif};
+  }
+}
+const GARA = generaGara();
+
+const CODICE = [FOTOS.filter(f => f.cat === STELLA1).length, RETTE.size, GARA.rif.x];
+const INDIZI = [
+  "Quante foto vanno nella cassetta con la stella?",
+  "Quante rette diverse passano per le puntine?",
+  "Qual è la x del rifugio?"
+];
+const AIUTI = [
+  "Il punto non ha dimensioni: è un posto preciso, come una città su una cartina. La linea ha una sola dimensione, la lunghezza: può essere aperta (un fiume) o chiusa (un recinto). La semiretta parte da un punto, l'origine, e non finisce mai (un raggio di sole). Il piano ha due dimensioni ed è senza bordi (la superficie di un lago calmo).",
+  "Tocca una puntina e poi un'altra: il filo è la retta che passa per quei due punti. Per due punti passa una sola retta: non puoi tendere due fili diversi tra le stesse puntine. Attenzione alle puntine allineate: se A, B e C stanno sulla stessa retta, il filo per A e C è lo stesso di quello per A e B!",
+  "Nelle coordinate (x; y) prima c'è la x: ti muovi a destra lungo l'asse orizzontale. Poi la y: sali lungo l'asse verticale. L'ordine conta: (6; 3) non è lo stesso punto di (3; 6), come nella battaglia navale."
+];
+
+const S = {
+  risolto:[false,false,false], aiuto:[false,false,false],
+  cat1: FOTOS.map(() => null), sbagliate1:new Set(),
+  rette:[], scelta2:null, nuova2:null,
+  band: GARA.lanterne.map(() => null), sbagliate3:new Set(), rif:{x:"", y:""}, corso:false,
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+};
+const $ = s => document.querySelector(s);
+const annuncia = t => { $("#annuncio").textContent = t; };
+
+/* ===== trascina oppure tocca-e-posa ===== */
+let scelto = null;
+function seleziona(el, posa){
+  if(scelto && scelto.el === el){ deseleziona(); return; }
+  deseleziona();
+  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli"); suona("prendi");
+  annuncia(`Hai preso ${el.getAttribute("aria-label") || el.textContent}. Ora tocca dove vuoi metterlo.`);
+}
+function deseleziona(){ if(scelto) scelto.el.classList.remove("scelto"); scelto = null; document.body.classList.remove("scegli"); }
+const zonaSotto = (x,y) => document.elementFromPoint(x,y)?.closest("[data-zona]");
+function pezzo(el, posa){
+  el.addEventListener("pointerdown", e => {
+    if(e.button > 0) return;
+    avvia();
+    const r = el.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
+    let ombra = null, sopra = null;
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    const muovi = ev => {
+      if(!ombra){
+        if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
+        deseleziona();
+        ombra = el.cloneNode(true); ombra.classList.add("ombra"); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
+        document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
+      }
+      ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z !== sopra){ sopra?.classList.remove("sopra"); z?.classList.add("sopra"); sopra = z; }
+    };
+    const fine = ev => {
+      el.removeEventListener("pointermove", muovi); el.removeEventListener("pointerup", fine); el.removeEventListener("pointercancel", fine);
+      if(!ombra) return;
+      ombra.remove(); el.classList.remove("sollevato"); sopra?.classList.remove("sopra");
+      el.dataset.trascinato = "1";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z && ev.type === "pointerup") posa(el, z, ev.clientX, ev.clientY);
+    };
+    el.addEventListener("pointermove", muovi); el.addEventListener("pointerup", fine); el.addEventListener("pointercancel", fine);
+  });
+  el.addEventListener("click", e => {
+    e.stopPropagation();
+    if(el.dataset.trascinato){ delete el.dataset.trascinato; return; }
+    avvia(); seleziona(el, posa);
+  });
+}
+document.addEventListener("click", e => {
+  if(!scelto) return;
+  const z = e.target.closest("[data-zona]");
+  if(z){ const s = scelto; deseleziona(); s.posa(s.el, z, e.clientX, e.clientY); }
+  else if(!e.target.closest(".pezzo")) deseleziona();
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") deseleziona(); });
+
+/* ===== tempo e suoni ===== */
+function avvia(){ if(!S.inizio) S.inizio = Date.now(); }
+const mmss = ms => { const s = Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+setInterval(() => { $("#tempo").textContent = "Tempo " + mmss(S.inizio ? (S.fine || Date.now()) - S.inizio : 0); }, 500);
+let audio;
+let suoniOn = true; try { suoniOn = localStorage.getItem("nicoprof:suoni") !== "no"; } catch {}
+/* [frequenza, ritardo, durata, forma, volume] */
+const SUONI = {
+  si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25,"sawtooth",.07]], bip:[[880,0,.06,"triangle",.05]],
+  prendi:[[520,0,.05,"triangle",.08],[780,.04,.06,"triangle",.08]],
+  posa:[[300,0,.07,"triangle",.13],[200,.05,.09,"triangle",.11]],
+  togli:[[500,0,.05,"sine",.1],[330,.04,.07,"sine",.09]],
+  filo:[[330,0,.05,"triangle",.1],[660,.04,.18,"sine",.12]],
+  toc:[[180,0,.06,"triangle",.18],[140,.05,.06,"triangle",.14]],
+  passo:[[700,0,.05,"triangle",.08],[900,.06,.05,"triangle",.08]],
+  segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[140,0,.5,"sawtooth",.035],[155,.25,.6,"sawtooth",.03]],
+  porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
+};
+function suona(tipo){
+  if(!suoniOn || !SUONI[tipo]) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    SUONI[tipo].forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
+  } catch {}
+}
+function aggiornaSuoni(){ const b = document.querySelector("#suoni"); if(b){ b.textContent = "Suoni: " + (suoniOn ? "sì" : "no"); b.setAttribute("aria-pressed", suoniOn); } }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#suoni")) return;
+  suoniOn = !suoniOn; try { localStorage.setItem("nicoprof:suoni", suoniOn ? "si" : "no"); } catch {}
+  aggiornaSuoni(); suona("bip");
+});
+
+/* ===== coriandoli per la vittoria ===== */
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--bosco)", "var(--azzurro)"];
+  for(let i = 0; i < 90; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.8 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4500);
+  }
+}
+
+/* ===== segreti nascosti ===== */
+const trovati = new Set();
+function segreto(id, testo){
+  if(trovati.has(id)) return;
+  trovati.add(id); suona("segreto");
+  let t = document.querySelector("#segreto");
+  if(!t){ t = document.createElement("div"); t.id = "segreto"; t.setAttribute("role", "status"); document.body.append(t); }
+  t.innerHTML = `<b>Segreto trovato! (${trovati.size} di ${SEGRETI})</b><span>${testo}</span>`;
+  t.hidden = false; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  clearTimeout(segreto.timer); segreto.timer = setTimeout(() => { t.hidden = true; }, 6500);
+}
+let digitate = "";
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea") || e.key.length !== 1) return;
+  digitate = (digitate + e.key.toLowerCase()).slice(-12);
+  PAROLE_SEGRETE.forEach(([parola, azione]) => { if(digitate.endsWith(parola)) azione(); });
+});
+const fraseSegreti = () => trovati.size === SEGRETI ? "Hai scoperto anche tutti i segreti nascosti!" : `Segreti nascosti trovati: ${trovati.size} su ${SEGRETI}. Gioca di nuovo per scoprirli tutti!`;
+
+/* ===== parti comuni ===== */
+function testa(i, titolo){
+  const chiuso = i > 0 && !S.risolto[i-1];
+  return `<div class="e-head"><h2 id="t${i+1}"><span class="n">${S.risolto[i] ? "✓" : i+1}</span>${titolo}</h2>
+    ${!chiuso && !S.risolto[i] ? `<button class="btn piccolo" type="button" data-aiuto="${i}">${S.aiuto[i] ? "Nascondi aiuto" : "Aiutino"}</button>` : ""}</div>`;
+}
+const chiusoHtml = i => `<p class="nota">Risolvi prima l'enigma ${i} per aprire questo.</p>`;
+const premioHtml = (i, extra = "") => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Cifra n. ${i+1} trovata! ${INDIZI[i]} ${extra}Risposta: ${CODICE[i]}.</span></div>`;
+const aiutoHtml = i => S.aiuto[i] ? `<p class="aiuto">${AIUTI[i]}</p>` : "";
+function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textContent = testo; el.className = "esito "+tipo; } }
+
+
+
+
+
+/* ===== enigma 1: la bacheca delle foto ===== */
+function disegna1(){
+  const sez = $("#e1"), fatto = S.risolto[0];
+  sez.className = "enigma" + (fatto ? " risolto" : "");
+  const foto = i => `<button class="pezzo foto${S.sbagliate1.has(i) ? " sbagliato" : ""}" type="button" data-f="${i}" aria-label="Foto: ${FOTOS[i].t}"${fatto ? " disabled" : ""}><svg viewBox="0 0 80 60" aria-hidden="true">${FOTOS[i].d}</svg>${FOTOS[i].t}</button>`;
+  const fuori = FOTOS.map((_, i) => i).filter(i => S.cat1[i] === null);
+  sez.innerHTML = testa(0, "La bacheca delle foto") + `
+    <p class="consegna">Il guardiaparco ha staccato le foto dalla bacheca per riordinarle: ogni foto mostra un <b>ente geometrico</b> nella realtà. <b>Metti ogni foto nella cassetta giusta.</b></p>
+    ${aiutoHtml(0)}
+    <div class="cassette">${CATEGORIE.map(c => `<div class="cassetta zona" data-zona="c-${c.k}" aria-label="Cassetta ${c.nome}${c.k === STELLA1 ? ", con la stella" : ""}">${c.k === STELLA1 ? '<span class="stella" aria-hidden="true">★</span>' : ""}
+      <h3>${c.ico}${c.nome}</h3><small>${c.descr}</small>
+      <div class="dentro">${FOTOS.map((_, i) => i).filter(i => S.cat1[i] === c.k).map(foto).join("")}</div></div>`).join("")}</div>
+    ${fatto ? premioHtml(0, `Nella cassetta "${CATEGORIE.find(c => c.k === STELLA1).nome}" ci sono ${CODICE[0]} ${CODICE[0] === 1 ? "foto" : "foto"}. `) : `
+    <p class="etichetta">Foto da sistemare</p>
+    <div class="banco zona" data-zona="banco1">${fuori.length ? fuori.map(foto).join("") : '<span class="vuoto">Tutte le foto sono nelle cassette. Ora controlla!</span>'}</div>
+    <div class="azioni"><button class="btn blu" type="button" id="controlla1">Controlla la bacheca</button><p class="esito" id="esito0"></p></div>`}`;
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa1));
+  $("#controlla1").addEventListener("click", controlla1);
+}
+function posa1(el, zona){
+  const i = +el.dataset.f, z = zona.dataset.zona;
+  if(z === "banco1") S.cat1[i] = null;
+  else if(z.startsWith("c-")) S.cat1[i] = z.slice(2);
+  else return;
+  S.sbagliate1.delete(i); suona("posa");
+  disegna1();
+}
+function controlla1(){
+  const fuori = S.cat1.filter(v => v === null).length;
+  if(fuori){ esito(0, `Mancano ancora ${fuori} ${fuori === 1 ? "foto" : "foto"} da sistemare.`, "no"); suona("no"); return; }
+  S.sbagliate1 = new Set(FOTOS.map((f, i) => S.cat1[i] === f.cat ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliate1.size){
+    disegna1();
+    esito(0, S.sbagliate1.size === 1 ? "1 foto è nella cassetta sbagliata: è colorata di rosso." : `${S.sbagliate1.size} foto sono nelle cassette sbagliate: sono colorate di rosso.`, "no"); suona("no"); return;
+  }
+  risolvi(0);
+}
+
+/* ===== enigma 2: le puntine e i fili ===== */
+/* prolungo la retta fino ai bordi della mappa: la retta non finisce mai */
+function estendi(p, q){
+  const dx = q[0] - p[0], dy = q[1] - p[1], ts = [];
+  if(dx){ ts.push(-p[0] / dx, (W2 - p[0]) / dx); }
+  if(dy){ ts.push(-p[1] / dy, (H2 - p[1]) / dy); }
+  const dentro = ts.filter(t => { const x = p[0] + t * dx, y = p[1] + t * dy; return x >= -0.01 && x <= W2 + 0.01 && y >= -0.01 && y <= H2 + 0.01; });
+  const a = Math.min(...dentro), b = Math.max(...dentro);
+  return [[p[0] + a * dx, p[1] + a * dy], [p[0] + b * dx, p[1] + b * dy]];
+}
+function svgSughero(){
+  const fili = S.rette.map(r => {
+    const pts = r.split("-").map(Number), ord = pts.map(k => PUNTINE[k]).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const [e1, e2] = estendi(ord[0], ord[ord.length - 1]);
+    const nuovo = r === S.nuova2;
+    return `<line x1="${e1[0]}" y1="${e1[1]}" x2="${e2[0]}" y2="${e2[1]}" stroke="var(--filo)" stroke-width="1.6" stroke-dasharray="6 5" opacity=".7"/>
+      <line class="${nuovo ? "filo-nuovo" : ""}" x1="${ord[0][0]}" y1="${ord[0][1]}" x2="${ord[ord.length - 1][0]}" y2="${ord[ord.length - 1][1]}" stroke="var(--filo)" stroke-width="3.5" stroke-linecap="round"/>`;
+  }).join("");
+  const pins = PUNTINE.map(([x, y], k) => `<g class="puntina${S.scelta2 === k ? " scelta" : ""}" data-p="${k}" tabindex="${S.risolto[1] ? -1 : 0}" role="button" aria-label="Puntina ${LETTERE[k]}">
+      <circle class="alone" cx="${x}" cy="${y}" r="20" fill="var(--giallo)" opacity="0" style="opacity:${S.scelta2 === k ? .55 : 0}"/>
+      <circle cx="${x + 2}" cy="${y + 3}" r="9" fill="rgba(0,0,0,.25)"/>
+      <circle class="testa" cx="${x}" cy="${y}" r="9" fill="var(--puntina)" stroke="#1E2A44" stroke-width="2"/>
+      <circle cx="${x - 3}" cy="${y - 3}" r="2.5" fill="#FFFFFF" opacity=".7"/>
+      <text x="${x + 13}" y="${y - 10}" font-family="Baloo 2, sans-serif" font-weight="800" font-size="20" fill="#1E2A44">${LETTERE[k]}</text>
+      <circle cx="${x}" cy="${y}" r="22" fill="transparent"/></g>`).join("");
+  return `<svg viewBox="0 0 ${W2} ${H2}" role="group" aria-label="Mappa di sughero con le puntine">${fili}${pins}</svg>`;
+}
+const SVG_SGABELLO = '<svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="16" rx="22" ry="7" fill="var(--legno)" stroke="var(--ink)" stroke-width="2.5"/><path d="M16 20L10 58M48 20l6 38M32 23v35" stroke="var(--legno-scuro)" stroke-width="4" stroke-linecap="round"/></svg>';
+function disegna2(){
+  const sez = $("#e2"), chiuso = !S.risolto[0], fatto = S.risolto[1];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(1, "Le puntine e i fili") + chiusoHtml(1); return; }
+  sez.innerHTML = testa(1, "Le puntine e i fili") + `
+    <p class="consegna">Sulla mappa di sughero il guardiaparco ha piantato ${PUNTINE.length} puntine. <b>Tendi un filo per ogni retta diversa che passa per le puntine:</b> tocca una puntina e poi un'altra. Quando hai teso tutte le rette possibili, conta i fili.</p>
+    ${aiutoHtml(1)}
+    <div class="tavolo2">
+      <div class="sughero" id="sughero">${svgSughero()}</div>
+      <div style="display:grid;gap:12px;justify-items:start">
+        <span class="contatore">Rette tese: <b id="nrette">${S.rette.length}</b></span>
+        <button class="sgabello" type="button" id="sgabello" aria-label="Lo sgabello a tre gambe del guardiaparco">${SVG_SGABELLO}sgabello</button>
+      </div>
+    </div>
+    ${fatto ? premioHtml(1, `Le rette diverse sono ${CODICE[1]}. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla2">Ho teso tutte le rette</button><button class="btn piccolo" type="button" id="togli2">Togli l'ultimo filo</button><p class="esito" id="esito1"></p></div>`}`;
+  S.nuova2 = null;
+  if(fatto) return;
+  sez.querySelectorAll(".puntina").forEach(g => {
+    g.addEventListener("click", () => tocca2(+g.dataset.p));
+    g.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); tocca2(+g.dataset.p); } });
+  });
+  $("#controlla2").addEventListener("click", controlla2);
+  $("#togli2").addEventListener("click", () => { if(S.rette.length){ S.rette.pop(); suona("togli"); disegna2(); } });
+}
+let tocchiStessa = 0, ultimaToccata = null;
+function tocca2(k){
+  avvia();
+  tocchiStessa = ultimaToccata === k ? tocchiStessa + 1 : 1; ultimaToccata = k;
+  if(tocchiStessa >= 3) segreto("infinite", "Per un punto solo passano infinite rette: con una puntina sola il filo può girare in tutte le direzioni!");
+  if(S.scelta2 === null || S.scelta2 === k){ S.scelta2 = S.scelta2 === k ? null : k; suona("bip"); disegna2(); if(S.scelta2 !== null) document.querySelector(`.puntina[data-p="${k}"]`)?.focus(); return; }
+  const r = retta(S.scelta2, k), chiave = chiaveRetta(r), da = S.scelta2;
+  S.scelta2 = null;
+  if(S.rette.includes(chiave)){
+    disegna2();
+    const nomi = r.map(i => LETTERE[i]).join(", ");
+    esito(1, r.length > 2 ? `Le puntine ${nomi} sono allineate: per ${LETTERE[da]} e ${LETTERE[k]} passa la stessa retta che hai già teso!` : `Per ${LETTERE[da]} e ${LETTERE[k]} hai già teso il filo: per due punti passa una sola retta!`, "no");
+    suona("no"); return;
+  }
+  S.rette.push(chiave); S.nuova2 = chiave; suona("filo");
+  disegna2();
+  if(r.length > 2) esito(1, `Il filo passa anche per ${r.filter(i => i !== da && i !== k).map(i => LETTERE[i]).join(" e ")}: quelle puntine sono allineate!`, "si");
+}
+function controlla2(){
+  if(S.rette.length < RETTE.size){
+    const mancano = [];
+    for(let i = 0; i < PUNTINE.length; i++) for(let j = i + 1; j < PUNTINE.length; j++) if(!S.rette.includes(chiaveRetta(retta(i, j)))) mancano.push(LETTERE[i] + LETTERE[j]);
+    esito(1, `Non hai ancora teso tutte le rette: c'è almeno una coppia di puntine senza filo (prova con ${mancano[0][0]}…).`, "no"); suona("no"); return;
+  }
+  risolvi(1);
+}
+let tocchiSgabello = 0;
+document.addEventListener("click", e => {
+  const s = e.target.closest("#sgabello"); if(!s) return;
+  suona("toc"); s.classList.remove("trema"); void s.offsetWidth; s.classList.add("trema");
+  if(++tocchiSgabello >= 3) segreto("sgabello", "Lo sgabello a 3 gambe non traballa mai: per tre punti non allineati passa un solo piano, e le tre gambe toccano sempre il pavimento!");
+});
+
+/* ===== enigma 3: la cartina dell'orienteering ===== */
+const CX = 30, CY = 34, PASSO = 40, WC = CX + GX * PASSO + 24, HC = CY + GY * PASSO + 36;
+const px = x => CX + x * PASSO, py = y => CY + (GY - y) * PASSO;
+const SVG_BANDIERA = n => `<svg viewBox="0 0 34 40" aria-hidden="true"><path d="M6 2v37" stroke="#1E2A44" stroke-width="3" stroke-linecap="round"/><path class="drappo" d="M7 3h20l-5 7 5 7H7z" fill="#F28C28" stroke="#1E2A44" stroke-width="2" stroke-linejoin="round"/><path d="M7 10h18" stroke="#FFFFFF" stroke-width="2" opacity=".8"/><text x="15" y="31" font-family="Baloo 2, sans-serif" font-weight="800" font-size="13" fill="#1E2A44">${n}</text></svg>`;
+function svgCartina(){
+  let g = "";
+  for(let x = 0; x <= GX; x++) g += `<line x1="${px(x)}" y1="${py(0)}" x2="${px(x)}" y2="${py(GY)}" stroke="#1E2A44" stroke-opacity=".18"/>`;
+  for(let y = 0; y <= GY; y++) g += `<line x1="${px(0)}" y1="${py(y)}" x2="${px(GX)}" y2="${py(y)}" stroke="#1E2A44" stroke-opacity=".18"/>`;
+  let num = "";
+  for(let x = 1; x <= GX; x++) num += `<text x="${px(x)}" y="${py(0) + 18}" text-anchor="middle" font-size="13" font-weight="800" fill="#1E2A44" font-family="Nunito, sans-serif">${x}</text>`;
+  for(let y = 1; y <= GY; y++) num += `<text x="${px(0) - 10}" y="${py(y) + 4}" text-anchor="end" font-size="13" font-weight="800" fill="#1E2A44" font-family="Nunito, sans-serif">${y}</text>`;
+  /* alberi-trappola nei punti con le coordinate scambiate */
+  const alberi = GARA.lanterne.map(l => `<g transform="translate(${px(l.y)} ${py(l.x)})"><path d="M0 -24l11 16H5l9 12H-14l9-12h-6z" fill="#3F7A3C" stroke="#1E2A44" stroke-width="1.5"/><rect x="-2" y="4" width="4" height="5" fill="#7A5428"/></g>`).join("");
+  const rif = `<g transform="translate(${px(GARA.rif.x)} ${py(GARA.rif.y)})"><path d="M-13 -2l13-12 13 12v12h-26z" fill="#C9935A" stroke="#1E2A44" stroke-width="2" stroke-linejoin="round"/><path d="M-15 -1L0 -15 15 -1" fill="none" stroke="#E5534B" stroke-width="3.5" stroke-linecap="round"/><rect x="-3" y="2" width="6" height="8" fill="#1E2A44"/></g>`;
+  return `<svg class="sfondo" viewBox="0 0 ${WC} ${HC}" role="img" aria-label="Cartina del parco con il piano cartesiano">
+    <rect width="${WC}" height="${HC}" fill="var(--prato)"/>
+    <ellipse cx="${px(5.5)}" cy="${py(1.6)}" rx="58" ry="26" fill="var(--lago)" opacity=".9"/>
+    <path d="M${px(0)} ${py(3.5)}Q${px(2)} ${py(5)} ${px(4)} ${py(4)}T${px(8)} ${py(5.2)}" fill="none" stroke="var(--sentiero)" stroke-width="5" stroke-dasharray="8 5"/>
+    <circle cx="${px(1.2)}" cy="${py(1.2)}" r="22" fill="var(--bosco)" opacity=".45"/><circle cx="${px(7)}" cy="${py(3.3)}" r="18" fill="var(--bosco)" opacity=".45"/>
+    ${g}
+    <line x1="${px(0)}" y1="${py(0)}" x2="${px(GX) + 14}" y2="${py(0)}" stroke="#1E2A44" stroke-width="2.5" marker-end="url(#fx)"/>
+    <line x1="${px(0)}" y1="${py(0)}" x2="${px(0)}" y2="${py(GY) - 14}" stroke="#1E2A44" stroke-width="2.5" marker-end="url(#fx)"/>
+    <defs><marker id="fx" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1E2A44"/></marker></defs>
+    <text x="${px(GX) + 14}" y="${py(0) - 6}" font-size="14" font-style="italic" font-weight="700" fill="#1E2A44" font-family="Georgia, serif">x</text>
+    <text x="${px(0) + 8}" y="${py(GY) - 6}" font-size="14" font-style="italic" font-weight="700" fill="#1E2A44" font-family="Georgia, serif">y</text>
+    <g id="origine" style="cursor:pointer"><circle cx="${px(0)}" cy="${py(0)}" r="5" fill="#1E2A44"/><text x="${px(0) - 8}" y="${py(0) + 18}" text-anchor="end" font-size="14" font-weight="800" fill="#1E2A44" font-family="Nunito, sans-serif">O</text></g>
+    ${num}${alberi}${rif}
+  </svg>`;
+}
+function disegna3(){
+  const sez = $("#e3"), chiuso = !S.risolto[1], fatto = S.risolto[2];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(2, "La cartina dell'orienteering") + chiusoHtml(2); return; }
+  const band = i => `<button class="pezzo bandierina${S.sbagliate3.has(i) ? " sbagliato" : ""}" type="button" data-b="${i}" aria-label="Bandierina ${i + 1}"${fatto ? " disabled" : ""}>${SVG_BANDIERA(i + 1)}</button>`;
+  const fuori = GARA.lanterne.map((_, i) => i).filter(i => S.band[i] === null);
+  sez.innerHTML = testa(2, "La cartina dell'orienteering") + `
+    <p class="consegna">Sul foglio di gara ci sono le coordinate delle lanterne. <b>Trascina ogni bandierina nel punto della cartina con le sue coordinate</b> (o toccala e poi tocca il punto). Poi <b>scrivi le coordinate del rifugio</b>: da lì parte la squadra di soccorso!</p>
+    ${aiutoHtml(2)}
+    <div class="orient">
+      <div class="cartina zona" id="cartina" data-zona="cartina">${svgCartina()}
+        ${GARA.lanterne.map((_, i) => S.band[i] ? `<div class="bandiera-pos" style="left:${px(S.band[i].x) / WC * 100}%;top:${py(S.band[i].y) / HC * 100}%">${band(i)}</div>` : "").join("")}
+        <svg class="omino" id="omino" viewBox="0 0 30 30" aria-hidden="true" style="left:${px(0) / WC * 100}%;top:${py(0) / HC * 100}%;${fatto ? "" : "display:none"}"><circle cx="15" cy="6" r="4" fill="#E5534B" stroke="#1E2A44" stroke-width="1.5"/><path d="M15 10l-2 9 5 9M13 19l-6 6M14 13l-7 2M15 13l8 4" stroke="#1E2A44" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
+      </div>
+      <div class="foglio-gara"><h3>FOGLIO DI GARA · SQUADRA 3B</h3>
+        <ol>${GARA.lanterne.map(l => `<li>Lanterna: (${l.x}; ${l.y})</li>`).join("")}</ol>
+        <div class="coord-input">Rifugio: ( <input type="text" inputmode="numeric" maxlength="2" data-c="x" value="${fatto ? GARA.rif.x : S.rif.x}" aria-label="x del rifugio"${fatto ? " disabled" : ""}> ; <input type="text" inputmode="numeric" maxlength="2" data-c="y" value="${fatto ? GARA.rif.y : S.rif.y}" aria-label="y del rifugio"${fatto ? " disabled" : ""}> )</div>
+      </div>
+    </div>
+    ${fatto ? premioHtml(2, `Il rifugio è nel punto (${GARA.rif.x}; ${GARA.rif.y}). `) : `
+    <p class="etichetta">Bandierine</p>
+    <div class="banco zona" data-zona="banco3">${fuori.length ? fuori.map(band).join("") : '<span class="vuoto">Tutte le bandierine sono sulla cartina.</span>'}</div>
+    <div class="azioni"><button class="btn blu" type="button" id="controlla3">Controlla il percorso</button><p class="esito" id="esito2"></p></div>`}`;
+  if(fatto){ if(!S.corso){ S.corso = true; corri(); } return; }
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa3));
+  sez.querySelectorAll("input[data-c]").forEach(inp => inp.addEventListener("input", () => { avvia(); S.rif[inp.dataset.c] = inp.value; }));
+  $("#controlla3").addEventListener("click", controlla3);
+}
+function posa3(el, zona, cx, cy){
+  const i = +el.dataset.b, z = zona.dataset.zona;
+  if(z === "banco3") S.band[i] = null;
+  else if(z === "cartina"){
+    const r = $("#cartina").getBoundingClientRect(), k = r.width / WC;
+    const x = Math.round(((cx - r.left) / k - CX) / PASSO), y = Math.round(GY - ((cy - r.top) / k - CY) / PASSO);
+    if(x < 0 || x > GX || y < 0 || y > GY) return;
+    S.band[i] = {x, y};
+  } else return;
+  S.sbagliate3.delete(i); suona("posa");
+  disegna3();
+}
+function controlla3(){
+  const fuori = S.band.filter(v => v === null).length;
+  if(fuori){ esito(2, `Mancano ancora ${fuori} ${fuori === 1 ? "bandierina" : "bandierine"} sulla cartina.`, "no"); suona("no"); return; }
+  /* ogni bandierina va su una lanterna qualsiasi, purché tutte le lanterne siano coperte */
+  const chiave = p => p.x + "," + p.y, giuste = new Set(GARA.lanterne.map(chiave));
+  S.sbagliate3 = new Set(S.band.map((b, i) => giuste.has(chiave(b)) ? -1 : i).filter(i => i >= 0));
+  const doppie = new Set(S.band.map(chiave)).size < S.band.length;
+  if(S.sbagliate3.size || doppie){
+    disegna3();
+    const scambiata = S.band.find(b => GARA.lanterne.some(l => l.x === b.y && l.y === b.x));
+    esito(2, scambiata ? `Una bandierina è sotto un albero, nel punto (${scambiata.x}; ${scambiata.y}): hai scambiato x e y! Prima la x, poi la y.` : doppie ? "Due bandierine sono sulla stessa lanterna." : "Qualche bandierina non è su una lanterna: è colorata di rosso.", "no"); suona("no"); return;
+  }
+  const n = t => +String(t).replace(/[^\d]/g, "");
+  if(!String(S.rif.x).trim() || !String(S.rif.y).trim()){ esito(2, "Le bandierine sono giuste! Ora scrivi le coordinate del rifugio.", "si"); suona("bip"); return; }
+  if(n(S.rif.x) !== GARA.rif.x || n(S.rif.y) !== GARA.rif.y){
+    esito(2, n(S.rif.x) === GARA.rif.y && n(S.rif.y) === GARA.rif.x ? "Le coordinate del rifugio sono invertite: prima la x (orizzontale), poi la y!" : "Le coordinate del rifugio non sono giuste: conta di nuovo i quadretti dall'origine O.", "no"); suona("no"); return;
+  }
+  risolvi(2);
+}
+/* effetto finale: l'omino corre da O alle lanterne e poi al rifugio */
+function corri(){
+  const om = $("#omino"); if(!om) return;
+  const tappe = [...S.band, GARA.rif];
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ om.style.left = px(GARA.rif.x) / WC * 100 + "%"; om.style.top = py(GARA.rif.y) / HC * 100 + "%"; return; }
+  tappe.forEach((t, i) => setTimeout(() => { om.style.left = px(t.x) / WC * 100 + "%"; om.style.top = py(t.y) / HC * 100 + "%"; suona(i === tappe.length - 1 ? "si" : "passo"); }, 300 + i * 700));
+}
+let tocchiOrigine = 0;
+document.addEventListener("click", e => {
+  if(!e.target.closest("#origine") || scelto) return;
+  suona("bip");
+  if(++tocchiOrigine >= 3) segreto("origine", "L'origine O ha coordinate (0; 0): è il punto di partenza di tutte le misure, come il cancello d'ingresso del parco!");
+});
+
+/* ===== il lucchetto ===== */
+function disegna4(){
+  const sez = $("#e4"), pronto = S.risolto.every(Boolean);
+  if(S.libero){
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta della casetta è aperta e il temporale è passato: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato punto, linea, semiretta e piano, le regole di Euclide e il piano cartesiano.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone()}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    $("#ricomincia").addEventListener("click", () => location.reload());
+    $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("elementi"));
+    return;
+  }
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
+    <h2 id="t4">La porta della casetta</h2>
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
+      <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
+      <output aria-label="Cifra ${i+1}">${v}</output>
+      <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
+    <p class="esito" id="esito3"></p></div></div>`;
+  sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
+    b.parentElement.querySelector("output").textContent = S.rotelle[i];
+  }));
+  $("#apri")?.addEventListener("click", () => {
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
+    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+  });
+}
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
+}
+
+function disegnaIndizi(){
+  $("#indizi").innerHTML = CODICE.map((c,i) => `<span class="cifra-mini${S.risolto[i] ? "" : " vuota"}" title="${INDIZI[i]}">${S.risolto[i] ? c : "?"}</span>`).join("");
+}
+function risolvi(i){
+  S.risolto[i] = true; suona("si");
+  annuncia(`Enigma ${i+1} risolto! La cifra numero ${i+1} è ${CODICE[i]}.`);
+  tutto();
+  const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
+  setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
+}
+function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-aiuto]"); if(!b) return;
+  const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
+  [disegna1, disegna2, disegna3][i]();
+});
+
+
+/* segreti: toccare 3 volte lo sgabello, toccare 3 volte la stessa puntina, toccare 3 volte l'origine O, scrivere "euclide" */
+const SEGRETI = 4;
+const PAROLE_SEGRETE = [["euclide", () => segreto("euclide", "Euclide visse ad Alessandria d'Egitto più di 2300 anni fa: il suo libro, gli Elementi, è stato usato per insegnare la geometria per secoli!")]];
+tutto();
+aggiornaSuoni();
+</script>
+</body>
+</html>

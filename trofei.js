@@ -4,11 +4,12 @@
      il codice di un compagno non funziona con un altro nome
    Per aggiungere un trofeo: una riga in TROFEI (id uguale a quello passato da OggettoSegreto.apri nella escape room). */
 const TROFEI = [
-  {id:"insiemi", nome:"Gli anelli di Venn", gioco:"L'aula chiusa", link:"escape-insiemi.html", argomento:"Insiemi, tabelle e grafici"},
-  {id:"relativi", nome:"Il drone d'oro", gioco:"Il drone sotto zero", link:"escape-relativi.html", argomento:"Numeri relativi"},
-  {id:"naturali", nome:"Il carrello d'oro", gioco:"Il supermercato chiuso", link:"escape-numeri.html", argomento:"Numeri naturali e decimali"},
-  {id:"letterale", nome:"La gru d'oro", gioco:"Il cantiere bloccato", link:"escape-letterale.html", argomento:"Espressioni letterali e monomi"},
-  {id:"materia", nome:"L'atomo d'oro", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"Atomi, tavola periodica e legami"}
+  {id:"insiemi", nome:"Il Medaglione dei Due Regni", gioco:"L'aula chiusa", link:"escape-insiemi.html", argomento:"Insiemi, tabelle e grafici"},
+  {id:"relativi", nome:"La Piuma del Grifone delle Nevi", gioco:"Il drone sotto zero", link:"escape-relativi.html", argomento:"Numeri relativi"},
+  {id:"naturali", nome:"La Moneta del Mercante Infinito", gioco:"Il supermercato chiuso", link:"escape-numeri.html", argomento:"Numeri naturali e decimali"},
+  {id:"letterale", nome:"La Pergamena delle Rune", gioco:"Il cantiere bloccato", link:"escape-letterale.html", argomento:"Espressioni letterali e monomi"},
+  {id:"elementi", nome:"La Bussola delle Stelle", gioco:"La casetta del guardiaparco", link:"escape-elementi.html", argomento:"I primi elementi della geometria"},
+  {id:"materia", nome:"Il Cristallo dell'Alchimista", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"Atomi, tavola periodica e legami"}
 ];
 
 const Trofei = (() => {
@@ -64,41 +65,67 @@ const Trofei = (() => {
   };
 })();
 
-/* disegni dei trofei: la forma richiama l'argomento. colori = {oro, oroScuro, linea, base} */
+/* il premio per chi conquista tutti i trofei */
+const GRAN_NOME = "La Corona del Gran Maestro ilnicoprof";
+
+/* disegni dei trofei: oggetti magici inventati, ognuno legato al suo argomento e con i suoi colori.
+   svgTrofeo(id, COLORI_ORO) = trofeo conquistato (usa i colori del trofeo), svgTrofeo(id, COLORI_SPENTO) = ancora da vincere */
+const COLORI_TROFEO = {
+  insiemi:  {oro:"#D5DEEC", oroScuro:"#4F7FE0", linea:"#1E2A44", base:"#7286AE", extra:"#9FC0FF"},
+  naturali: {oro:"#E0A065", oroScuro:"#A8642E", linea:"#1E2A44", base:"#8A5A34", extra:"#FFE7B8"},
+  relativi: {oro:"#CFEAFF", oroScuro:"#4FA3E3", linea:"#1E2A44", base:"#7FA8C9", extra:"#FFFFFF"},
+  materia:  {oro:"#C39BF5", oroScuro:"#7A47D6", linea:"#1E2A44", base:"#5E4A8A", extra:"#FFE066"},
+  letterale:{oro:"#F2E1B6", oroScuro:"#C9A66B", linea:"#1E2A44", base:"#8A6A3E", extra:"#2F9E5B"},
+  elementi: {oro:"#3A5A9E", oroScuro:"#D5DCE6", linea:"#1E2A44", base:"#4A5A7A", extra:"#FFE066"},
+  gran:     {oro:"#F5C542", oroScuro:"#D9A21B", linea:"#1E2A44", base:"#B98042", extra:"#E5534B"}
+};
 function svgTrofeo(id, colori){
-  const {oro, oroScuro, linea, base} = colori;
+  const c = colori === COLORI_SPENTO ? COLORI_SPENTO : (COLORI_TROFEO[id] || colori);
+  const {oro, oroScuro, linea, base} = c, extra = c.extra || oroScuro;
   const piedistallo = `<path d="M30 84h40l-4-10H34z" fill="${base}" stroke="${linea}" stroke-width="2.5" stroke-linejoin="round"/><rect x="24" y="84" width="52" height="10" rx="2" fill="${base}" stroke="${linea}" stroke-width="2.5"/>`;
+  const scintilla = (x, y, r) => `<path d="M${x} ${y - r}l${r * .3} ${r * .7} ${r * .7} ${r * .3}-${r * .7} ${r * .3}-${r * .3} ${r * .7}-${r * .3}-${r * .7}-${r * .7}-${r * .3} ${r * .7}-${r * .3}z" fill="${extra}" stroke="${linea}" stroke-width="1"/>`;
   const forme = {
-    insiemi: `<circle cx="39" cy="42" r="21" fill="none" stroke="${linea}" stroke-width="13"/><circle cx="39" cy="42" r="21" fill="none" stroke="${oro}" stroke-width="8"/>
-              <circle cx="61" cy="42" r="21" fill="none" stroke="${linea}" stroke-width="13"/><circle cx="61" cy="42" r="21" fill="none" stroke="${oro}" stroke-width="8"/>
-              <path d="M52 25.5a21 21 0 0 1 0 33" fill="none" stroke="${linea}" stroke-width="13"/><path d="M52 25.5a21 21 0 0 1 0 33" fill="none" stroke="${oroScuro}" stroke-width="8"/>
-              <path d="M50 66v8" stroke="${linea}" stroke-width="4"/>`,
-    relativi: `<path d="M12 26h26M62 26h26" stroke="${linea}" stroke-width="5" stroke-linecap="round"/><path d="M25 26v12M75 26v12" stroke="${linea}" stroke-width="4"/>
-               <rect x="20" y="36" width="60" height="26" rx="10" fill="${oro}" stroke="${linea}" stroke-width="3.5"/>
-               <circle cx="50" cy="49" r="7" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
-               <path d="M40 62l-5 12M60 62l5 12" stroke="${linea}" stroke-width="4" stroke-linecap="round"/>`,
-    naturali: `<path d="M8 18h12l10 40h42" fill="none" stroke="${linea}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-               <path d="M24 26h60l-9 24H31z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
-               <path d="M38 26l2 24M52 26v24M66 26l-3 24M27 38h53" stroke="${linea}" stroke-width="2"/>
-               <circle cx="38" cy="66" r="6" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/><circle cx="66" cy="66" r="6" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>`,
-    letterale: `<path d="M34 72V20M44 72V20" stroke="${linea}" stroke-width="4"/><path d="M34 30l10 10M44 40l-10 10M34 50l10 10" stroke="${linea}" stroke-width="2.5"/>
-               <path d="M14 18h76" stroke="${linea}" stroke-width="9" stroke-linecap="round"/><path d="M14 18h76" stroke="${oro}" stroke-width="5" stroke-linecap="round"/>
-               <path d="M39 18V6L14 18M39 6l51 12" fill="none" stroke="${linea}" stroke-width="2.5"/>
-               <rect x="12" y="21" width="14" height="10" rx="2" fill="${oroScuro}" stroke="${linea}" stroke-width="2.5"/>
-               <path d="M76 21v26" stroke="${linea}" stroke-width="2.5"/><path d="M76 47v4a3 3 0 1 1-4 3" fill="none" stroke="${linea}" stroke-width="3" stroke-linecap="round"/>
-               <rect x="62" y="56" width="28" height="8" rx="1.5" fill="${oro}" stroke="${linea}" stroke-width="2.5"/>`,
-    materia: `<g fill="none" stroke-linecap="round">
-               <ellipse cx="50" cy="40" rx="31" ry="11" stroke="${linea}" stroke-width="9"/><ellipse cx="50" cy="40" rx="31" ry="11" stroke="${oro}" stroke-width="4.5"/>
-               <ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(60 50 40)" stroke="${linea}" stroke-width="9"/><ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(60 50 40)" stroke="${oro}" stroke-width="4.5"/>
-               <ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(-60 50 40)" stroke="${linea}" stroke-width="9"/><ellipse cx="50" cy="40" rx="31" ry="11" transform="rotate(-60 50 40)" stroke="${oroScuro}" stroke-width="4.5"/></g>
-               <circle cx="50" cy="40" r="7.5" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
-               <path d="M50 67v7" stroke="${linea}" stroke-width="4"/>`,
-    gran: `<path d="M30 14h40v18a20 20 0 0 1-40 0z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
-           <path d="M30 20H18a10 10 0 0 0 12 16M70 20h12a10 10 0 0 1-12 16" fill="none" stroke="${linea}" stroke-width="4"/>
-           <path d="M46 51h8v14h-8z" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
-           <path d="M50 22l3 6 6.5 1-4.7 4.6 1.1 6.4-5.9-3.1-5.9 3.1 1.1-6.4-4.7-4.6 6.5-1z" fill="${oroScuro}"/>`
+    /* due anelli d'argento intrecciati: la terra blu in mezzo è quella che i due regni condividono */
+    insiemi: `<path d="M50 24.1A21 21 0 0 1 50 59.9A21 21 0 0 1 50 24.1z" fill="${oroScuro}"/>
+              <circle cx="39" cy="42" r="21" fill="none" stroke="${linea}" stroke-width="12"/><circle cx="39" cy="42" r="21" fill="none" stroke="${oro}" stroke-width="7"/>
+              <circle cx="61" cy="42" r="21" fill="none" stroke="${linea}" stroke-width="12"/><circle cx="61" cy="42" r="21" fill="none" stroke="${oro}" stroke-width="7"/>
+              <path d="M52 24.5a21 21 0 0 1 0 35" fill="none" stroke="${linea}" stroke-width="12"/><path d="M52 24.5a21 21 0 0 1 0 35" fill="none" stroke="${oro}" stroke-width="7"/>
+              <circle cx="50" cy="42" r="4" fill="${extra}" stroke="${linea}" stroke-width="1.5"/><path d="M50 64v10" stroke="${linea}" stroke-width="4"/>`,
+    /* una moneta di bronzo con il simbolo dell'infinito */
+    naturali: `<circle cx="50" cy="40" r="28" fill="${oro}" stroke="${linea}" stroke-width="3.5"/><circle cx="50" cy="40" r="21" fill="none" stroke="${oroScuro}" stroke-width="2.5" stroke-dasharray="3 3"/>
+               <path d="M50 40c-4-7-15-7-15 0s11 7 15 0 15-7 15 0-11 7-15 0z" fill="none" stroke="${linea}" stroke-width="6"/><path d="M50 40c-4-7-15-7-15 0s11 7 15 0 15-7 15 0-11 7-15 0z" fill="none" stroke="${oroScuro}" stroke-width="3"/>
+               ${scintilla(78, 16, 7)}${scintilla(22, 66, 5)}<path d="M50 68v6" stroke="${linea}" stroke-width="4"/>`,
+    /* la piuma del grifone, con un fiocco di neve */
+    relativi: `<path d="M56 8C76 20 74 52 52 70L46 70C34 50 38 22 56 8z" fill="${oro}" stroke="${linea}" stroke-width="3" stroke-linejoin="round"/>
+               <path d="M55 12C52 34 50 52 49 74" fill="none" stroke="${linea}" stroke-width="2.5" stroke-linecap="round"/>
+               <path d="M54 22l10-4M53 32l13-3M52 42l12-1M51 52l10 1M54 26l-11-1M53 36l-12 1M52 46l-10 3" stroke="${oroScuro}" stroke-width="2.2" stroke-linecap="round"/>
+               <g stroke="${linea}" stroke-width="2" stroke-linecap="round"><path d="M24 20v16M16 28h16M18.5 22.5l11 11M29.5 22.5l-11 11"/></g>
+               <g stroke="${extra}" stroke-width="1" stroke-linecap="round"><path d="M24 20v16M16 28h16"/></g>`,
+    /* il cristallo dell'alchimista, con scintille in orbita */
+    materia:  `<ellipse cx="50" cy="40" rx="36" ry="12" fill="none" stroke="${linea}" stroke-width="1.5" stroke-dasharray="4 4" transform="rotate(-18 50 40)"/>
+               <path d="M50 10l16 16-4 36-12 10-12-10-4-36z" fill="${oro}" stroke="${linea}" stroke-width="3" stroke-linejoin="round"/>
+               <path d="M34 26h32M50 10l-6 16 6 46 6-46z" fill="none" stroke="${oroScuro}" stroke-width="2"/><path d="M44 26l6 46" stroke="${linea}" stroke-width="1" opacity=".4"/>
+               ${scintilla(16, 34, 6)}${scintilla(84, 46, 6)}<path d="M50 72v2" stroke="${linea}" stroke-width="4"/>`,
+    /* la pergamena con le rune: le lettere che valgono numeri */
+    letterale:`<rect x="26" y="16" width="48" height="48" fill="${oro}" stroke="${linea}" stroke-width="3"/>
+               <rect x="20" y="10" width="60" height="10" rx="5" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/><rect x="20" y="60" width="60" height="10" rx="5" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
+               <g fill="none" stroke="${extra}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                 <path d="M34 28v14M34 28l7 5M34 35l7 5"/><path d="M50 27l-5 15M50 27l5 15M46 37h8"/><path d="M62 27v15M62 34l6-7M62 34l6 8"/>
+                 <path d="M36 50h10M41 47v8"/><path d="M54 48l4 6 4-6"/></g>
+               <path d="M50 70v4" stroke="${linea}" stroke-width="4"/>`,
+    /* la bussola delle stelle: l'ago punta sempre verso una stella, cioè verso un punto */
+    elementi: `<path d="M50 4l2.5 5.5 6 .8-4.4 4 1.1 6-5.2-3-5.2 3 1.1-6-4.4-4 6-.8z" fill="${extra}" stroke="${linea}" stroke-width="1.5"/>
+               <circle cx="50" cy="46" r="26" fill="${oro}" stroke="${linea}" stroke-width="3.5"/><circle cx="50" cy="46" r="20" fill="none" stroke="${oroScuro}" stroke-width="1.5" stroke-dasharray="2 4"/>
+               <path d="M50 24l6 22-6 22-6-22z" fill="${oroScuro}" stroke="${linea}" stroke-width="2" stroke-linejoin="round"/><path d="M50 24l6 22h-12z" fill="${extra}" stroke="${linea}" stroke-width="2" stroke-linejoin="round"/>
+               <circle cx="50" cy="46" r="3" fill="${linea}"/>${scintilla(20, 22, 5)}${scintilla(82, 70, 5)}<path d="M50 72v2" stroke="${linea}" stroke-width="4"/>`,
+    /* la corona del gran maestro: una gemma per ogni regno */
+    gran:     `<path d="M18 58l-4-34 18 16 18-26 18 26 18-16-4 34z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
+               <rect x="17" y="56" width="66" height="12" rx="3" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>
+               <circle cx="32" cy="62" r="3.5" fill="#4F7FE0" stroke="${linea}" stroke-width="1.5"/><circle cx="44" cy="62" r="3.5" fill="#7A47D6" stroke="${linea}" stroke-width="1.5"/><circle cx="56" cy="62" r="3.5" fill="#2F9E5B" stroke="${linea}" stroke-width="1.5"/><circle cx="68" cy="62" r="3.5" fill="${extra}" stroke="${linea}" stroke-width="1.5"/>
+               <circle cx="14" cy="22" r="4" fill="${extra}" stroke="${linea}" stroke-width="2"/><circle cx="50" cy="12" r="4" fill="#4FA3E3" stroke="${linea}" stroke-width="2"/><circle cx="86" cy="22" r="4" fill="#2F9E5B" stroke="${linea}" stroke-width="2"/>
+               <path d="M50 68v6" stroke="${linea}" stroke-width="4"/>`
   };
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true">${forme[id] || forme.gran}${piedistallo}</svg>`;
 }
 const COLORI_ORO = {oro:"#F5C542", oroScuro:"#D9A21B", linea:"#1E2A44", base:"#B98042"};
-const COLORI_SPENTO = {oro:"#D5DCE6", oroScuro:"#C2CBD8", linea:"#8A96AB", base:"#D5DCE6"};
+const COLORI_SPENTO = {oro:"#D5DCE6", oroScuro:"#C2CBD8", linea:"#8A96AB", base:"#D5DCE6", extra:"#C2CBD8"};

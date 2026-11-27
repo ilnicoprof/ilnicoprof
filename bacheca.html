@@ -179,7 +179,7 @@ dialog .riga{margin-top:12px}
 </dialog>
 
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
-<script src="trofei.js?v=ae314f74"></script>
+<script src="trofei.js?v=e61aff63"></script>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -243,7 +243,7 @@ function disegnaTrofei(nuovo){
   $("#trofei").innerHTML = TROFEI.map(t => s[t.id]
     ? `<article class="trofeo${nuovo === t.id ? " nuovo" : ""}">${svgTrofeo(t.id, COLORI_ORO)}<b>${esc(t.nome)}</b><small>${esc(t.gioco)} · ${esc(t.argomento)}</small><span class="cod">${esc(s[t.id].codice)}</span><small>conquistato il ${dataIt(s[t.id].data)}</small></article>`
     : `<article class="trofeo spento">${svgTrofeo(t.id, COLORI_SPENTO)}<b>${esc(t.nome)}</b><small>Ancora da conquistare</small><a href="${t.link}">Gioca a ${esc(t.gioco)}</a></article>`).join("")
-    + (tutti ? `<article class="trofeo gran${nuovo ? " nuovo" : ""}">${svgTrofeo("gran", COLORI_ORO)}<b>Il gran trofeo ilnicoprof</b><small>Hai conquistato tutti i trofei!</small></article>` : "");
+    + (tutti ? `<article class="trofeo gran${nuovo ? " nuovo" : ""}">${svgTrofeo("gran", COLORI_ORO)}<b>${GRAN_NOME}</b><small>Hai conquistato tutti i trofei!</small></article>` : "");
   $("#conta").textContent = `${presi} ${presi === 1 ? "trofeo" : "trofei"} su ${TROFEI.length}`;
 }
 
@@ -269,7 +269,7 @@ async function creaImmagine(){
   try { await document.fonts.ready; } catch {}
   const s = Trofei.sbloccati(), n = Trofei.nome() || "senza nome";
   const tutti = TROFEI.every(t => s[t.id]);
-  const lista = [...TROFEI.map(t => ({id:t.id, nome:t.nome, gioco:t.gioco, preso:s[t.id]})), ...(tutti ? [{id:"gran", nome:"Il gran trofeo ilnicoprof", gioco:"tutti i trofei", preso:{codice:"", data:""}}] : [])];
+  const lista = [...TROFEI.map(t => ({id:t.id, nome:t.nome, gioco:t.gioco, preso:s[t.id]})), ...(tutti ? [{id:"gran", nome:GRAN_NOME, gioco:"tutti i trofei", preso:{codice:"", data:""}}] : [])];
   const W = 1080, col = 2, cw = 440, ch = 470, gx = 40, x0 = (W - col*cw - gx) / 2, righe = Math.ceil(lista.length / col);
   const H = 330 + righe * (ch + 36) + 150;
   const c = document.createElement("canvas"); c.width = W; c.height = H;
