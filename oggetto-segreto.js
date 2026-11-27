@@ -9,7 +9,10 @@ const OggettoSegreto = (() => {
   const PER_STANZA = {insiemi:"astuccio", naturali:"grattaevinci", relativi:"pacco", materia:"provetta", letterale:"attrezzi",
                       elementi:"pergamena", misure:"orologio", segmenti:"biglietto", stati:"ghiaccio"};
   let scelto = OGGETTI[Math.floor(Math.random() * OGGETTI.length)];
-  const scegli = id => { if(id && PER_STANZA[id]) scelto = PER_STANZA[id]; };
+  /* se la pagina non dice quale oggetto usare (per esempio una pagina vecchia rimasta in memoria nel browser), lo ricavo dal nome del file */
+  const DA_PAGINA = {insiemi:"insiemi", numeri:"naturali", relativi:"relativi", chimica:"materia", letterale:"letterale", elementi:"elementi", misure:"misure", segmenti:"segmenti", stati:"stati"};
+  const daPagina = () => { const m = /^escape-([a-z]+)\.html$/.exec(location.pathname.split("/").pop()); return m ? DA_PAGINA[m[1]] : null; };
+  const scegli = id => { const k = (id && PER_STANZA[id]) ? id : daPagina(); if(k && PER_STANZA[k]) scelto = PER_STANZA[k]; };
   let codice = null, trovato = false, idTrofeo = null;
   const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const suono = t => { try { if(typeof suona === "function") suona(t); } catch {} };
@@ -129,7 +132,7 @@ const OggettoSegreto = (() => {
 /* cassetta degli attrezzi */
 .os-cassa{position:relative;width:280px;max-width:100%;height:200px}
 .os-coperchio{transition:transform .9s cubic-bezier(.4,0,.2,1)}
-.os-coperchio.alza{transform:translateY(-150px) rotate(-10deg)}
+.os-coperchio.alza{transform:translateY(-190px) rotate(-10deg)}
 .os-vite{cursor:pointer}
 .os-vite.via{animation:os-svita .7s ease forwards}
 @keyframes os-svita{40%{transform:rotate(360deg)}100%{transform:rotate(540deg) translateY(30px);opacity:0}}
@@ -292,7 +295,8 @@ const OggettoSegreto = (() => {
     fin.querySelector("#os-scuoti").addEventListener("click", scuoti);
     /* scuoterlo anche trascinandolo a destra e sinistra */
     let ultimoX = null, verso = 0, strada = 0;
-    vaso.addEventListener("pointerdown", e => { ultimoX = e.clientX; try { vaso.setPointerCapture(e.pointerId); } catch {} });
+    /* il bigliettino è un pulsante dentro il barattolo: se il barattolo "catturasse" il tocco, il bigliettino non si aprirebbe mai */
+    vaso.addEventListener("pointerdown", e => { if(e.target.closest("button")) return; ultimoX = e.clientX; try { vaso.setPointerCapture(e.pointerId); } catch {} });
     vaso.addEventListener("pointermove", e => {
       if(ultimoX === null) return;
       const d = e.clientX - ultimoX; ultimoX = e.clientX;
@@ -457,7 +461,7 @@ const OggettoSegreto = (() => {
       <rect x="20" y="90" width="240" height="100" rx="8" fill="#C0392B" stroke="#1E2A44" stroke-width="4"/>
       <rect x="40" y="112" width="200" height="60" rx="6" fill="#2A2F3A"/><rect x="58" y="132" width="164" height="22" rx="3" fill="#F5C542" stroke="#1E2A44" stroke-width="2"/>
       <text x="140" y="148" text-anchor="middle" font-family="Courier New, monospace" font-weight="700" font-size="16" fill="#1E2A44">${codice}</text>
-      <g class="os-coperchio" id="os-coperchio"><path d="M108 58V38h64v20" fill="none" stroke="#1E2A44" stroke-width="7"/><rect x="20" y="56" width="240" height="66" rx="8" fill="#E5534B" stroke="#1E2A44" stroke-width="4"/>${viti}</g></svg>`;
+      <g class="os-coperchio" id="os-coperchio"><path d="M108 58V38h64v20" fill="none" stroke="#1E2A44" stroke-width="7"/><rect x="20" y="56" width="240" height="118" rx="8" fill="#E5534B" stroke="#1E2A44" stroke-width="4"/><path d="M20 120h240" stroke="#1E2A44" stroke-width="2.5" opacity=".5"/>${viti}</g></svg>`;
     comandi(`<span class="os-nota" id="os-viti">Viti tolte: 0 su 4</span>`);
     fin.querySelectorAll(".os-vite").forEach(v => {
       const togli = () => {
@@ -544,7 +548,8 @@ const OggettoSegreto = (() => {
       const fine = ev => {
         t.removeEventListener("pointermove", muovi); t.removeEventListener("pointerup", fine);
         const a = t.getBoundingClientRect(), b = ob.getBoundingClientRect();
-        const sopra = a.right > b.left + 10 && a.left < b.right && a.bottom > b.top && a.top < b.bottom;
+        const cx = a.left + a.width / 2, cy = a.top + a.height / 2;
+        const sopra = cx > b.left && cx < b.right + 40 && cy > b.top && cy < b.bottom;   /* il centro del biglietto deve arrivare sulla macchinetta */
         if(sopra) timbra(); else { t.style.transition = "transform .35s ease"; t.style.transform = "translate(0,0)"; }
       };
       t.addEventListener("pointermove", muovi); t.addEventListener("pointerup", fine);
