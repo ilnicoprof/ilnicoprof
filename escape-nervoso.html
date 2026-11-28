@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lo studio di medicina dello sport</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" sizes="32x32" href="immagini/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="immagini/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="immagini/icon-192.png">
+<link rel="apple-touch-icon" href="immagini/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti del nicoprof; enigma 1 = il monitor del neurone (parti, velocità dell'impulso, sfida del righello),
+   enigma 2 = il modello del cervello (encefalo e midollo), enigma 3 = il cardiofrequenzimetro (sistema autonomo), poi la porta */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300; --verde:#8EDDB4; --verde-ink:#0B4A2C;
+  --neuro:#9B6CF0; --neuro-chiaro:#E4D8FF; --mielina:#FFD87A; --cellula:#BFE3FF; --luce:#FFE066;
+  --c-cervello:#F7B8C8; --c-cervelletto:#F6C48A; --c-tronco:#A8DDB8; --c-midollo:#A9CFF5; --osso:#E6E1D6;
+  --monitor:#0E1A14; --ecg:#7CFFA0; --cuore:#E5534B;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --porta:#3E8C86; --porta-scura:#27615C; --metallo:#D5DCE6;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+  --f-mono:"Courier New",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C;
+  --neuro:#B794FF; --neuro-chiaro:#3E2F66; --mielina:#B8963A; --cellula:#29496E; --luce:#FFE066;
+  --c-cervello:#8A4A5A; --c-cervelletto:#8A6232; --c-tronco:#3E7A55; --c-midollo:#34587E; --osso:#5A5A55;
+  --monitor:#06100B; --ecg:#7CFFA0; --cuore:#FF7A70;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#27615C; --porta-scura:#173F3B; --metallo:#5A6680;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C;
+  --neuro:#B794FF; --neuro-chiaro:#3E2F66; --mielina:#B8963A; --cellula:#29496E; --luce:#FFE066;
+  --c-cervello:#8A4A5A; --c-cervelletto:#8A6232; --c-tronco:#3E7A55; --c-midollo:#34587E; --osso:#5A5A55;
+  --monitor:#06100B; --ecg:#7CFFA0; --cuore:#FF7A70;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#27615C; --porta-scura:#173F3B; --metallo:#5A6680;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:820px;margin:0 auto;padding-block:20px 56px;display:grid;gap:20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap>*{min-width:0}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna svg{width:16px;height:16px}
+header{display:grid;gap:8px}
+.eyebrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:800;font-size:.85rem}
+.tag{font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.storia{margin:0;font-family:var(--f-hand);font-size:1.3rem;line-height:1.35;max-width:60ch}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.indizi{display:flex;gap:8px;flex-wrap:wrap}
+.cifra-mini{display:inline-grid;place-items:center;width:34px;height:40px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.cifra-mini.vuota{border-style:dashed;color:var(--ink-soft);background:transparent}
+
+.enigma{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px;display:grid;gap:14px;min-width:0}
+.enigma>*{min-width:0}
+.enigma.chiuso{box-shadow:none;border-style:dashed;border-color:var(--line);background:transparent}
+.enigma.risolto{border-color:var(--ok);box-shadow:5px 5px 0 var(--ok)}
+.e-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.e-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.1;display:flex;align-items:center;gap:10px}
+.e-head h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);font-size:1.1rem;flex:none}
+.enigma.chiuso h2{color:var(--ink-soft)}
+.enigma.chiuso .e-head h2 .n{background:transparent;color:var(--ink-soft);border-color:var(--line)}
+.consegna{margin:0;font-size:1.02rem;max-width:65ch}
+.consegna b{font-weight:800}
+.nota{margin:0;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+.esito{margin:0;min-height:1.5em;font-weight:800}
+.esito.si{color:var(--ok)} .esito.no{color:var(--errore)}
+.azioni{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+.btn.piccolo{font-size:.92rem;padding:5px 12px;box-shadow:2px 2px 0 var(--ink)}
+.aiuto{margin:0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--giallo) 30%,transparent);border:1.5px dashed var(--giallo-ink);font-family:var(--f-hand);font-size:1.15rem}
+.premio{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:var(--ok-bg);color:var(--ok);font-weight:800}
+.premio .cifra-mini{border-color:var(--ok);flex:none}
+
+/* pezzi che si spostano */
+.pezzo{all:unset;box-sizing:border-box;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-width:40px;height:40px;padding:0 10px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:1.1rem;box-shadow:0 3px 0 var(--ink);font-variant-numeric:tabular-nums}
+.pezzo:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pezzo.scelto{background:var(--marker);transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
+.pezzo.sollevato{opacity:.3}
+.pezzo.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+.ombra{position:fixed!important;z-index:50!important;pointer-events:none!important;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
+.scegli .zona{outline:2px dashed var(--accent);outline-offset:-2px}
+.zona.sopra{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
+.banco{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:58px;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
+.banco .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.1rem}
+.etichetta{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin:0 0 -6px}
+.display{font-family:var(--f-mono);font-weight:700;background:#16241A;color:#7CFFA0;padding:10px 14px;border-radius:10px;border:3px solid var(--ink);font-size:1.15rem;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 6px rgba(124,255,160,.5)}
+.display small{display:block;font-size:.75rem;color:#4FBF73;text-shadow:none}
+
+.c-verde{background:var(--verde);color:var(--verde-ink)}
+.e-head h2 .n{background:var(--verde);color:var(--verde-ink)}
+.scena{border-radius:14px;border:2px solid var(--ink);background:var(--card);overflow:hidden}
+.scena svg{display:block;width:100%;height:auto}
+.domande{display:grid;gap:8px}
+.domanda{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:800;padding:10px;border-radius:12px;background:var(--pill)}
+.domanda.sbagliata{background:var(--errore-bg)}
+.domanda input{width:76px;font:inherit;font-family:var(--f-mono);font-size:1.1rem;padding:4px 8px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+.opz{all:unset;box-sizing:border-box;cursor:pointer;padding:3px 10px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-weight:800;font-size:.9rem}
+.opz[aria-pressed="true"]{background:var(--marker)}
+.opz:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opz:disabled{cursor:default}
+.cartello{font-family:var(--f-hand);font-size:1.2rem;padding:8px 14px;border-radius:10px;border:3px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);justify-self:start;transform:rotate(-1deg);max-width:100%}
+.stella{color:var(--giallo);-webkit-text-stroke:1.2px var(--ink)}
+
+/* enigma 1: il neurone */
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
+.slot{display:flex;align-items:center;gap:8px;min-height:48px;padding:4px 8px;border-radius:12px;border:2px dashed var(--line);background:var(--pill)}
+.slot .num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);background:var(--card);font-family:var(--f-display);font-weight:800;flex:none}
+.slot .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.05rem}
+.slot.sbagliato{border-color:var(--errore);background:var(--errore-bg)}
+.nome{font-size:.98rem}
+.righello-box{display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;align-items:center;padding:12px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
+.righello-box h3{margin:0;font-family:var(--f-display);font-size:1.1rem}
+.righello-box p{margin:0}
+.pista{position:relative;height:260px;border-radius:10px;background:var(--card);border:2px solid var(--ink);overflow:hidden}
+#righello{position:absolute;left:38px;top:15px;width:34px;height:200px;will-change:transform}
+.dita{position:absolute;left:18px;right:18px;top:198px;height:14px;border-top:5px solid var(--ink);border-bottom:5px solid var(--ink);border-radius:6px;opacity:.55;pointer-events:none}
+
+/* enigma 2: il cervello */
+.cervello-box{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:12px;align-items:start}
+@media (max-width:640px){.cervello-box{grid-template-columns:1fr}.righello-box{grid-template-columns:1fr}.pista{width:110px}}
+.parte{cursor:pointer;transition:filter .2s ease,stroke-width .2s ease}
+.parte.sopra,.scegli .parte{stroke-width:5;filter:brightness(1.08)}
+.parte.piena{stroke-width:4}
+.risolto .parte{animation:accendi 1.6s ease-in-out infinite alternate}
+.risolto .parte:nth-of-type(2){animation-delay:.4s}.risolto .parte:nth-of-type(3){animation-delay:.8s}.risolto .parte:nth-of-type(4){animation-delay:1.2s}
+@keyframes accendi{to{filter:brightness(1.18) drop-shadow(0 0 6px var(--luce))}}
+.aree{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (max-width:420px){.aree{grid-template-columns:1fr}}
+.area{display:grid;align-content:start;gap:6px;min-height:120px;padding:8px;border-radius:12px;border:3px solid var(--ink);background:var(--card)}
+.area h3{margin:0;font-family:var(--f-display);font-size:1rem;display:flex;align-items:center;gap:6px}
+.area h3 i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);flex:none}
+.area small{font-size:.75rem;font-weight:700;color:var(--ink-soft)}
+.area .dentro{display:flex;flex-wrap:wrap;gap:6px}
+.att{height:auto;min-height:40px;padding:5px 9px;font-family:var(--f-body);font-size:.85rem;font-weight:800;line-height:1.2;text-align:center;max-width:220px}
+
+/* enigma 3: il cardiofrequenzimetro */
+.momenti{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.momento{display:grid;gap:8px;align-content:start;padding:10px;border-radius:14px;border:2px solid var(--ink);background:var(--card)}
+.momento.sbagliato{border-color:var(--errore);background:var(--errore-bg)}
+.momento h3{margin:0;font-family:var(--f-display);font-size:1.05rem}
+.schermo{position:relative;border-radius:10px;border:3px solid var(--ink);background:var(--monitor);overflow:hidden}
+.schermo svg{display:block;width:100%;height:auto}
+.traccia{stroke-dasharray:1;stroke-dashoffset:1}
+.traccia.vista{stroke-dashoffset:0}
+.traccia.corre{stroke-dashoffset:0;transition:stroke-dashoffset 5s linear}
+.cuoricino{transform-origin:center;flex:none}
+.cuoricino.batte{animation:batte .3s ease-out}
+@keyframes batte{40%{transform:scale(1.45)}}
+.riga{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:800;font-size:.9rem}
+.riga input{width:64px;font:inherit;font-family:var(--f-mono);font-size:1.05rem;padding:3px 6px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+@media (prefers-reduced-motion:reduce){.risolto .parte{animation:none}.traccia.corre{transition:none}.cuoricino.batte{animation:none}}
+
+/* il lucchetto */
+.porta{display:grid;gap:16px;justify-items:center;text-align:center;background:var(--porta);background-image:repeating-linear-gradient(90deg,transparent 0 46px,var(--porta-scura) 46px 48px);border:3px solid var(--ink);border-radius:18px 18px 6px 6px;padding:22px 14px;box-shadow:5px 5px 0 var(--ink);color:#FFF8EC}
+.porta h2{margin:0;font-family:var(--f-display);font-size:1.5rem}
+.porta.chiuso .lucchetto{opacity:.6}
+.lucchetto{display:flex;gap:10px;padding:16px 18px;border-radius:18px;background:var(--metallo);border:3px solid var(--ink);box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.rotella{display:grid;gap:4px;justify-items:center}
+.rotella button{all:unset;cursor:pointer;width:44px;height:28px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);font-weight:800}
+.rotella button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rotella button:disabled{cursor:default;opacity:.6}
+.rotella output{display:grid;place-items:center;width:52px;height:62px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:2.2rem;font-variant-numeric:tabular-nums}
+.porta .esito{color:#FFF8EC}
+.libero{display:grid;gap:10px;justify-items:center;text-align:center;padding:24px 16px;border-radius:18px;background:var(--ok-bg);border:3px solid var(--ok);color:var(--ink)}
+.libero b{font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--ok)}
+.libero p{margin:0;font-weight:700}
+
+.suoni{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+#segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
+#segreto b{font-family:var(--f-display);font-size:1.1rem}
+@keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
+@keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.scuoti{animation:scuoti .3s ease 2}
+@media (max-width:480px){.enigma{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.firma{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.1);font-family:var(--f-body);font-size:.75rem;color:var(--ink-soft);pointer-events:none}
+.firma img{width:30px;height:30px;border-radius:50%;background:#FFFFFF;border:1px solid var(--line);flex:none}
+.firma b{font-weight:800;color:var(--ink)}
+@media (max-width:480px){.firma{padding:3px}.firma span{display:none}}
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>ilnicoprof</a>
+  <header>
+    <div class="eyebrow"><span class="tag c-verde">Scienze</span> 3ª media · Il sistema nervoso · escape room</div>
+    <h1>lo studio di medicina dello <span class="hl">sport</span></h1>
+    <p class="storia">La classe è al centro sportivo per i test atletici. Mentre provi la macchina dei riflessi, la dottoressa esce a prendere i cardiofrequenzimetri e la porta dello studio si chiude: il lucchetto ha un codice di 3 cifre. Il tuo sistema nervoso è la centrale di comando: usalo per uscire!</p>
+    <div class="barra">
+      <span class="pill" id="tempo">Tempo 00:00</span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
+      <div class="indizi" id="indizi" aria-label="Cifre trovate"></div>
+    </div>
+  </header>
+
+  <section class="enigma" id="e1" aria-labelledby="t1"></section>
+  <section class="enigma" id="e2" aria-labelledby="t2"></section>
+  <section class="enigma" id="e3" aria-labelledby="t3"></section>
+  <section id="e4" aria-labelledby="t4"></section>
+  <p class="sr" aria-live="polite" id="annuncio"></p>
+</div>
+
+<div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js?v=73657ebf"></script>
+<script src="oggetto-segreto.js?v=3574e1e2"></script>
+<script>
+/* ===== dati ===== */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mescola = a => { const b = [...a]; for(let i = b.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]] = [b[j],b[i]]; } return b; };
+const pesca = (a, n) => mescola(a).slice(0, n);
+const numero = v => { const t = String(v).trim().replace(",", "."); return t === "" ? NaN : +t; };
+const virgola = x => String(Math.round(x * 1000) / 1000).replace(".", ",");
+
+/* enigma 1: le parti del neurone (numerate a caso) e il sensore dell'impulso */
+const PARTI = [
+  {id:"dendriti", n:"Dendriti"}, {id:"corpo", n:"Corpo cellulare"}, {id:"nucleo", n:"Nucleo"},
+  {id:"assone", n:"Assone"}, {id:"guaina", n:"Guaina mielinica"}, {id:"sinapsi", n:"Sinapsi"}
+];
+const NUM1 = mescola([1, 2, 3, 4, 5, 6]);
+const ORDINE1 = mescola(PARTI.map((_, i) => i));
+/* velocità v (m/s, decine intere) e tempo t (s): la distanza d = v·t è un tratto del corpo tra 0,6 e 1,8 m */
+const COPPIE1 = [];
+for(let v = 20; v <= 90; v += 10) for(const t of [0.01, 0.02, 0.03, 0.04, 0.05]){ const d = Math.round(v * t * 100) / 100; if(d >= 0.6 && d <= 1.8) COPPIE1.push({v, t, d}); }
+const IMP = pesca(COPPIE1, 1)[0];
+const PERCORSO1 = IMP.d < 1 ? "dalla mano al midollo spinale" : IMP.d < 1.4 ? "dalla punta del dito al cervello" : "dall'alluce al cervello";
+
+/* enigma 2: le attività da portare alla parte giusta dell'encefalo o al midollo */
+const ZONE2 = [
+  {id:"cervello", n:"Cervello", c:"var(--c-cervello)", d:"pensiero, memoria, movimenti volontari"},
+  {id:"cervelletto", n:"Cervelletto", c:"var(--c-cervelletto)", d:"equilibrio e coordinazione"},
+  {id:"tronco", n:"Tronco encefalico", c:"var(--c-tronco)", d:"funzioni vitali automatiche"},
+  {id:"midollo", n:"Midollo spinale", c:"var(--c-midollo)", d:"autostrada degli impulsi e riflessi"}
+];
+const ATTIVITA = {
+  cervello:["Risolvere un'equazione", "Ricordare il numero di un amico", "Decidere di alzare la mano", "Capire una frase in inglese", "Riconoscere la voce della mamma"],
+  cervelletto:["Stare in equilibrio sullo skate", "Palleggiare senza guardare la palla", "Andare in bici senza pensarci", "Camminare sul bordo del marciapiede"],
+  tronco:["Respirare mentre dormi", "Il cuore che batte", "Deglutire un boccone", "Chiudere gli occhi se batti le mani davanti"],
+  midollo:["Togliere la mano dal fornello bollente", "La gamba che scatta con il martelletto", "Alzare il piede se pesti una puntina"]
+};
+function scegliAttivita(){
+  for(;;){
+    const n = {cervello:rnd(1, 4), cervelletto:rnd(1, 3), tronco:rnd(1, 3), midollo:rnd(1, 2)};
+    if(Object.values(n).reduce((a, b) => a + b, 0) !== 8) continue;
+    return mescola(Object.entries(n).flatMap(([z, k]) => pesca(ATTIVITA[z], k).map(t => ({t, z}))));
+  }
+}
+const CARTE2 = scegliAttivita();
+const STELLA2 = pesca(ZONE2.map(z => z.id), 1)[0];
+const N_STELLA2 = CARTE2.filter(c => c.z === STELLA2).length;
+
+/* enigma 3: tre registrazioni di 5 secondi del cardiofrequenzimetro */
+const MOMENTI = [
+  {id:"riposo", n:"A riposo", b:rnd(5, 6), s:"parasimpatico"},
+  {id:"saltelli", n:"Dopo 30 saltelli", b:rnd(8, 9), s:"simpatico"},
+  {id:"seduto", n:"Dopo 2 minuti seduto", b:7, s:"parasimpatico"}
+];
+const STELLA3 = rnd(0, 2);
+
+const CODICE = [IMP.v / 10, N_STELLA2, MOMENTI[STELLA3].b];
+const INDIZI = [
+  "Qual è la cifra delle decine della velocità dell'impulso, in m/s?",
+  "Quante attività vanno nella parte con la stella?",
+  "Quanti battiti ha registrato il monitor in 5 secondi nel momento con la stella?"
+];
+const AIUTI = [
+  "I dendriti sono i rami corti che ricevono i segnali; nel corpo cellulare c'è il nucleo; l'assone è il filo lungo che invia l'impulso; la guaina mielinica lo avvolge a pezzetti, lo isola e lo rende più veloce; la sinapsi è il punto in cui il messaggio passa alla cellula successiva. Velocità = distanza : tempo; per avere i km/h moltiplica i m/s per 3,6.",
+  "Il cervello pensa, ricorda e comanda i movimenti volontari; il cervelletto tiene l'equilibrio e rende automatici i movimenti imparati; il tronco encefalico comanda le funzioni vitali (respiro, battito, deglutizione); il midollo spinale porta gli impulsi e gestisce i riflessi, senza aspettare il cervello. Nel cervello la sostanza grigia (i corpi dei neuroni) sta fuori, nel midollo è il contrario.",
+  "Premi ▶ e conta i battiti (i picchi verdi) in 5 secondi. In un minuto ci sono 12 volte 5 secondi: battiti al minuto = battiti in 5 s × 12. Il simpatico prepara all'azione (cuore veloce), il parasimpatico riporta la calma (cuore lento)."
+];
+
+const S = {
+  risolto:[false,false,false], aiuto:[false,false,false],
+  slot1:{}, sbagliati1:new Set(), v1:"", k1:"", dom1:new Set(),
+  cat2:CARTE2.map(() => null), sbagliate2:new Set(), grigio:null, midollo:null, dom2:new Set(),
+  ascoltato:[false,false,false], bpm:["","",""], sis:[null,null,null], sbagliati3:new Set(),
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+};
+const $ = s => document.querySelector(s);
+const annuncia = t => { $("#annuncio").textContent = t; };
+
+/* ===== trascina oppure tocca-e-posa ===== */
+let scelto = null;
+function seleziona(el, posa){
+  if(scelto && scelto.el === el){ deseleziona(); return; }
+  deseleziona();
+  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli"); suona("prendi");
+  annuncia(`Hai preso ${el.getAttribute("aria-label") || el.textContent}. Ora tocca dove vuoi metterlo.`);
+}
+function deseleziona(){ if(scelto) scelto.el.classList.remove("scelto"); scelto = null; document.body.classList.remove("scegli"); }
+const zonaSotto = (x,y) => document.elementFromPoint(x,y)?.closest("[data-zona]");
+function pezzo(el, posa){
+  el.addEventListener("pointerdown", e => {
+    if(e.button > 0) return;
+    avvia();
+    const r = el.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
+    let ombra = null, sopra = null;
+    document.querySelectorAll(".ombra").forEach(o => o.remove());   /* nessuna copia rimasta da un trascinamento precedente */
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    const muovi = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      /* il rilascio del tasto è andato perso (mouse fuori dalla finestra, ctrl-clic...): poso il pezzo qui */
+      if(ev.pointerType === "mouse" && ev.buttons === 0){ fine({type:"pointerup", pointerId:e.pointerId, clientX:ev.clientX, clientY:ev.clientY}); return; }
+      if(!ombra){
+        if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
+        deseleziona();
+        ombra = el.cloneNode(true); ombra.classList.add("ombra");
+        /* la copia che segue il dito resta sempre visibile, qualunque stile abbia il pezzo */
+        Object.assign(ombra.style, {position:"fixed", zIndex:"50", pointerEvents:"none", margin:"0", opacity:"1", visibility:"visible"}); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
+        document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
+      }
+      ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z !== sopra){ sopra?.classList.remove("sopra"); z?.classList.add("sopra"); sopra = z; }
+    };
+    const fine = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      window.removeEventListener("pointermove", muovi); window.removeEventListener("pointerup", fine); window.removeEventListener("pointercancel", fine);
+      if(!ombra) return;
+      ombra.remove(); el.classList.remove("sollevato"); sopra?.classList.remove("sopra");
+      el.dataset.trascinato = "1"; setTimeout(() => { delete el.dataset.trascinato; }, 400);   /* serve solo a ignorare il clic che segue il rilascio */
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z && ev.type === "pointerup") posa(el, z, ev.clientX, ev.clientY);
+    };
+    /* ascolto tutta la pagina: il rilascio arriva anche se il dito o il mouse non è più sopra il pezzo */
+    window.addEventListener("pointermove", muovi); window.addEventListener("pointerup", fine); window.addEventListener("pointercancel", fine);
+  });
+  el.addEventListener("dragstart", ev => ev.preventDefault());
+  el.addEventListener("click", e => {
+    e.stopPropagation();
+    if(el.dataset.trascinato){ delete el.dataset.trascinato; return; }
+    avvia(); seleziona(el, posa);
+  });
+}
+document.addEventListener("click", e => {
+  if(!scelto) return;
+  const z = e.target.closest("[data-zona]");
+  if(z){ const s = scelto; deseleziona(); s.posa(s.el, z, e.clientX, e.clientY); }
+  else if(!e.target.closest(".pezzo")) deseleziona();
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") deseleziona(); });
+
+/* ===== tempo e suoni ===== */
+function avvia(){ if(!S.inizio) S.inizio = Date.now(); }
+const mmss = ms => { const s = Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+setInterval(() => { $("#tempo").textContent = "Tempo " + mmss(S.inizio ? (S.fine || Date.now()) - S.inizio : 0); }, 500);
+let audio;
+let suoniOn = true; try { suoniOn = localStorage.getItem("nicoprof:suoni") !== "no"; } catch {}
+/* [frequenza, ritardo, durata, forma, volume] */
+const SUONI = {
+  si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25,"sawtooth",.07]], bip:[[880,0,.06,"triangle",.05]],
+  prendi:[[520,0,.05,"triangle",.08],[780,.04,.06,"triangle",.08]],
+  posa:[[300,0,.07,"triangle",.13],[200,.05,.09,"triangle",.11]],
+  impulso:[[400,0,.08,"sine",.08],[800,.08,.08,"sine",.08],[1600,.16,.12,"sine",.08],[3200,.26,.18,"sine",.05]],
+  battito:[[70,0,.12,"sine",.35],[55,.14,.14,"sine",.25]],
+  segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[140,0,.5,"sawtooth",.035],[155,.25,.6,"sawtooth",.03]],
+  porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
+};
+function suona(tipo){
+  if(!suoniOn || !SUONI[tipo]) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    SUONI[tipo].forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
+  } catch {}
+}
+function aggiornaSuoni(){ const b = document.querySelector("#suoni"); if(b){ b.textContent = "Suoni: " + (suoniOn ? "sì" : "no"); b.setAttribute("aria-pressed", suoniOn); } }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#suoni")) return;
+  suoniOn = !suoniOn; try { localStorage.setItem("nicoprof:suoni", suoniOn ? "si" : "no"); } catch {}
+  aggiornaSuoni(); suona("bip");
+});
+
+/* ===== coriandoli per la vittoria ===== */
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--verde)", "var(--rosa)"];
+  for(let i = 0; i < 90; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.8 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4500);
+  }
+}
+
+/* ===== segreti nascosti ===== */
+const trovati = new Set();
+function segreto(id, testo){
+  if(trovati.has(id)) return;
+  trovati.add(id); suona("segreto");
+  let t = document.querySelector("#segreto");
+  if(!t){ t = document.createElement("div"); t.id = "segreto"; t.setAttribute("role", "status"); document.body.append(t); }
+  t.innerHTML = `<b>Segreto trovato! (${trovati.size} di ${SEGRETI})</b><span>${testo}</span>`;
+  t.hidden = false; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  clearTimeout(segreto.timer); segreto.timer = setTimeout(() => { t.hidden = true; }, 6500);
+}
+let digitate = "";
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea") || e.key.length !== 1) return;
+  digitate = (digitate + e.key.toLowerCase()).slice(-12);
+  PAROLE_SEGRETE.forEach(([parola, azione]) => { if(digitate.endsWith(parola)) azione(); });
+});
+const fraseSegreti = () => trovati.size === SEGRETI ? "Hai scoperto anche tutti i segreti nascosti!" : `Segreti nascosti trovati: ${trovati.size} su ${SEGRETI}. Gioca di nuovo per scoprirli tutti!`;
+
+/* ===== parti comuni ===== */
+function testa(i, titolo){
+  const chiuso = i > 0 && !S.risolto[i-1];
+  return `<div class="e-head"><h2 id="t${i+1}"><span class="n">${S.risolto[i] ? "✓" : i+1}</span>${titolo}</h2>
+    ${!chiuso && !S.risolto[i] ? `<button class="btn piccolo" type="button" data-aiuto="${i}">${S.aiuto[i] ? "Nascondi aiuto" : "Aiutino"}</button>` : ""}</div>`;
+}
+const chiusoHtml = i => `<p class="nota">Risolvi prima l'enigma ${i} per aprire questo.</p>`;
+const premioHtml = (i, extra = "") => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Cifra n. ${i+1} trovata! ${INDIZI[i]} ${extra}Risposta: ${CODICE[i]}.</span></div>`;
+const aiutoHtml = i => S.aiuto[i] ? `<p class="aiuto">${AIUTI[i]}</p>` : "";
+function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textContent = testo; el.className = "esito "+tipo; } }
+
+
+
+
+
+
+
+
+
+/* ===== enigma 1: il monitor del neurone ===== */
+function svgNeurone(){
+  const fatto = S.risolto[0];
+  const segni = [
+    {p:"dendriti", at:[18, 98], to:[40, 66]}, {p:"corpo", at:[150, 168], to:[118, 134]}, {p:"nucleo", at:[150, 36], to:[94, 98]},
+    {p:"guaina", at:[254, 52], to:[250, 92]}, {p:"assone", at:[425, 156], to:[425, 108]}, {p:"sinapsi", at:[462, 192], to:[494, 116]}
+  ].map(s => { const i = PARTI.findIndex(x => x.id === s.p), [x, y] = s.at;
+    return `<path d="M${x} ${y}L${s.to[0]} ${s.to[1]}" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="3 2"/><circle cx="${x}" cy="${y}" r="13" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="15" fill="var(--ink)">${NUM1[i]}</text>`; }).join("");
+  return `<svg viewBox="0 0 520 210" role="img" aria-label="Un neurone con 6 parti numerate">
+    <path d="M500 36C514 70 514 140 500 176H520V36z" fill="var(--cellula)" stroke="var(--ink)" stroke-width="2"/>
+    <g stroke="var(--neuro)" stroke-linecap="round" fill="none">
+      <path d="M62 88L30 50M60 120L24 150M88 70L84 30M92 142L96 186" stroke-width="6"/>
+      <path d="M42 64L20 62M30 50L28 26M30 50L50 30M36 140L14 136M24 150L22 176M85 42L70 22M85 42L104 22M95 170L78 192M95 170L112 192" stroke-width="4"/>
+      <path d="M128 105H448M448 105L476 74M448 105L484 105M448 105L476 136" stroke-width="7"/>
+    </g>
+    ${[158, 222, 286, 350].map(x => `<rect x="${x}" y="92" width="52" height="26" rx="13" fill="var(--mielina)" stroke="var(--ink)" stroke-width="2"/>`).join("")}
+    ${[[478, 72], [487, 105], [478, 138]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="var(--neuro-chiaro)" stroke="var(--ink)" stroke-width="2"/>`).join("")}
+    <path d="M90 62C118 62 132 86 130 106C128 130 112 148 88 146C62 144 50 126 52 104C54 80 66 62 90 62Z" fill="var(--neuro-chiaro)" stroke="var(--ink)" stroke-width="3"/>
+    <circle cx="88" cy="104" r="14" fill="var(--neuro)" stroke="var(--ink)" stroke-width="2"/><circle cx="92" cy="100" r="4" fill="var(--neuro-chiaro)"/>
+    ${fatto ? `<circle r="7" fill="var(--luce)" stroke="var(--ink)" stroke-width="1.5"><animateMotion dur="1.6s" repeatCount="indefinite" path="M30 50L62 88L90 105L448 105L484 105"/></circle>
+      ${[96, 105, 114].map((y, i) => `<circle cx="494" cy="${y}" r="2.6" fill="var(--luce)" stroke="var(--ink)" stroke-width=".8"><animate attributeName="cx" values="493;501;493" dur="1.6s" begin="${i * .2}s" repeatCount="indefinite"/></circle>`).join("")}` : ""}
+    ${segni}
+  </svg>`;
+}
+function disegna1(){
+  const sez = $("#e1"), fatto = S.risolto[0];
+  sez.className = "enigma" + (fatto ? " risolto" : "");
+  const tag = p => `<button class="pezzo nome" type="button" data-p="${p}" aria-label="${PARTI[p].n}"${fatto ? " disabled" : ""}>${PARTI[p].n}</button>`;
+  const posati = new Set(Object.values(S.slot1));
+  const fuori = ORDINE1.filter(p => !posati.has(p));
+  const vero = n => PARTI.findIndex((_, i) => NUM1[i] === n);
+  sez.innerHTML = testa(0, "Il monitor del neurone") + `
+    <p class="consegna">Sul monitor della macchina dei riflessi c'è un neurone ingrandito. <b>Trascina ogni nome sul numero giusto</b>, poi leggi i dati del sensore e calcola la velocità dell'impulso nervoso.</p>
+    ${aiutoHtml(0)}
+    <div class="scena">${svgNeurone()}</div>
+    <div class="slots">${[1, 2, 3, 4, 5, 6].map(n => { const p = fatto ? vero(n) : S.slot1[n];
+      return `<div class="slot zona${S.sbagliati1.has(n) ? " sbagliato" : ""}" data-zona="s${n}"><span class="num">${n}</span>${p !== undefined ? tag(p) : '<span class="vuoto">trascina qui un nome</span>'}</div>`; }).join("")}</div>
+    ${fatto ? "" : `<p class="etichetta">I nomi delle parti</p>
+    <div class="banco zona" data-zona="banco1">${fuori.length ? fuori.map(tag).join("") : '<span class="vuoto">Tutti i nomi sono al loro posto.</span>'}</div>`}
+    <p class="cartello">Sensore · percorso ${PERCORSO1}: ${virgola(IMP.d)} m in ${virgola(IMP.t)} s</p>
+    <div class="domande">
+      <label class="domanda${S.dom1.has("v") ? " sbagliata" : ""}">Velocità dell'impulso: v = <input type="text" inputmode="decimal" id="v1" value="${fatto ? IMP.v : S.v1}"${fatto ? " disabled" : ""}> m/s</label>
+      <label class="domanda${S.dom1.has("k") ? " sbagliata" : ""}">In chilometri all'ora: v = <input type="text" inputmode="decimal" id="k1" value="${fatto ? virgola(IMP.v * 3.6) : S.k1}"${fatto ? " disabled" : ""}> km/h</label>
+    </div>
+    ${fatto ? premioHtml(0, `${virgola(IMP.d)} m : ${virgola(IMP.t)} s = ${IMP.v} m/s, cioè ${virgola(IMP.v * 3.6)} km/h. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla1">Controlla il monitor</button><p class="esito" id="esito0"></p></div>`}
+    <div class="righello-box">
+      <div class="pista" id="pista"><svg id="righello" viewBox="0 0 34 200" aria-hidden="true"><rect x="1" y="1" width="32" height="198" rx="3" fill="var(--giallo)" stroke="var(--ink)" stroke-width="2"/>${Array.from({length: 31}, (_, i) => `<path d="M1 ${190 - i * 6}h${i % 5 === 0 ? 12 : 6}" stroke="var(--ink)" stroke-width="1"/>${i % 5 === 0 ? `<text x="30" y="${193 - i * 6}" text-anchor="end" font-size="8" font-weight="700" fill="var(--ink)">${i}</text>` : ""}`).join("")}</svg><div class="dita"></div></div>
+      <div style="display:grid;gap:8px"><h3>La sfida del righello</h3>
+        <p>Il righello è tenuto fermo con lo 0 tra le tue dita. Premi «Pronto», aspetta: quando il righello cade, <b>afferralo</b> più in fretta che puoi (pulsante o barra spaziatrice). Più cm leggi, più è lungo il tuo tempo di reazione.</p>
+        <div class="azioni"><button class="btn piccolo" type="button" id="pronto">Pronto!</button><button class="btn piccolo blu" type="button" id="afferra">Afferra!</button></div>
+        <p class="esito" id="esito-righello" aria-live="polite"></p></div>
+    </div>`;
+  preparaRighello();
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa1));
+  $("#v1").addEventListener("input", e => { avvia(); S.v1 = e.target.value; });
+  $("#k1").addEventListener("input", e => { avvia(); S.k1 = e.target.value; });
+  $("#controlla1").addEventListener("click", controlla1);
+}
+function posa1(el, zona){
+  const p = +el.dataset.p, z = zona.dataset.zona;
+  for(const k of Object.keys(S.slot1)) if(S.slot1[k] === p) delete S.slot1[k];
+  if(z.startsWith("s")){ const n = +z.slice(1); S.slot1[n] = p; S.sbagliati1.delete(n); }
+  else if(z !== "banco1") return;
+  suona("posa"); disegna1();
+}
+function controlla1(){
+  const mancano = 6 - Object.keys(S.slot1).length;
+  if(mancano){ esito(0, `Mancano ancora ${mancano} ${mancano === 1 ? "nome" : "nomi"} sul monitor.`, "no"); suona("no"); return; }
+  S.sbagliati1 = new Set(Object.entries(S.slot1).filter(([n, p]) => NUM1[p] !== +n).map(([n]) => +n));
+  S.dom1 = new Set();
+  if(numero(S.v1) !== IMP.v) S.dom1.add("v");
+  if(Math.abs(numero(S.k1) - IMP.v * 3.6) > 1e-6 || isNaN(numero(S.k1))) S.dom1.add("k");
+  if(S.sbagliati1.size || S.dom1.size){
+    disegna1();
+    esito(0, (S.sbagliati1.size ? `${S.sbagliati1.size === 1 ? "1 nome è" : S.sbagliati1.size + " nomi sono"} sul numero sbagliato. ` : "") + (S.dom1.has("v") ? "La velocità non torna: velocità = distanza : tempo. " : "") + (S.dom1.has("k") ? "Per passare ai km/h moltiplica i m/s per 3,6." : ""), "no"); suona("no"); return;
+  }
+  risolvi(0); suona("impulso");
+}
+
+/* la sfida del righello: cade con l'accelerazione di gravità (d = ½·g·t², 490 cm/s²) */
+const RIG = {stato:"fermo", t0:0, attesa:null, raf:null, cm:0};
+function preparaRighello(){
+  const r = $("#righello"); if(!r) return;
+  r.style.transform = `translateY(${-RIG.cm * 6}px)`;
+  $("#pronto").addEventListener("click", pronto);
+  $("#afferra").addEventListener("click", afferra);
+}
+function pronto(){
+  avvia(); clearTimeout(RIG.attesa); cancelAnimationFrame(RIG.raf);
+  RIG.stato = "attesa"; RIG.cm = 0; $("#righello").style.transform = "translateY(0)";
+  $("#esito-righello").textContent = "Attento… il righello può cadere da un momento all'altro!"; $("#esito-righello").className = "esito";
+  RIG.attesa = setTimeout(() => {
+    RIG.stato = "cade"; RIG.t0 = performance.now(); suona("bip");
+    const passo = ora => {
+      if(RIG.stato !== "cade") return;
+      const t = (ora - RIG.t0) / 1000; RIG.cm = 490 * t * t;
+      const r = $("#righello"); if(r) r.style.transform = `translateY(${RIG.cm * 6}px)`;
+      if(RIG.cm >= 30){ RIG.stato = "fermo"; RIG.cm = 0; const e = $("#esito-righello"); if(e){ e.textContent = "Mancato! Il righello è caduto per terra. Riprova."; e.className = "esito no"; } suona("no"); return; }
+      RIG.raf = requestAnimationFrame(passo);
+    };
+    RIG.raf = requestAnimationFrame(passo);
+  }, 1200 + Math.random() * 2500);
+}
+function afferra(){
+  const e = $("#esito-righello");
+  if(RIG.stato === "attesa"){ clearTimeout(RIG.attesa); RIG.stato = "fermo"; e.textContent = "Troppo presto! Il righello non era ancora caduto: aspetta che si muova."; e.className = "esito no"; suona("no"); return; }
+  if(RIG.stato !== "cade") return;
+  RIG.stato = "fermo"; cancelAnimationFrame(RIG.raf);
+  const t = Math.sqrt(RIG.cm / 490);
+  suona("posa");
+  e.textContent = `Preso a ${virgola(Math.round(RIG.cm * 10) / 10)} cm: il tuo tempo di reazione è circa ${virgola(Math.round(t * 100) / 100)} s. L'occhio vede, il cervello decide, i neuroni motori comandano le dita.`; e.className = "esito si";
+  if(RIG.cm <= 15) segreto("righello", "Sotto i 15 cm: tempo di reazione minore di 0,18 s, riflessi da campione! I portieri e i piloti si allenano proprio così.");
+}
+document.addEventListener("keydown", e => { if(e.code === "Space" && RIG.stato !== "fermo" && !e.target.closest("input")){ e.preventDefault(); afferra(); } });
+
+/* ===== enigma 2: il modello del cervello ===== */
+function svgCervello(){
+  const pieno = z => S.cat2.some(v => v === z) ? " piena" : "";
+  return `<svg viewBox="0 0 360 310" role="img" aria-label="Modello dell'encefalo e del midollo spinale visto di lato">
+    ${[268, 284, 300].map(y => `<rect x="193" y="${y}" width="40" height="11" rx="3" fill="var(--osso)" stroke="var(--ink)" stroke-width="1.5"/>`).join("")}
+    <path class="parte zona${pieno("cervello")}" data-zona="cervello" d="M70 150C44 90 100 30 180 28C262 26 322 74 318 136C316 170 296 190 262 188C240 186 228 196 214 196L120 196C92 196 76 178 70 150Z" fill="var(--c-cervello)" stroke="var(--ink)" stroke-width="3"/>
+    <path d="M96 86c18-14 36 2 54-10s36 6 54-6 36 8 54 2M86 124c20-10 34 6 54-4s34 6 54-4 34 8 56 0M102 166c18-8 32 4 50-4s34 6 52-2" fill="none" stroke="var(--ink)" stroke-width="2" opacity=".45" pointer-events="none"/>
+    <path class="parte zona${pieno("cervelletto")}" data-zona="cervelletto" d="M232 196C238 176 262 170 284 176C306 182 316 204 304 222C292 240 256 242 240 230C228 220 228 206 232 196Z" fill="var(--c-cervelletto)" stroke="var(--ink)" stroke-width="3"/>
+    <path d="M240 200c18-6 40-6 62 4M238 214c20-4 42-2 62 6M246 228c16 0 32 0 46 2" fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".45" pointer-events="none"/>
+    <path class="parte zona${pieno("tronco")}" data-zona="tronco" d="M196 190C204 186 220 186 228 192L224 262L202 262Z" fill="var(--c-tronco)" stroke="var(--ink)" stroke-width="3"/>
+    <path class="parte zona${pieno("midollo")}" data-zona="midollo" d="M203 262L223 262L221 310L205 310Z" fill="var(--c-midollo)" stroke="var(--ink)" stroke-width="3"/>
+  </svg>`;
+}
+function disegna2(){
+  const sez = $("#e2"), chiuso = !S.risolto[0], fatto = S.risolto[1];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(1, "Il modello del cervello") + chiusoHtml(1); return; }
+  const carta = i => `<button class="pezzo att${S.sbagliate2.has(i) ? " sbagliato" : ""}" type="button" data-c="${i}" aria-label="${CARTE2[i].t}"${fatto ? " disabled" : ""}>${CARTE2[i].t}</button>`;
+  const dove = i => fatto ? CARTE2[i].z : S.cat2[i];
+  const fuori = CARTE2.map((_, i) => i).filter(i => dove(i) === null);
+  const op = (chiave, val, giusto) => `<button class="opz" type="button" data-q="${chiave}" data-v="${val}" aria-pressed="${(fatto ? giusto : S[chiave]) === val}"${fatto ? " disabled" : ""}>${val}</button>`;
+  sez.innerHTML = testa(1, "Il modello del cervello") + `
+    <p class="consegna">Il modello di plastica dell'encefalo è smontato e il cassetto con la chiave si apre solo quando è tutto a posto. <b>Porta ogni attività alla parte del sistema nervoso centrale che la comanda</b>: puoi lasciarla sul disegno o nel riquadro.</p>
+    ${aiutoHtml(1)}
+    <div class="cervello-box">
+      <div class="scena">${svgCervello()}</div>
+      <div class="aree">${ZONE2.map(z => `<div class="area zona" data-zona="${z.id}"><h3><i style="background:${z.c}"></i>${z.id === STELLA2 ? '<span class="stella" aria-label="con la stella">★</span>' : ""}${z.n}</h3><small>${z.d}</small>
+        <div class="dentro">${CARTE2.map((_, i) => i).filter(i => dove(i) === z.id).map(carta).join("")}</div></div>`).join("")}</div>
+    </div>
+    ${fatto ? "" : `<p class="etichetta">Le attività del tabellone</p>
+    <div class="banco zona" data-zona="banco2">${fuori.length ? fuori.map(carta).join("") : '<span class="vuoto">Tutte le attività sono al loro posto.</span>'}</div>`}
+    <div class="domande">
+      <div class="domanda${S.dom2.has("g") ? " sbagliata" : ""}">Nel cervello la sostanza grigia (i corpi dei neuroni) sta… ${["fuori", "dentro"].map(v => op("grigio", v, "fuori")).join("")}</div>
+      <div class="domanda${S.dom2.has("m") ? " sbagliata" : ""}">Nel midollo spinale la sostanza grigia sta… ${["fuori", "dentro"].map(v => op("midollo", v, "dentro")).join("")}</div>
+    </div>
+    ${fatto ? premioHtml(1, `Nella parte con la stella (${ZONE2.find(z => z.id === STELLA2).n.toLowerCase()}) ${N_STELLA2 === 1 ? "c'è 1 attività" : `ci sono ${N_STELLA2} attività`}. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla2">Controlla il modello</button><p class="esito" id="esito1"></p></div>`}`;
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa2));
+  sez.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { avvia(); S[b.dataset.q] = b.dataset.v; S.dom2.delete(b.dataset.q === "grigio" ? "g" : "m"); suona("bip"); disegna2(); }));
+  $("#controlla2").addEventListener("click", controlla2);
+}
+function posa2(el, zona){
+  const i = +el.dataset.c, z = zona.dataset.zona;
+  if(z === "banco2") S.cat2[i] = null;
+  else if(ZONE2.some(x => x.id === z)) S.cat2[i] = z;
+  else return;
+  S.sbagliate2.delete(i); suona("posa"); disegna2();
+}
+function controlla2(){
+  const fuori = S.cat2.filter(v => v === null).length;
+  if(fuori){ esito(1, `Mancano ancora ${fuori} ${fuori === 1 ? "attività" : "attività"} da sistemare.`, "no"); suona("no"); return; }
+  if(!S.grigio || !S.midollo){ esito(1, "Rispondi anche alle due domande sulla sostanza grigia.", "no"); suona("no"); return; }
+  S.sbagliate2 = new Set(CARTE2.map((c, i) => S.cat2[i] === c.z ? -1 : i).filter(i => i >= 0));
+  S.dom2 = new Set();
+  if(S.grigio !== "fuori") S.dom2.add("g");
+  if(S.midollo !== "dentro") S.dom2.add("m");
+  if(S.sbagliate2.size || S.dom2.size){
+    disegna2();
+    esito(1, (S.sbagliate2.size ? (S.sbagliate2.size === 1 ? "1 attività è nella parte sbagliata: è colorata di rosso. " : `${S.sbagliate2.size} attività sono nelle parti sbagliate: sono colorate di rosso. `) : "") + (S.dom2.size ? "Ricontrolla la sostanza grigia: fuori nel cervello, ma nel midollo…" : ""), "no"); suona("no"); return;
+  }
+  risolvi(1);
+}
+
+/* ===== enigma 3: il cardiofrequenzimetro ===== */
+const tempiBattiti = b => Array.from({length: b}, (_, k) => (k + .5) * 5 / b);
+function tracciaEcg(b){
+  let d = "M6 44";
+  tempiBattiti(b).forEach(t => { const x = 6 + t / 5 * 288; d += `L${(x - 14).toFixed(1)} 44q3-6 6 0L${(x - 3).toFixed(1)} 44L${x.toFixed(1)} 10L${(x + 4).toFixed(1)} 62L${(x + 8).toFixed(1)} 44L${(x + 18).toFixed(1)} 44q4-8 8 0`; });
+  return d + "L294 44";
+}
+function disegna3(){
+  const sez = $("#e3"), chiuso = !S.risolto[1], fatto = S.risolto[2];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(2, "Il cardiofrequenzimetro") + chiusoHtml(2); return; }
+  sez.innerHTML = testa(2, "Il cardiofrequenzimetro") + `
+    <p class="consegna">Sul computer della dottoressa ci sono tre registrazioni di 5 secondi del tuo cuore. <b>Premi ▶, conta i battiti e calcola i battiti al minuto.</b> Poi scegli quale parte del sistema nervoso autonomo lavora di più in quel momento.</p>
+    ${aiutoHtml(2)}
+    <div class="momenti">${MOMENTI.map((m, i) => `<div class="momento${S.sbagliati3.has(i) ? " sbagliato" : ""}">
+      <h3 style="display:flex;align-items:center;gap:6px">${i === STELLA3 ? '<span class="stella" aria-label="con la stella">★</span>' : ""}${m.n}<svg class="cuoricino" id="cuore${i}" viewBox="0 0 20 18" width="22" height="20" aria-hidden="true" style="margin-left:auto"><path d="M10 17c-6-4-9-7-9-11 0-3 2-5 5-5 2 0 3 1 4 3 1-2 2-3 4-3 3 0 5 2 5 5 0 4-3 7-9 11z" fill="var(--cuore)" stroke="var(--ink)" stroke-width="1.2"/></svg></h3>
+      <div class="schermo"><svg viewBox="0 0 300 72" role="img" aria-label="Tracciato del battito: ${S.ascoltato[i] || fatto ? "registrazione completa" : "ancora da ascoltare"}">
+        <path d="M6 18H294M6 44H294M6 66H294" stroke="#1F3A2A" stroke-width="1"/>
+        <path class="traccia${S.ascoltato[i] || fatto ? " vista" : ""}" id="traccia${i}" pathLength="1" d="${tracciaEcg(m.b)}" fill="none" stroke="var(--ecg)" stroke-width="2.4" stroke-linejoin="round"/></svg></div>
+      ${fatto ? "" : `<button class="btn piccolo" type="button" data-play="${i}">▶ Ascolta 5 secondi</button>`}
+      <label class="riga">Battiti al minuto: <input type="text" inputmode="numeric" data-bpm="${i}" value="${fatto ? m.b * 12 : S.bpm[i]}"${fatto ? " disabled" : ""}></label>
+      <div class="riga">Lavora di più il… ${["simpatico", "parasimpatico"].map(v => `<button class="opz" type="button" data-sis="${i}" data-v="${v}" aria-pressed="${(fatto ? m.s : S.sis[i]) === v}"${fatto ? " disabled" : ""}>${v}</button>`).join("")}</div>
+    </div>`).join("")}</div>
+    ${fatto ? premioHtml(2, `${MOMENTI[STELLA3].n}: ${MOMENTI[STELLA3].b} battiti in 5 s, cioè ${MOMENTI[STELLA3].b * 12} al minuto. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla3">Controlla le registrazioni</button><p class="esito" id="esito2"></p></div>`}`;
+  if(fatto) return;
+  sez.querySelectorAll("[data-play]").forEach(b => b.addEventListener("click", () => ascolta(+b.dataset.play, b)));
+  sez.querySelectorAll("[data-bpm]").forEach(inp => inp.addEventListener("input", e => { avvia(); S.bpm[+inp.dataset.bpm] = e.target.value; }));
+  sez.querySelectorAll("[data-sis]").forEach(b => b.addEventListener("click", () => { avvia(); S.sis[+b.dataset.sis] = b.dataset.v; S.sbagliati3.delete(+b.dataset.sis); suona("bip"); disegna3(); }));
+  $("#controlla3").addEventListener("click", controlla3);
+}
+let inAscolto = false;
+function ascolta(i, bottone){
+  if(inAscolto) return;
+  avvia(); inAscolto = true;
+  const tr = $(`#traccia${i}`), cuore = $(`#cuore${i}`);
+  bottone.disabled = true; bottone.textContent = "In ascolto…";
+  tr.classList.remove("vista", "corre"); void tr.getBoundingClientRect();
+  requestAnimationFrame(() => tr.classList.add("corre"));
+  tempiBattiti(MOMENTI[i].b).forEach(t => setTimeout(() => {
+    const c = $(`#cuore${i}`); if(c){ c.classList.remove("batte"); void c.getBoundingClientRect(); c.classList.add("batte"); }
+    suona("battito");
+  }, t * 1000));
+  setTimeout(() => {
+    inAscolto = false; S.ascoltato[i] = true;
+    const b = document.querySelector(`[data-play="${i}"]`); if(b){ b.disabled = false; b.textContent = "▶ Ascolta di nuovo"; }
+    if(S.ascoltato.every(Boolean)) segreto("medico", "Hai ascoltato tutte e tre le registrazioni: proprio come un medico sportivo, che confronta il battito a riposo e sotto sforzo!");
+  }, 5100);
+}
+function controlla3(){
+  const mancano = MOMENTI.filter((_, i) => !String(S.bpm[i]).trim() || !S.sis[i]).length;
+  if(mancano){ esito(2, `Completa tutte le registrazioni: ne ${mancano === 1 ? "manca ancora 1" : "mancano ancora " + mancano}.`, "no"); suona("no"); return; }
+  S.sbagliati3 = new Set(MOMENTI.map((m, i) => numero(S.bpm[i]) === m.b * 12 && S.sis[i] === m.s ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliati3.size){
+    const bpmNo = MOMENTI.some((m, i) => numero(S.bpm[i]) !== m.b * 12);
+    disegna3();
+    esito(2, (S.sbagliati3.size === 1 ? "1 registrazione non torna. " : `${S.sbagliati3.size} registrazioni non tornano. `) + (bpmNo ? "Ricorda: battiti in 5 secondi × 12 = battiti al minuto. " : "") + "Il simpatico accelera il cuore, il parasimpatico lo rallenta.", "no"); suona("no"); return;
+  }
+  risolvi(2);
+}
+
+/* ===== il lucchetto ===== */
+function disegna4(){
+  const sez = $("#e4"), pronto = S.risolto.every(Boolean);
+  if(S.libero){
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta dello studio è aperta e la dottoressa ti consegna il certificato per lo sport: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato il neurone e l'impulso nervoso, le parti dell'encefalo, il midollo spinale e il sistema nervoso autonomo.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("nervoso")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    $("#ricomincia").addEventListener("click", () => location.reload());
+    $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("nervoso"));
+    return;
+  }
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
+    <h2 id="t4">La porta dello studio</h2>
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
+      <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
+      <output aria-label="Cifra ${i+1}">${v}</output>
+      <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
+    <p class="esito" id="esito3"></p></div></div>`;
+  sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
+    b.parentElement.querySelector("output").textContent = S.rotelle[i];
+  }));
+  $("#apri")?.addEventListener("click", () => {
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
+    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+  });
+}
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
+}
+
+function disegnaIndizi(){
+  $("#indizi").innerHTML = CODICE.map((c,i) => `<span class="cifra-mini${S.risolto[i] ? "" : " vuota"}" title="${INDIZI[i]}">${S.risolto[i] ? c : "?"}</span>`).join("");
+}
+function risolvi(i){
+  S.risolto[i] = true; suona("si");
+  annuncia(`Enigma ${i+1} risolto! La cifra numero ${i+1} è ${CODICE[i]}.`);
+  tutto();
+  const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
+  setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
+}
+function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-aiuto]"); if(!b) return;
+  const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
+  [disegna1, disegna2, disegna3][i]();
+});
+
+
+
+/* segreti: afferrare il righello entro 15 cm, scrivere "sinapsi", ascoltare tutte e tre le registrazioni */
+const SEGRETI = 3;
+const PAROLE_SEGRETE = [["sinapsi", () => segreto("sinapsi", "Nel tuo encefalo ci sono circa 86 miliardi di neuroni e ognuno può avere migliaia di sinapsi: più collegamenti che stelle nella nostra galassia!")]];
+tutto();
+aggiornaSuoni();
+</script>
+</body>
+</html>
