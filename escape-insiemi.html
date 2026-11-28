@@ -243,6 +243,8 @@ tfoot td{font-weight:800}
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
 <script src="trofei.js?v=86d2ee20"></script>
 <script src="oggetto-segreto.js?v=b1e400c9"></script>
+<script>window.HA_GUIDATA = true;</script>
+<script src="guidata.js?v=d3a1175a"></script>
 <script>
 /* ===== dati degli enigmi ===== */
 const NUMERI = [2,3,4,5,6,7,8,9,10,12];
@@ -252,12 +254,33 @@ const SPORT = [
   {k:"basket", nome:"Basket", f:3}, {k:"tennis", nome:"Tennis", f:1}
 ];
 const TESSERE = [1,2,3,4,5,6,7];
-const CODICE = [
+/* ===== modalità guidata: gli stessi tre giochi, al livello della scheda PEI semplificata ===== */
+const GUIDATA = Guidata.attiva;
+const rndG = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mescolaG = a => { const b=[...a]; for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; };
+/* gioco 1: chi gioca a calcio, chi fa musica, chi fa tutte e due le cose */
+const G1 = (() => {
+  const nomi = mescolaG(["LEO", "ADA", "PIO", "SARA", "OMAR", "BEA", "LUCA", "IDA", "TEO"]);
+  const k = rndG(1, 3), soloA = rndG(1, 2), soloB = rndG(1, 2);
+  return {k, comune:nomi.slice(0, k), soloA:nomi.slice(k, k + soloA), soloB:nomi.slice(k + soloA, k + soloA + soloB), fuori:nomi.slice(k + soloA + soloB, k + soloA + soloB + 1)};
+})();
+/* gioco 2: la tabella con le stanghette */
+const G2 = (() => { const c = mescolaG([2, 3, 4, 5, 6]).slice(0, 3); return {sport:[{n:"CALCIO", c:c[0]}, {n:"NUOTO", c:c[1]}, {n:"DANZA", c:c[2]}]}; })();
+G2.max = Math.max(...G2.sport.map(s => s.c));
+/* gioco 3: il grafico a barre dei libri letti */
+const G3 = (() => { const v = mescolaG([1, 2, 3, 4, 5, 6]).slice(0, 3); return {bambini:[{n:"ALE", v:v[0]}, {n:"BIA", v:v[1]}, {n:"CRI", v:v[2]}]}; })();
+G3.min = Math.min(...G3.bambini.map(b => b.v));
+
+const CODICE = GUIDATA ? [G1.k, G2.max, G3.min] : [
   NUMERI.filter(n => regioneGiusta(n)==="AB").length,      // elementi di A ∩ B
   Math.max(...SPORT.map(s => s.f)),                          // frequenza più alta
   SPORT.filter(s => s.f > 3).length                          // sport votati da più di 3 alunni
 ];
-const INDIZI = [
+const INDIZI = GUIDATA ? [
+  "Quanti bambini ci sono nella parte in comune?",
+  "Quante stanghette ha lo sport più scelto?",
+  "Quanti libri ha la barra più bassa?"
+] : [
   "Quanti elementi ha A ∩ B?",
   "Qual è la frequenza dello sport più votato?",
   "Quanti sport hanno frequenza maggiore di 3?"
@@ -277,7 +300,8 @@ const S = {
   ordineNumeri: mescola(NUMERI),
   contati:new Set(), slot:SPORT.map(()=>null), sbagliati2:new Set(),
   altezze:[3,7,2,6,4], sbagliati3:new Set(),
-  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null,
+  g:[{passo:0}, {passo:0}, {passo:0}]
 };
 
 const $ = s => document.querySelector(s);
@@ -605,6 +629,7 @@ function disegna4(){
       <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
       <output aria-label="Cifra ${i+1}">${v}</output>
       <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${GUIDATA && pronto ? `<div class="g-riga" style="justify-content:center"><p class="g-cifre">I tuoi numeri: ${CODICE.join(" · ")}</p>${Guidata.bottoneVoce("I tuoi numeri sono " + CODICE.join(", ") + ". Mettili nel lucchetto con le frecce e premi Apri la porta.")}</div>` : ""}
     ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
     <p class="esito" id="esito3"></p></div></div>`;
   sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
@@ -613,7 +638,7 @@ function disegna4(){
   }));
   $("#apri")?.addEventListener("click", () => {
     if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
-    else { if(S.rotelle.join("") === "123") segreto("123", "1-2-3? È il codice che tutti provano per primo... ed è proprio per questo che nessuno lo usa!"); suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+    else { if(GUIDATA){ suona("no"); esito(3, "Non si apre ancora: controlla i tre numeri, uno alla volta.", "no"); Guidata.parlaAuto("Non si apre ancora. Controlla i tre numeri, uno alla volta."); return; } if(S.rotelle.join("") === "123") segreto("123", "1-2-3? È il codice che tutti provano per primo... ed è proprio per questo che nessuno lo usa!"); suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
   });
 }
 
@@ -647,7 +672,83 @@ function risolvi(i){
   const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
   setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), 700);
 }
-function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+function tutto(){ disegnaIndizi(); if(GUIDATA){ disegna1g(); disegna2g(); disegna3g(); } else { disegna1(); disegna2(); disegna3(); } disegna4(); }
+
+/* ===== i tre giochi della modalità guidata ===== */
+const premioG = i => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Hai trovato il numero ${i+1}: è <b>${CODICE[i]}</b>!</span>${Guidata.bottoneVoce("Hai trovato il numero " + (i+1) + ". È " + CODICE[i] + "!")}</div>`;
+const opzioniNumero = n => mescolaG([n - 1, n, n + 1].filter(x => x >= 0).concat(n === 0 ? [2] : []).slice(0, 3)).map(String);
+/* i nomi stanno ben dentro la loro zona: cerchi grandi e molto sovrapposti, nomi con il contorno bianco */
+const VENN = {ax:122, bx:198, cy:116, r:82};
+function figuraVenn(){
+  const {ax, bx, cy, r} = VENN;
+  const nome = (n, x, y, size = 16) => `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-family="Lexend, Nunito, sans-serif" font-weight="800" font-size="${size}" fill="var(--ink)" stroke="var(--card)" stroke-width="5" stroke-linejoin="round" paint-order="stroke">${n}</text>`;
+  const col = (lista, x) => lista.map((n, j) => nome(n, x, cy + (j - (lista.length - 1) / 2) * 26)).join("");
+  return `<svg viewBox="0 0 320 214" role="img" aria-label="Due cerchi: calcio e musica">
+    <rect x="3" y="3" width="314" height="208" rx="14" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>
+    <circle cx="${ax}" cy="${cy}" r="${r}" fill="#FFD966" fill-opacity=".45" stroke="var(--ink)" stroke-width="3"/>
+    <circle cx="${bx}" cy="${cy}" r="${r}" fill="#9FD0FF" fill-opacity=".45" stroke="var(--ink)" stroke-width="3"/>
+    ${nome("⚽ CALCIO", 58, 22, 14)}${nome("🎵 MUSICA", 262, 22, 14)}
+    ${col(G1.soloA, 78)}${col(G1.comune, 160)}${col(G1.soloB, 242)}
+    ${G1.fuori.length ? nome(G1.fuori[0], 284, 196, 15) : ""}
+  </svg>`;
+}
+function disegna1g(){
+  const nomeDentro = G1.soloA[0], nomeFuori = G1.soloB[0], chiedoDentro = Math.random() < .5, chi = chiedoDentro ? nomeDentro : nomeFuori;
+  if(!S.g[0].passi) S.g[0].passi = [
+    {testo:`${chi} è dentro il cerchio del calcio?`, figura:figuraVenn(), opzioni:["Sì, è dentro", "No, è fuori"], giusta:chiedoDentro ? 0 : 1, aiuto:`Cerca il nome ${chi} nel disegno.`},
+    (() => { const ops = mescolaG([G1.comune[0], G1.soloA[0], G1.soloB[0]]); return {testo:"Chi gioca a calcio e fa anche musica?", figura:figuraVenn(), opzioni:ops, giusta:ops.indexOf(G1.comune[0]), aiuto:"Guarda la parte dove i due cerchi si toccano."}; })(),
+    {testo:"La parte in comune ai due cerchi si chiama…", figura:figuraVenn(), opzioni:["Intersezione", "Unione"], giusta:0, aiuto:"Intersezione vuol dire: la parte in comune."},
+    (() => { const ops = opzioniNumero(G1.k); return {testo:"Quanti bambini ci sono nella parte in comune?", figura:figuraVenn(), opzioni:ops, giusta:ops.indexOf(String(G1.k)), aiuto:"Conta i nomi nel mezzo, dove i cerchi si toccano."}; })()
+  ];
+  Guidata.passi({sez:$("#e1"), num:1, titolo:"I due cerchi", intro:"Ci sono due gruppi: chi gioca a calcio e chi fa musica. Rispondi alle domande guardando il disegno.",
+    passi:S.g[0].passi, stato:S.g[0], fatto:S.risolto[0], figuraFinale:`<div class="g-figura">${figuraVenn()}</div>`, premio:premioG(0), quandoFinito:() => risolvi(0)});
+}
+function stanghette(n){
+  let x = 6, h = "";
+  for(let i = 1; i <= n; i++){
+    if(i % 5 === 0){ h += `<path d="M${x - 46} 30L${x - 4} 6" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>`; x += 14; }
+    else { h += `<path d="M${x} 6V32" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>`; x += 11; }
+  }
+  return `<svg viewBox="0 0 110 38" width="110" height="38" aria-label="${n} stanghette">${h}</svg>`;
+}
+function figuraTabella(){
+  return `<table style="width:100%;border-collapse:collapse;font-family:Lexend,var(--f-body);font-size:1.15rem;background:var(--card);border:2px solid var(--ink);border-radius:12px">
+    <thead><tr><th style="text-align:left;padding:8px 12px">SPORT</th><th style="text-align:left;padding:8px 12px">SEGNI</th></tr></thead>
+    <tbody>${G2.sport.map(s => `<tr style="border-top:1.5px solid var(--line)"><td style="padding:8px 12px;font-weight:800">${s.n}</td><td style="padding:6px 12px">${stanghette(s.c)}</td></tr>`).join("")}</tbody></table>`;
+}
+function disegna2g(){
+  if(!S.g[1].passi){
+    const conta = G2.sport.map(s => { const ops = opzioniNumero(s.c); return {testo:`Conta le stanghette del ${s.n}. Quante sono?`, figura:figuraTabella(), opzioni:ops, giusta:ops.indexOf(String(s.c)), aiuto:"Tocca le stanghette con il dito, una alla volta."}; });
+    const ops = mescolaG(G2.sport.map(s => s.n)), piu = G2.sport.find(s => s.c === G2.max).n;
+    S.g[1].passi = [...conta, {testo:"Lo sport più scelto è…", figura:figuraTabella(), opzioni:ops, giusta:ops.indexOf(piu), aiuto:"È lo sport con più stanghette."}];
+  }
+  Guidata.passi({sez:$("#e2"), num:2, titolo:"La tabella dei voti", intro:"I compagni hanno votato il loro sport preferito. Ogni voto è una stanghetta.",
+    passi:S.g[1].passi, stato:S.g[1], fatto:S.risolto[1], chiuso:!S.risolto[0], figuraFinale:`<div class="g-figura">${figuraTabella()}</div>`, premio:premioG(1), quandoFinito:() => risolvi(1)});
+}
+function figuraBarre(){
+  const H = 24, base = 176, colori = ["#FFB3C1", "#9FD0FF", "#8EDDB4"];
+  return `<svg viewBox="0 0 320 210" role="img" aria-label="Grafico a barre dei libri letti">
+    <rect x="2" y="2" width="316" height="206" rx="14" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>
+    ${[0, 1, 2, 3, 4, 5, 6].map(v => `<path d="M46 ${base - v * H}H300" stroke="var(--line)" stroke-width="1.5"/><text x="36" y="${base - v * H + 5}" text-anchor="end" font-family="Lexend, Nunito, sans-serif" font-weight="700" font-size="14" fill="var(--ink)">${v}</text>`).join("")}
+    ${G3.bambini.map((b, i) => `<rect x="${70 + i * 78}" y="${base - b.v * H}" width="50" height="${b.v * H}" rx="4" fill="${colori[i]}" stroke="var(--ink)" stroke-width="2.5"/>
+      <text x="${95 + i * 78}" y="200" text-anchor="middle" font-family="Lexend, Nunito, sans-serif" font-weight="800" font-size="15" fill="var(--ink)">${b.n}</text>`).join("")}
+    <path d="M46 ${base}H300M46 ${base}V18" stroke="var(--ink)" stroke-width="2.5"/>
+  </svg>`;
+}
+function disegna3g(){
+  if(!S.g[2].passi){
+    const nomi = mescolaG(G3.bambini.map(b => b.n));
+    const piu = G3.bambini.reduce((a, b) => b.v > a.v ? b : a).n, meno = G3.bambini.reduce((a, b) => b.v < a.v ? b : a).n;
+    const nomi2 = mescolaG(G3.bambini.map(b => b.n)), ops = opzioniNumero(G3.min);
+    S.g[2].passi = [
+      {testo:"Chi ha letto più libri?", figura:figuraBarre(), opzioni:nomi, giusta:nomi.indexOf(piu), aiuto:"È la barra più alta."},
+      {testo:"La barra più bassa è di…", figura:figuraBarre(), opzioni:nomi2, giusta:nomi2.indexOf(meno), aiuto:"Cerca la barra più corta."},
+      {testo:`Quanti libri ha letto ${meno}?`, figura:figuraBarre(), opzioni:ops, giusta:ops.indexOf(String(G3.min)), aiuto:`Segui con il dito la cima della barra di ${meno} fino ai numeri a sinistra.`}
+    ];
+  }
+  Guidata.passi({sez:$("#e3"), num:3, titolo:"Il grafico dei libri", intro:"Ale, Bia e Cri hanno letto alcuni libri. Ogni barra mostra quanti.",
+    passi:S.g[2].passi, stato:S.g[2], fatto:S.risolto[2], chiuso:!S.risolto[1], figuraFinale:`<div class="g-figura">${figuraBarre()}</div>`, premio:premioG(2), quandoFinito:() => risolvi(2)});
+}
 
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-aiuto]"); if(!b) return;
@@ -660,6 +761,11 @@ const PAROLE_SEGRETE = [["venn", () => {
   const v = $(".venn"); if(v){ v.classList.remove("balla"); void v.offsetWidth; v.classList.add("balla"); }
   segreto("venn", "Ciao da John Venn! È il matematico inglese che nel 1880 inventò questi diagrammi.");
 }]];
+if(GUIDATA){
+  const st = $(".storia"), testo = "La porta dell'aula è chiusa! Il lucchetto ha 3 numeri. Fai i 3 giochi: ogni gioco ti dà un numero. Poi metti i numeri nel lucchetto.";
+  st.outerHTML = `<div class="g-riga"><p class="storia">${testo}</p>${Guidata.bottoneVoce(testo)}</div>`;
+}
+Guidata.montaBarra();
 tutto();
 aggiornaSuoni();
 </script>
