@@ -231,7 +231,8 @@ const OggettoSegreto = (() => {
 
   function bottone(id){
     scegli(id); aggiungiStile();
-    return `<button class="os-cade" type="button" id="os-cade">${ICONE[scelto]}<span>Aprendo la porta è caduto ${NOMI[scelto]}! Toccalo per esplorarlo.</span></button>`;
+    const femm = /^(una|la) /.test(NOMI[scelto]);   /* "è caduta una torta", "è caduto un astuccio" */
+    return `<button class="os-cade" type="button" id="os-cade">${ICONE[scelto]}<span>Aprendo la porta è ${femm ? "caduta" : "caduto"} ${NOMI[scelto]}! ${femm ? "Toccala per esplorarla" : "Toccalo per esplorarlo"}.</span></button>`;
   }
 
   let fin;

@@ -249,7 +249,9 @@ h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker
 
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
 <script src="trofei.js?v=86d2ee20"></script>
-<script src="oggetto-segreto.js?v=b1e400c9"></script>
+<script src="oggetto-segreto.js?v=155ecfba"></script>
+<script>window.HA_GUIDATA = true;</script>
+<script src="guidata.js?v=28812963"></script>
 <script>
 /* ===== dati ===== */
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
@@ -329,8 +331,22 @@ function generaGara(){
 }
 const GARA = generaGara();
 
-const CODICE = [FOTOS.filter(f => f.cat === STELLA1).length, RETTE.size, GARA.rif.x];
-const INDIZI = [
+/* ===== modalità guidata: gli stessi tre giochi, al livello della scheda PEI semplificata ===== */
+const GUIDATA = Guidata.attiva;
+const G = (() => {
+  /* le stelle del cielo: punti ben distanti tra loro, ognuno con la sua lettera */
+  const stelle = [];
+  const n = rnd(3, 7);
+  for(let tent = 0; stelle.length < n && tent < 5000; tent++){
+    const x = rnd(30, 270), y = rnd(26, 130);
+    if(stelle.every(s => Math.hypot(s.x - x, s.y - y) > 62)) stelle.push({x, y});
+  }
+  const linea = pesca(FOTO.filter(f => ["fiume", "anello", "recinto"].includes(f.id)), 1)[0];
+  return {stelle, linea, lineaAperta:linea.id === "fiume", luce:pesca(FOTO.filter(f => f.cat === "semiretta"), 1)[0],
+    inFila:rnd(3, 6), allineati:Math.random() < .5, fuori:rnd(0, 3), rif:{x:rnd(1, 6), y:rnd(1, 4)}};
+})();
+const CODICE = GUIDATA ? [G.stelle.length, G.inFila, G.rif.x] : [FOTOS.filter(f => f.cat === STELLA1).length, RETTE.size, GARA.rif.x];
+const INDIZI = GUIDATA ? ["Quante stelle (punti) ci sono nel cielo?", "Quante puntine stanno sul filo?", "Su quale numero dell'asse x arriva la linea del rifugio?"] : [
   "Quante foto vanno nella cassetta con la stella?",
   "Quante rette diverse passano per le puntine?",
   "Qual è la x del rifugio?"
@@ -346,7 +362,8 @@ const S = {
   cat1: FOTOS.map(() => null), sbagliate1:new Set(),
   rette:[], scelta2:null, nuova2:null,
   band: GARA.lanterne.map(() => null), sbagliate3:new Set(), rif:{x:"", y:""}, corso:false,
-  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null,
+  g:[{passo:0}, {passo:0}, {passo:0}]
 };
 const $ = s => document.querySelector(s);
 const annuncia = t => { $("#annuncio").textContent = t; };
@@ -732,7 +749,7 @@ document.addEventListener("click", e => {
 function disegna4(){
   const sez = $("#e4"), pronto = S.risolto.every(Boolean);
   if(S.libero){
-    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta della casetta è aperta e il temporale è passato: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato punto, linea, semiretta e piano, le regole di Euclide e il piano cartesiano.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("elementi")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta della casetta è aperta e il temporale è passato: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>${GUIDATA ? "Hai riconosciuto punti, linee, punti in fila e gli assi della cartina!" : `Hai ripassato punto, linea, semiretta e piano, le regole di Euclide e il piano cartesiano.`}</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("elementi")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
     $("#ricomincia").addEventListener("click", () => location.reload());
     $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("elementi"));
     return;
@@ -743,6 +760,7 @@ function disegna4(){
       <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
       <output aria-label="Cifra ${i+1}">${v}</output>
       <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${GUIDATA && pronto ? `<div class="g-riga" style="justify-content:center"><p class="g-cifre">I tuoi numeri: ${CODICE.join(" · ")}</p>${Guidata.bottoneVoce("I tuoi numeri sono " + CODICE.join(", ") + ". Mettili nel lucchetto con le frecce e premi Apri la porta.")}</div>` : ""}
     ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
     <p class="esito" id="esito3"></p></div></div>`;
   sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
@@ -751,7 +769,7 @@ function disegna4(){
   }));
   $("#apri")?.addEventListener("click", () => {
     if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
-    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+    else { if(GUIDATA){ suona("no"); esito(3, "Non si apre ancora: controlla i tre numeri, uno alla volta.", "no"); Guidata.parlaAuto("Non si apre ancora. Controlla i tre numeri, uno alla volta."); return; } suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
   });
 }
 /* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
@@ -784,7 +802,119 @@ function risolvi(i){
   const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
   setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
 }
-function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+function tutto(){ disegnaIndizi(); if(GUIDATA){ disegna1g(); disegna2g(); disegna3g(); } else { disegna1(); disegna2(); disegna3(); } disegna4(); }
+
+/* ===== i tre giochi della modalità guidata ===== */
+const FONT_G = 'font-family="Lexend, Nunito, sans-serif" font-weight="800"';
+const premioG = i => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Hai trovato il numero ${i+1}: è <b>${CODICE[i]}</b>!</span>${Guidata.bottoneVoce("Hai trovato il numero " + (i+1) + ". È " + CODICE[i] + "!")}</div>`;
+const figFoto = f => `<svg viewBox="0 0 80 60" role="img" aria-label="${f.t}" style="border-radius:12px;border:2px solid var(--ink);max-width:320px;margin:0 auto">${f.d}</svg>`;
+/* la lettera di ogni stella va sul primo lato libero: dentro il cielo, lontano dalle altre stelle e dalle altre lettere */
+function posizioniLettere(stelle){
+  const W = 14, H = 20, prese = [];
+  const libero = (bx, by) => bx - W / 2 >= 8 && bx + W / 2 <= 292 && by - H / 2 >= 8 && by + H / 2 <= 152
+    && stelle.every(s => Math.max(Math.abs(s.x - bx) - W / 2, 0) ** 2 + Math.max(Math.abs(s.y - by) - H / 2, 0) ** 2 > 9 ** 2)
+    && prese.every(q => Math.abs(q.x - bx) > W + 4 || Math.abs(q.y - by) > H + 4);
+  return stelle.map(s => {
+    const c = [[16, -15], [-16, -15], [16, 15], [-16, 15], [0, -22], [0, 22], [22, 0], [-22, 0]].map(([dx, dy]) => ({x:s.x + dx, y:s.y + dy})).find(q => libero(q.x, q.y)) || {x:s.x + 16, y:s.y - 15};
+    prese.push(c); return c;
+  });
+}
+function figStelle(){
+  const lett = posizioniLettere(G.stelle);
+  return `<svg viewBox="0 0 300 160" role="img" aria-label="Il cielo di notte con ${G.stelle.length} stelle">
+    <rect x="2" y="2" width="296" height="156" rx="14" fill="#1F2E52" stroke="var(--ink)" stroke-width="2"/>
+    ${G.stelle.map((s, i) => `<circle cx="${s.x}" cy="${s.y}" r="6" fill="#FFE066" stroke="#FFFFFF" stroke-width="1.5"/>
+      <text x="${lett[i].x}" y="${lett[i].y}" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="17" fill="#FFFFFF">${"ABCDEFG"[i]}</text>`).join("")}
+  </svg>`;
+}
+/* tre puntine in fila oppure no */
+function figTre(allineati){
+  const pts = allineati ? [[60, 120], [150, 80], [240, 40]] : [[60, 110], [150, 40], [240, 110]];
+  return `<svg viewBox="0 0 300 160" role="img" aria-label="Tre puntine sulla mappa di sughero">
+    <rect x="2" y="2" width="296" height="156" rx="14" fill="#D9B98C" stroke="var(--ink)" stroke-width="2"/>
+    ${pts.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="10" fill="#E5534B" stroke="var(--ink)" stroke-width="2.5"/><text x="${x + 18}" y="${y + 18}" dominant-baseline="central" ${FONT_G} font-size="17" fill="#1E2A44">${"ABC"[i]}</text>`).join("")}
+  </svg>`;
+}
+/* quattro puntine: tre in fila e una fuori (G.fuori) */
+function figQuattro(){
+  /* tre puntine su una riga orizzontale, quella fuori fila ben più in alto */
+  const pts = [60, 125, 190, 255].map((x, i) => [x, i === G.fuori ? 42 : 112]);
+  return `<svg viewBox="0 0 300 160" role="img" aria-label="Quattro puntine: una non è in fila">
+    <rect x="2" y="2" width="296" height="156" rx="14" fill="#D9B98C" stroke="var(--ink)" stroke-width="2"/>
+    ${pts.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="10" fill="#E5534B" stroke="var(--ink)" stroke-width="2.5"/><text x="${x - 16}" y="${y}" dominant-baseline="central" text-anchor="end" ${FONT_G} font-size="17" fill="#1E2A44">${"ABCD"[i]}</text>`).join("")}
+  </svg>`;
+}
+/* il filo con le puntine: G.inFila sul filo e una fuori */
+function figFilo(){
+  const n = G.inFila, xs = Array.from({length:n}, (_, i) => 36 + i * (228 / (n - 1)));
+  return `<svg viewBox="0 0 300 160" role="img" aria-label="Un filo teso con delle puntine">
+    <rect x="2" y="2" width="296" height="156" rx="14" fill="#D9B98C" stroke="var(--ink)" stroke-width="2"/>
+    <path d="M14 66H286" stroke="#FFFFFF" stroke-width="5"/><path d="M14 66H286" stroke="#2F6FDE" stroke-width="3"/>
+    ${xs.map(x => `<circle cx="${x.toFixed(1)}" cy="66" r="10" fill="#E5534B" stroke="var(--ink)" stroke-width="2.5"/>`).join("")}
+    <circle cx="150" cy="126" r="10" fill="#E5534B" stroke="var(--ink)" stroke-width="2.5"/>
+  </svg>`;
+}
+function figAssi(){
+  return `<svg viewBox="0 0 300 180" role="img" aria-label="Due assi: uno sdraiato e uno in piedi">
+    <rect x="2" y="2" width="296" height="176" rx="14" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>
+    <path d="M56 140H262M56 140V24" stroke="var(--ink)" stroke-width="3.5"/><path d="M254 132l10 8-10 8M48 32l8-10 8 10" fill="none" stroke="var(--ink)" stroke-width="3.5"/>
+    <rect x="248" y="150" width="30" height="24" rx="5" fill="#FFF3B0" stroke="var(--ink)" stroke-width="2"/><text x="263" y="162" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="16" fill="#1E2A44">?</text>
+    <rect x="14" y="14" width="30" height="24" rx="5" fill="#FFF3B0" stroke="var(--ink)" stroke-width="2"/><text x="29" y="26" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="16" fill="#1E2A44">?</text>
+    <rect x="22" y="148" width="30" height="24" rx="5" fill="#FFF3B0" stroke="var(--ink)" stroke-width="2"/><text x="37" y="160" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="16" fill="#1E2A44">?</text>
+  </svg>`;
+}
+function figCartinaG(){
+  const X = v => 50 + v * 36, Y = v => 150 - v * 28;
+  return `<svg viewBox="0 0 320 190" role="img" aria-label="La cartina con il rifugio">
+    <rect x="2" y="2" width="316" height="186" rx="14" fill="#EAF4E0" stroke="var(--ink)" stroke-width="2"/>
+    ${[1, 2, 3, 4, 5, 6].map(v => `<path d="M${X(v)} 150V${Y(4.6)}" stroke="#C9D5C0" stroke-width="1.5"/>`).join("")}${[1, 2, 3, 4].map(v => `<path d="M50 ${Y(v)}H${X(6.5)}" stroke="#C9D5C0" stroke-width="1.5"/>`).join("")}
+    <path d="M50 150H${X(6.8)}M50 150V${Y(4.8)}" stroke="var(--ink)" stroke-width="3"/>
+    ${[0, 1, 2, 3, 4, 5, 6].map(v => `<text x="${X(v)}" y="170" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="16" fill="var(--ink)">${v}</text>`).join("")}
+    <text x="${X(6.8) + 4}" y="150" dominant-baseline="central" ${FONT_G} font-size="15" fill="var(--ink)">x</text><text x="40" y="${Y(4.6)}" text-anchor="end" dominant-baseline="central" ${FONT_G} font-size="15" fill="var(--ink)">y</text>
+    <path d="M${X(G.rif.x)} ${Y(G.rif.y)}V150" stroke="#E5534B" stroke-width="3" stroke-dasharray="6 5"/>
+    <path d="M${X(G.rif.x) - 14} ${Y(G.rif.y) + 4}l14-14 14 14v12h-28z" fill="#C9935A" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>
+  </svg>`;
+}
+function disegna1g(){
+  if(!S.g[0].passi){
+    const s1 = Guidata.scelte("B", "b", "5"), s2 = Guidata.scelte(G.lineaAperta ? "APERTA" : "CHIUSA", G.lineaAperta ? "CHIUSA" : "APERTA"),
+      s3 = Guidata.scelte("SEMIRETTA", "PUNTO"), s4 = Guidata.vicini(G.stelle.length);
+    S.g[0].passi = [
+      {testo:"Il nome di un punto è…", ...s1, aiuto:"Il nome del punto è una lettera MAIUSCOLA."},
+      {testo:`${G.linea.t}: è una linea…`, figura:figFoto(G.linea), ...s2, aiuto:G.lineaAperta ? "Il fiume ha due punte libere: è aperta." : "Torna dove è partita: è chiusa."},
+      {testo:`${G.luce.t}: è come una…`, figura:figFoto(G.luce), ...s3, aiuto:"La luce parte e va lontano senza fine: è una semiretta."},
+      {testo:"Ogni stella è un punto. Quante stelle ci sono nel cielo?", figura:figStelle(), ...s4, aiuto:"Conta le stelle con il dito: ognuna ha la sua lettera."}
+    ];
+  }
+  Guidata.passi({sez:$("#e1"), num:1, titolo:"La bacheca delle foto", intro:"Sulla bacheca della casetta ci sono le foto del parco. Guardale e rispondi.",
+    passi:S.g[0].passi, stato:S.g[0], fatto:S.risolto[0], figuraFinale:`<div class="g-figura">${figStelle()}</div>`, premio:premioG(0), quandoFinito:() => risolvi(0)});
+}
+function disegna2g(){
+  if(!S.g[1].passi){
+    const s1 = Guidata.scelte(G.allineati ? "IN FILA" : "NON IN FILA", G.allineati ? "NON IN FILA" : "IN FILA"),
+      s2 = Guidata.scelte("ABCD"[G.fuori], ..."ABCD".split("").filter((_, i) => i !== G.fuori).slice(0, 2)), s3 = Guidata.vicini(G.inFila);
+    S.g[1].passi = [
+      {testo:"Le puntine A, B, C sono in fila?", figura:figTre(G.allineati), ...s1, aiuto:"In fila vuol dire: sulla stessa riga dritta, come i compagni in fila indiana."},
+      {testo:"Quale puntina non è in fila con le altre?", figura:figQuattro(), ...s2, aiuto:"Tre puntine sono sulla stessa riga dritta: trova quella che scappa."},
+      {testo:"Quante puntine stanno sul filo?", figura:figFilo(), ...s3, aiuto:"Conta solo le puntine sul filo blu, non quella sotto."}
+    ];
+  }
+  Guidata.passi({sez:$("#e2"), num:2, titolo:"La mappa di sughero", intro:"Sulla mappa di sughero ci sono le puntine. I punti in fila si chiamano allineati.",
+    passi:S.g[1].passi, stato:S.g[1], fatto:S.risolto[1], chiuso:!S.risolto[0], figuraFinale:`<div class="g-figura">${figFilo()}</div>`, premio:premioG(1), quandoFinito:() => risolvi(1)});
+}
+function disegna3g(){
+  if(!S.g[2].passi){
+    const s1 = Guidata.scelte("x", "y"), s2 = Guidata.scelte("y", "x"), s3 = Guidata.scelte("O", "A"), s4 = Guidata.vicini(G.rif.x);
+    S.g[2].passi = [
+      {testo:"L'asse sdraiato si chiama asse…", figura:figAssi(), ...s1, aiuto:"Sdraiato: asse x. In piedi: asse y."},
+      {testo:"L'asse in piedi si chiama asse…", figura:figAssi(), ...s2, aiuto:"Sdraiato: asse x. In piedi: asse y."},
+      {testo:"I due assi si incontrano nel punto…", figura:figAssi(), ...s3, aiuto:"Il punto dove si incontrano gli assi si chiama O."},
+      {testo:"Segui la linea rossa dal rifugio giù fino all'asse x. Su quale numero arriva?", figura:figCartinaG(), ...s4, aiuto:"Scendi con il dito lungo la linea rossa e leggi il numero sotto."}
+    ];
+  }
+  Guidata.passi({sez:$("#e3"), num:3, titolo:"La cartina della gara", intro:"La cartina del parco è un piano cartesiano. Trova il rifugio.",
+    passi:S.g[2].passi, stato:S.g[2], fatto:S.risolto[2], chiuso:!S.risolto[1], figuraFinale:`<div class="g-figura">${figCartinaG()}</div>`, premio:premioG(2), quandoFinito:() => risolvi(2)});
+}
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-aiuto]"); if(!b) return;
   const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
@@ -795,6 +925,11 @@ document.addEventListener("click", e => {
 /* segreti: toccare 3 volte lo sgabello, toccare 3 volte la stessa puntina, toccare 3 volte l'origine O, scrivere "euclide" */
 const SEGRETI = 4;
 const PAROLE_SEGRETE = [["euclide", () => segreto("euclide", "Euclide visse ad Alessandria d'Egitto più di 2300 anni fa: il suo libro, gli Elementi, è stato usato per insegnare la geometria per secoli!")]];
+if(GUIDATA){
+  const st = $(".storia"), testo = "Un temporale! Sei nella casetta del guardiaparco e la porta si è chiusa. Il lucchetto ha 3 numeri. Fai i 3 giochi: ogni gioco ti dà un numero.";
+  st.outerHTML = `<div class="g-riga"><p class="storia">${testo}</p>${Guidata.bottoneVoce(testo)}</div>`;
+}
+Guidata.montaBarra();
 tutto();
 aggiornaSuoni();
 </script>
