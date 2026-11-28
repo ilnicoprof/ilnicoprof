@@ -50,10 +50,10 @@ const GIOCHI = [
   {titolo:"Lo studio di medicina dello sport", tipo:"escape", materia:"scienze", classe:"3ª", capitolo:"Sistema nervoso",
    descr:"Escape room: riconosci le parti del neurone e calcola la velocità dell'impulso, porta ogni attività alla parte giusta dell'encefalo e conta i battiti del cardiofrequenzimetro tra simpatico e parasimpatico.",
    link:"escape-nervoso.html"},
-  {titolo:"Il laboratorio della pasticceria", tipo:"escape", materia:"scienze", classe:"2ª", capitolo:"La materia si trasforma",
+  {titolo:"Il laboratorio della pasticceria", tipo:"escape", materia:"scienze", classe:"2ª", capitolo:"Le reazioni chimiche",
    descr:"Escape room: distingui trasformazioni fisiche e chimiche in pasticceria, bilancia le equazioni sulla bilancia degli atomi e scopri il pH dei liquidi con le cartine.",
    link:"escape-trasforma.html"},
-  {titolo:"Il laboratorio sigillato", tipo:"escape", materia:"scienze", classe:"2ª", capitolo:"Dentro la materia",
+  {titolo:"Il laboratorio sigillato", tipo:"escape", materia:"scienze", classe:"2ª", capitolo:"L'atomo",
    descr:"Escape room: costruisci un atomo, rimetti a posto la tavola periodica caduta e riconosci i legami chimici per uscire dal laboratorio.",
    link:"escape-chimica.html"}
 ];

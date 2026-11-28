@@ -242,10 +242,10 @@ dialog::backdrop{background:var(--veil)}
 <div class="toast" id="toast" hidden></div>
 
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
-<script src="materiali.js?v=b5467d08"></script>
-<script src="giochi.js?v=f5697943"></script>
+<script src="materiali.js?v=6c21fd1c"></script>
+<script src="giochi.js?v=70f33bd0"></script>
 <script src="frasi.js?v=abf57d0f"></script>
-<script src="trofei.js?v=0e06068c"></script>
+<script src="trofei.js?v=86d2ee20"></script>
 <script>
 /* true finché il sito è solo un'anteprima: i link ai file non funzionano ancora */
 const ANTEPRIMA = false;
@@ -423,7 +423,7 @@ function apri(id){
   });
   const giochi = GIOCHI.filter(g => g.materia===c.materia && [].concat(g.capitolo||[]).includes(c.titolo));
   /* Eureka Game Lite compare da solo nei capitoli che hanno frasi con lo stesso argomento */
-  const frasiCap = (typeof FRASI !== "undefined" ? FRASI : []).filter(f => f.materia===c.materia && f.argomento===c.titolo).length;
+  const frasiCap = (typeof FRASI !== "undefined" ? FRASI : []).filter(f => f.materia===c.materia && norm(f.argomento)===norm(c.titolo)).length;
   if(frasiCap) giochi.unshift({titolo:"Eureka Game Lite", tipo:"minigioco", sotto:`${frasiCap} frasi da indovinare`,
     link:"eureka-solo.html#" + norm(c.materia+"-"+c.titolo).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")});
   const bloccoGiochi = giochi.length ? `<section class="blocco"><h3>${IC.gioco} Gioca e ripassa</h3><div class="files">${giochi.map(g => {

@@ -624,7 +624,7 @@ const CAPITOLI = [
  {
   "materia": "scienze",
   "classe": "2ª",
-  "titolo": "Dentro la materia",
+  "titolo": "L'atomo",
   "file": [
    {
     "nome": "Appunti",
@@ -681,7 +681,7 @@ const CAPITOLI = [
  {
   "materia": "scienze",
   "classe": "2ª",
-  "titolo": "La materia si trasforma",
+  "titolo": "Le reazioni chimiche",
   "file": [
    {
     "nome": "Appunti",

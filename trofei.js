@@ -12,13 +12,13 @@ const TROFEI = [
   {id:"segmenti", nome:"La Locomotiva di Cristallo", gioco:"Il plastico ferroviario", link:"escape-segmenti.html", argomento:"I segmenti"},
   {id:"stati", nome:"La Goccia di Ghiaccio Eterno", gioco:"Il rifugio nella bufera", link:"escape-stati.html", argomento:"Gli stati di aggregazione della materia"},
   {id:"elementi", nome:"La Bussola delle Stelle", gioco:"La casetta del guardiaparco", link:"escape-elementi.html", argomento:"I primi elementi della geometria"},
-  {id:"trasforma", nome:"L'Uovo della Fenice", gioco:"Il laboratorio della pasticceria", link:"escape-trasforma.html", argomento:"La materia si trasforma"},
+  {id:"trasforma", nome:"L'Uovo della Fenice", gioco:"Il laboratorio della pasticceria", link:"escape-trasforma.html", argomento:"Le reazioni chimiche"},
   {id:"cerchio", nome:"L'Anello dell'Uroboro", gioco:"Il luna park dopo la chiusura", link:"escape-cerchio.html", argomento:"Circonferenza e cerchio"},
   {id:"nervoso", nome:"Il Diadema dei Pensieri Lucenti", gioco:"Lo studio di medicina dello sport", link:"escape-nervoso.html", argomento:"Il sistema nervoso"},
   {id:"poliedri", nome:"La Gemma dei Cinque Elementi", gioco:"Il deposito del museo", link:"escape-poliedri.html", argomento:"I solidi e i poliedri"},
   {id:"genetica", nome:"L'Elica dell'Albero della Vita", gioco:"La serra dell'orto botanico", link:"escape-genetica.html", argomento:"Genetica e DNA"},
   {id:"riproduttore", nome:"Il Medaglione della Luna Nuova", gioco:"La mostra «Come siamo nati»", link:"escape-riproduttore.html", argomento:"Apparato riproduttore"},
-  {id:"materia", nome:"Il Cristallo dell'Alchimista", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"Atomi, tavola periodica e legami"}
+  {id:"materia", nome:"Il Cristallo dell'Alchimista", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"L'atomo"}
 ];
 
 const Trofei = (() => {
