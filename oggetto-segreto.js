@@ -7,10 +7,10 @@ const OggettoSegreto = (() => {
   const OGGETTI = ["diario", "barattolo", "scatola", "mappamondo"];
   /* ogni escape room ha il suo oggetto, legato alla sua storia; gli altri 4 restano per le escape room nuove */
   const PER_STANZA = {insiemi:"astuccio", naturali:"grattaevinci", relativi:"pacco", materia:"provetta", letterale:"attrezzi",
-                      elementi:"pergamena", misure:"orologio", segmenti:"biglietto", stati:"ghiaccio", trasforma:"torta", cerchio:"palloncino", nervoso:"cardio"};
+                      elementi:"pergamena", misure:"orologio", segmenti:"biglietto", stati:"ghiaccio", trasforma:"torta", cerchio:"palloncino", nervoso:"cardio", poliedri:"sarcofago"};
   let scelto = OGGETTI[Math.floor(Math.random() * OGGETTI.length)];
   /* se la pagina non dice quale oggetto usare (per esempio una pagina vecchia rimasta in memoria nel browser), lo ricavo dal nome del file */
-  const DA_PAGINA = {insiemi:"insiemi", numeri:"naturali", relativi:"relativi", chimica:"materia", letterale:"letterale", elementi:"elementi", misure:"misure", segmenti:"segmenti", stati:"stati", trasforma:"trasforma", cerchio:"cerchio", nervoso:"nervoso"};
+  const DA_PAGINA = {insiemi:"insiemi", numeri:"naturali", relativi:"relativi", chimica:"materia", letterale:"letterale", elementi:"elementi", misure:"misure", segmenti:"segmenti", stati:"stati", trasforma:"trasforma", cerchio:"cerchio", nervoso:"nervoso", poliedri:"poliedri"};
   const daPagina = () => { const m = /^escape-([a-z]+)\.html$/.exec(location.pathname.split("/").pop()); return m ? DA_PAGINA[m[1]] : null; };
   const scegli = id => { const k = (id && PER_STANZA[id]) ? id : daPagina(); if(k && PER_STANZA[k]) scelto = PER_STANZA[k]; };
   let codice = null, trovato = false, idTrofeo = null;
@@ -35,11 +35,12 @@ const OggettoSegreto = (() => {
     torta:'<svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="44" rx="26" ry="10" fill="#E0A065" stroke="#1E2A44" stroke-width="3"/><path d="M6 30v14M58 30v14" stroke="#1E2A44" stroke-width="3"/><ellipse cx="32" cy="30" rx="26" ry="10" fill="#F7C6D0" stroke="#1E2A44" stroke-width="3"/><circle cx="32" cy="26" r="4" fill="#E5534B" stroke="#1E2A44" stroke-width="1.5"/></svg>',
     palloncino:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 44c-3 6 3 8 0 18" fill="none" stroke="#1E2A44" stroke-width="2"/><ellipse cx="32" cy="24" rx="17" ry="20" fill="#E5534B" stroke="#1E2A44" stroke-width="3"/><path d="M29 44h6l-3-4z" fill="#E5534B" stroke="#1E2A44" stroke-width="2"/><ellipse cx="25" cy="16" rx="4" ry="7" fill="#fff" opacity=".5"/></svg>',
     cardio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="22" y="4" width="20" height="14" rx="3" fill="#2A2F3A" stroke="#1E2A44" stroke-width="2.5"/><rect x="22" y="46" width="20" height="14" rx="3" fill="#2A2F3A" stroke="#1E2A44" stroke-width="2.5"/><rect x="14" y="14" width="36" height="36" rx="10" fill="#3A4560" stroke="#1E2A44" stroke-width="3"/><rect x="19" y="19" width="26" height="26" rx="6" fill="#101826"/><path d="M22 34h6l3-7 4 12 3-5h5" fill="none" stroke="#7CFFA0" stroke-width="2.2" stroke-linejoin="round"/><rect x="50" y="26" width="5" height="10" rx="2" fill="#E5534B" stroke="#1E2A44" stroke-width="1.5"/></svg>',
+    sarcofago:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M22 6h20c6 0 8 6 8 12v32c0 6-6 10-18 10S14 56 14 50V18c0-6 2-12 8-12z" fill="#E0B53A" stroke="#1E2A44" stroke-width="3"/><ellipse cx="32" cy="18" rx="8" ry="9" fill="#F2D59A" stroke="#1E2A44" stroke-width="2"/><path d="M24 12h16v4H24z" fill="#2F6FDE"/><path d="M20 32h24M20 38h24M20 44h24" stroke="#2F6FDE" stroke-width="2.5"/></svg>',
     ghiaccio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="12" width="40" height="40" rx="8" fill="#DDF3FF" stroke="#1E2A44" stroke-width="3"/><path d="M18 18l10 0" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="24" y="28" width="18" height="12" fill="#FFF8EC" stroke="#1E2A44" stroke-width="1.5" opacity=".7"/></svg>'
   });
   const NOMI = {diario:"un vecchio diario", barattolo:"un barattolo", scatola:"una scatola misteriosa", mappamondo:"un piccolo mappamondo",
     astuccio:"un astuccio dimenticato", grattaevinci:"un gratta e vinci del supermercato", pacco:"il pacco del drone", provetta:"una provetta misteriosa",
-    attrezzi:"la cassetta degli attrezzi", pergamena:"una cartina arrotolata", orologio:"un vecchio orologio da taschino", biglietto:"un biglietto del treno", ghiaccio:"un cubetto di ghiaccio", torta:"una torta del pasticcere", palloncino:"un palloncino del luna park", cardio:"il cardiofrequenzimetro del medico"};
+    attrezzi:"la cassetta degli attrezzi", pergamena:"una cartina arrotolata", orologio:"un vecchio orologio da taschino", biglietto:"un biglietto del treno", ghiaccio:"un cubetto di ghiaccio", torta:"una torta del pasticcere", palloncino:"un palloncino del luna park", cardio:"il cardiofrequenzimetro del medico", sarcofago:"un sarcofago in miniatura"};
   const ISTRUZIONI = {
     diario:"Sfoglia il diario pagina per pagina: da qualche parte qualcuno ha scritto il codice.",
     barattolo:"Dentro il barattolo c'è un bigliettino. Scuotilo forte (anche trascinandolo a destra e a sinistra) finché il tappo salta!",
@@ -56,6 +57,7 @@ const OggettoSegreto = (() => {
     torta:"Dentro la torta il pasticcere ha nascosto una sorpresa: tagliala in fette (tocca il coltello o la torta) e cerca il bigliettino.",
     palloncino:"Dentro il palloncino si vede un bigliettino arrotolato: gonfialo ancora (tocca il palloncino o la pompa) finché scoppia!",
     cardio:"Il cardiofrequenzimetro è acceso: premi il pulsante rosso sul lato (o tocca lo schermo) per sfogliare le schermate. Nell'ultima c'è il codice!",
+    sarcofago:"Il coperchio del piccolo sarcofago è chiuso: fallo scorrere trascinandolo verso destra (o usa il pulsante) e guarda dentro.",
     ghiaccio:"Dentro il cubetto c'è un bigliettino congelato: scaldalo strofinandoci sopra il dito (o con il pulsante) finché si scioglie."
   };
 
@@ -197,6 +199,12 @@ const OggettoSegreto = (() => {
 @keyframes os-pulsa{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}}
 .os-schermo{cursor:pointer}
 @media (prefers-reduced-motion:reduce){.os-cuore{animation:none}}
+/* sarcofago */
+.os-cripta{position:relative;width:280px;max-width:100%;height:230px;touch-action:none}
+.os-cripta svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.os-coperchio{cursor:grab;touch-action:none}
+.os-coperchio:active{cursor:grabbing}
+.os-coperchio.scivola{transition:transform .5s cubic-bezier(.3,1.2,.5,1)}
 @media (prefers-reduced-motion:reduce){.os-pall.trema,.os-pezzetto,.os-scende{animation:none!important}.os-scende{transform:translate(-50%,70px)}.os-pezzetto{display:none}}
 @media (prefers-reduced-motion:reduce){.os-cade,.os-cade svg,.os-pag.gira,.os-vaso.scuoti,.os-cubo.gira,.os-bigliettino,.os-aperto,.os-trovato{animation:none!important}.os-tappo{transition:none}}
 `;
@@ -250,7 +258,7 @@ const OggettoSegreto = (() => {
       <div class="os-scena" id="os-scena"></div>
       <div class="os-riga" id="os-comandi"></div>
       <div id="os-premio" style="width:100%"></div></div>`;
-    ({diario, barattolo, scatola, mappamondo, astuccio, grattaevinci, pacco, provetta, attrezzi, pergamena, orologio, biglietto, ghiaccio, torta, palloncino, cardio})[scelto]();
+    ({diario, barattolo, scatola, mappamondo, astuccio, grattaevinci, pacco, provetta, attrezzi, pergamena, orologio, biglietto, ghiaccio, torta, palloncino, cardio, sarcofago})[scelto]();
     if(trovato) mostraCodice();
   }
   function mostraCodice(){
@@ -706,6 +714,35 @@ const OggettoSegreto = (() => {
     disegna();
     comandi(`<button class="os-btn blu" type="button" id="os-premi">Premi il pulsante</button>`);
     fin.querySelector("#os-premi").addEventListener("click", premi);
+  }
+
+  /* ---- il sarcofago (Il deposito del museo): il coperchio scorre di lato, dentro c'è un papiro con il codice ---- */
+  function sarcofago(){
+    let dx = 0, aperto = false;
+    const MAX = 170;
+    scena().innerHTML = `<div class="os-cripta" id="os-cripta"><svg viewBox="0 0 280 230" role="img" aria-label="Sarcofago in miniatura con il coperchio chiuso">
+      <path d="M60 40h160c14 0 22 10 22 22v110c0 14-10 24-24 24H62c-14 0-24-10-24-24V62c0-12 8-22 22-22z" fill="#8A5A34" stroke="#1E2A44" stroke-width="4"/>
+      <path d="M62 56h156c8 0 12 6 12 12v100c0 8-6 14-14 14H64c-8 0-14-6-14-14V68c0-6 4-12 12-12z" fill="#3A2A1A"/>
+      <g transform="rotate(-4 140 118)"><rect x="80" y="92" width="120" height="52" rx="4" fill="#F2E1B6" stroke="#1E2A44" stroke-width="2"/><path d="M86 100h108M86 136h108" stroke="#C9A66B" stroke-width="2"/>
+        <text x="140" y="125" text-anchor="middle" font-family="Courier New, monospace" font-weight="700" font-size="17" fill="#1E2A44">${codice}</text></g>
+      <g class="os-coperchio" id="os-coperchio"><path d="M60 40h160c14 0 22 10 22 22v110c0 14-10 24-24 24H62c-14 0-24-10-24-24V62c0-12 8-22 22-22z" fill="#E0B53A" stroke="#1E2A44" stroke-width="4"/>
+        <ellipse cx="140" cy="82" rx="26" ry="28" fill="#F2D59A" stroke="#1E2A44" stroke-width="3"/><path d="M114 68h52v10h-52z" fill="#2F6FDE" stroke="#1E2A44" stroke-width="2"/>
+        <circle cx="130" cy="84" r="3" fill="#1E2A44"/><circle cx="150" cy="84" r="3" fill="#1E2A44"/>
+        <path d="M80 128h120M80 144h120M80 160h120M80 176h120" stroke="#2F6FDE" stroke-width="5"/><path d="M90 128v48M190 128v48" stroke="#C0392B" stroke-width="3"/></g>
+    </svg></div>`;
+    const cop = fin.querySelector("#os-coperchio"), svg = fin.querySelector("#os-cripta svg");
+    const metti = anim => { cop.classList.toggle("scivola", anim); cop.setAttribute("transform", `translate(${dx} ${-dx * .12})`); cop.style.transform = `translate(${dx}px, ${-dx * .12}px)`; };
+    const apri = () => { if(aperto) return; aperto = true; dx = MAX; metti(true); suono("cigolio"); comandi(""); setTimeout(mostraCodice, 600); };
+    cop.addEventListener("pointerdown", e => {
+      if(aperto) return;
+      const k = 280 / svg.getBoundingClientRect().width, x0 = e.clientX, d0 = dx;
+      try { cop.setPointerCapture(e.pointerId); } catch {}
+      const muovi = ev => { dx = Math.max(0, Math.min(MAX, d0 + (ev.clientX - x0) * k)); metti(false); if(dx > MAX * .7) apri(); };
+      const fine = () => { window.removeEventListener("pointermove", muovi); window.removeEventListener("pointerup", fine); window.removeEventListener("pointercancel", fine); if(!aperto){ dx = 0; metti(true); } };
+      window.addEventListener("pointermove", muovi); window.addEventListener("pointerup", fine); window.addEventListener("pointercancel", fine);
+    });
+    comandi(`<button class="os-btn blu" type="button" id="os-sposta">Sposta il coperchio</button>`);
+    fin.querySelector("#os-sposta").addEventListener("click", apri);
   }
 
   return {bottone, apri};

@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Il deposito del museo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" sizes="32x32" href="immagini/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="immagini/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="immagini/icon-192.png">
+<link rel="apple-touch-icon" href="immagini/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti del nicoprof; enigma 1 = la vetrina dei solidi (Eulero, solidi in 3D che ruotano),
+   enigma 2 = il laboratorio di restauro (volume per immersione e densità), enigma 3 = le casse (piramide e prisma, diagonale), poi la porta */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300; --azzurro:#9FD0FF; --azzurro-ink:#0D3B6E;
+  --sabbia:#F2D59A; --sabbia-scura:#C9A66B; --lapis:#2F6FDE; --turchese:#5FCBBE; --oro:#E0B53A;
+  --vetrina:#EAF1F8; --acqua:#8EC5F0; --legno:#A0703F;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --porta:#B98042; --porta-scura:#8A5A34; --metallo:#D5DCE6;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+  --f-mono:"Courier New",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --azzurro:#86BEF5;
+  --sabbia:#8A7444; --sabbia-scura:#6B5A32; --lapis:#7FB0FF; --turchese:#3E9A8E; --oro:#C9A030;
+  --vetrina:#16203A; --acqua:#3E6E99; --legno:#7A5530;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#7A5530; --porta-scura:#4E3519; --metallo:#5A6680;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --azzurro:#86BEF5;
+  --sabbia:#8A7444; --sabbia-scura:#6B5A32; --lapis:#7FB0FF; --turchese:#3E9A8E; --oro:#C9A030;
+  --vetrina:#16203A; --acqua:#3E6E99; --legno:#7A5530;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#7A5530; --porta-scura:#4E3519; --metallo:#5A6680;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:820px;margin:0 auto;padding-block:20px 56px;display:grid;gap:20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap>*{min-width:0}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna svg{width:16px;height:16px}
+header{display:grid;gap:8px}
+.eyebrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:800;font-size:.85rem}
+.tag{font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.storia{margin:0;font-family:var(--f-hand);font-size:1.3rem;line-height:1.35;max-width:60ch}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.indizi{display:flex;gap:8px;flex-wrap:wrap}
+.cifra-mini{display:inline-grid;place-items:center;width:34px;height:40px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.cifra-mini.vuota{border-style:dashed;color:var(--ink-soft);background:transparent}
+
+.enigma{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px;display:grid;gap:14px;min-width:0}
+.enigma>*{min-width:0}
+.enigma.chiuso{box-shadow:none;border-style:dashed;border-color:var(--line);background:transparent}
+.enigma.risolto{border-color:var(--ok);box-shadow:5px 5px 0 var(--ok)}
+.e-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.e-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.1;display:flex;align-items:center;gap:10px}
+.e-head h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);font-size:1.1rem;flex:none}
+.enigma.chiuso h2{color:var(--ink-soft)}
+.enigma.chiuso .e-head h2 .n{background:transparent;color:var(--ink-soft);border-color:var(--line)}
+.consegna{margin:0;font-size:1.02rem;max-width:65ch}
+.consegna b{font-weight:800}
+.nota{margin:0;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+.esito{margin:0;min-height:1.5em;font-weight:800}
+.esito.si{color:var(--ok)} .esito.no{color:var(--errore)}
+.azioni{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+.btn.piccolo{font-size:.92rem;padding:5px 12px;box-shadow:2px 2px 0 var(--ink)}
+.aiuto{margin:0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--giallo) 30%,transparent);border:1.5px dashed var(--giallo-ink);font-family:var(--f-hand);font-size:1.15rem}
+.premio{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:var(--ok-bg);color:var(--ok);font-weight:800}
+.premio .cifra-mini{border-color:var(--ok);flex:none}
+
+/* pezzi che si spostano */
+.pezzo{all:unset;box-sizing:border-box;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-width:40px;height:40px;padding:0 10px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:1.1rem;box-shadow:0 3px 0 var(--ink);font-variant-numeric:tabular-nums}
+.pezzo:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pezzo.scelto{background:var(--marker);transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
+.pezzo.sollevato{opacity:.3}
+.pezzo.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+.ombra{position:fixed!important;z-index:50!important;pointer-events:none!important;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
+.scegli .zona{outline:2px dashed var(--accent);outline-offset:-2px}
+.zona.sopra{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
+.banco{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:58px;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
+.banco .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.1rem}
+.etichetta{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin:0 0 -6px}
+.display{font-family:var(--f-mono);font-weight:700;background:#16241A;color:#7CFFA0;padding:10px 14px;border-radius:10px;border:3px solid var(--ink);font-size:1.15rem;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 6px rgba(124,255,160,.5)}
+.display small{display:block;font-size:.75rem;color:#4FBF73;text-shadow:none}
+
+.c-azzurro{background:var(--azzurro);color:var(--azzurro-ink)}
+.e-head h2 .n{background:var(--azzurro);color:var(--azzurro-ink)}
+.scena{border-radius:14px;border:2px solid var(--ink);background:var(--vetrina);overflow:hidden}
+.scena svg{display:block;width:100%;height:auto}
+.domande{display:grid;gap:8px}
+.domanda{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:800;padding:10px;border-radius:12px;background:var(--pill)}
+.domanda.sbagliata{background:var(--errore-bg)}
+.domanda input,.riga input{width:72px;font:inherit;font-family:var(--f-mono);font-size:1.05rem;padding:3px 7px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+.opz{all:unset;box-sizing:border-box;cursor:pointer;padding:3px 10px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-weight:800;font-size:.9rem}
+.opz[aria-pressed="true"]{background:var(--marker)}
+.opz:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opz:disabled{cursor:default}
+.cartello{font-family:var(--f-hand);font-size:1.2rem;padding:8px 14px;border-radius:10px;border:3px solid var(--ink);background:var(--sabbia);color:var(--ink);justify-self:start;transform:rotate(-1deg);max-width:100%}
+.stella{color:var(--giallo);-webkit-text-stroke:1.2px var(--ink)}
+.riga{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:800;font-size:.92rem}
+
+/* enigma 1: i solidi in 3D */
+.solidi{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.solido{display:grid;gap:8px;align-content:start;padding:10px;border-radius:14px;border:2px solid var(--ink);background:var(--card)}
+.solido.sbagliato{border-color:var(--errore);background:var(--errore-bg)}
+.solido h3{margin:0;font-family:var(--f-display);font-size:1.05rem}
+.vista3d{border-radius:10px;border:2px solid var(--line);background:var(--vetrina);touch-action:none;cursor:grab}
+.vista3d:active{cursor:grabbing}
+.vista3d svg{display:block;width:100%;height:auto}
+.eulero{font-family:var(--f-mono);font-weight:700;font-size:.95rem;padding:4px 8px;border-radius:8px;background:var(--pill)}
+.eulero.ok{background:var(--ok-bg);color:var(--ok)}
+
+/* enigma 2: il laboratorio di restauro */
+.lab{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.lab{grid-template-columns:1fr}}
+.strumento{display:grid;justify-items:center;gap:6px;padding:10px;border-radius:14px;border:3px dashed var(--ink);background:var(--vetrina);min-height:210px}
+.strumento h3{margin:0;font-family:var(--f-display);font-size:1rem}
+.strumento svg{width:100%;max-width:220px;height:auto}
+.display{text-align:center;min-width:130px}
+.livello{transition:y 1.2s ease,height 1.2s ease}
+.reperti{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.reperto{display:grid;gap:6px;padding:10px;border-radius:14px;border:2px solid var(--ink);background:var(--card)}
+.reperto.sbagliato{border-color:var(--errore);background:var(--errore-bg)}
+.reperto h3{margin:0;font-family:var(--f-display);font-size:1rem;display:flex;align-items:center;gap:6px}
+.oggetto{height:56px;padding:4px 10px}
+.oggetto svg{width:44px;height:44px}
+.misure{font-family:var(--f-mono);font-weight:700;font-size:.9rem;color:var(--ink-soft)}
+.tabella-d{display:flex;flex-wrap:wrap;gap:6px;font-weight:800;font-size:.85rem}
+.tabella-d span{padding:3px 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--pill)}
+
+/* enigma 3: la sabbia e la cassa */
+.casse{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.casse{grid-template-columns:1fr}}
+.sabbia-p{transition:y .9s ease,height .9s ease}
+.sabbia-t{transition:y .5s ease,height .5s ease}
+
+/* il lucchetto */
+.porta{display:grid;gap:16px;justify-items:center;text-align:center;background:var(--porta);background-image:repeating-linear-gradient(90deg,transparent 0 46px,var(--porta-scura) 46px 48px);border:3px solid var(--ink);border-radius:18px 18px 6px 6px;padding:22px 14px;box-shadow:5px 5px 0 var(--ink);color:#FFF8EC}
+.porta h2{margin:0;font-family:var(--f-display);font-size:1.5rem}
+.porta.chiuso .lucchetto{opacity:.6}
+.lucchetto{display:flex;gap:10px;padding:16px 18px;border-radius:18px;background:var(--metallo);border:3px solid var(--ink);box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.rotella{display:grid;gap:4px;justify-items:center}
+.rotella button{all:unset;cursor:pointer;width:44px;height:28px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);font-weight:800}
+.rotella button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rotella button:disabled{cursor:default;opacity:.6}
+.rotella output{display:grid;place-items:center;width:52px;height:62px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:2.2rem;font-variant-numeric:tabular-nums}
+.porta .esito{color:#FFF8EC}
+.libero{display:grid;gap:10px;justify-items:center;text-align:center;padding:24px 16px;border-radius:18px;background:var(--ok-bg);border:3px solid var(--ok);color:var(--ink)}
+.libero b{font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--ok)}
+.libero p{margin:0;font-weight:700}
+
+.suoni{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+#segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
+#segreto b{font-family:var(--f-display);font-size:1.1rem}
+@keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
+@keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.scuoti{animation:scuoti .3s ease 2}
+@media (max-width:480px){.enigma{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.firma{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.1);font-family:var(--f-body);font-size:.75rem;color:var(--ink-soft);pointer-events:none}
+.firma img{width:30px;height:30px;border-radius:50%;background:#FFFFFF;border:1px solid var(--line);flex:none}
+.firma b{font-weight:800;color:var(--ink)}
+@media (max-width:480px){.firma{padding:3px}.firma span{display:none}}
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>ilnicoprof</a>
+  <header>
+    <div class="eyebrow"><span class="tag c-azzurro">Geometria</span> 3ª media · I solidi e i poliedri · escape room</div>
+    <h1>il deposito del <span class="hl">museo</span></h1>
+    <p class="storia">La classe visita il museo di archeologia egizia. La restauratrice vi porta nel deposito, dove si preparano le casse per una mostra, poi esce a cercare le chiavi: la porta blindata si chiude e il lucchetto ha un codice di 3 cifre. Tra piramidi, casse e reperti, sono i solidi a mostrarti l'uscita!</p>
+    <div class="barra">
+      <span class="pill" id="tempo">Tempo 00:00</span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
+      <div class="indizi" id="indizi" aria-label="Cifre trovate"></div>
+    </div>
+  </header>
+
+  <section class="enigma" id="e1" aria-labelledby="t1"></section>
+  <section class="enigma" id="e2" aria-labelledby="t2"></section>
+  <section class="enigma" id="e3" aria-labelledby="t3"></section>
+  <section id="e4" aria-labelledby="t4"></section>
+  <p class="sr" aria-live="polite" id="annuncio"></p>
+</div>
+
+<div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js?v=266e3131"></script>
+<script src="oggetto-segreto.js?v=d3b4227f"></script>
+<script>
+/* ===== dati ===== */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mescola = a => { const b = [...a]; for(let i = b.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]] = [b[j],b[i]]; } return b; };
+const pesca = (a, n) => mescola(a).slice(0, n);
+const numero = v => { const t = String(v).trim().replace(",", "."); return t === "" ? NaN : +t; };
+const virgola = x => String(Math.round(x * 1000) / 1000).replace(".", ",");
+
+/* ===== i solidi in 3D: vertici [x,y,z] (y in alto) e facce come elenchi di vertici ===== */
+function prisma(n, r, h, giro = 0){
+  const V = [];
+  for(const y of [-h / 2, h / 2]) for(let i = 0; i < n; i++){ const a = giro + i * 2 * Math.PI / n; V.push([r * Math.cos(a), y, r * Math.sin(a)]); }
+  const F = [[...Array(n).keys()].reverse(), [...Array(n).keys()].map(i => i + n)];
+  for(let i = 0; i < n; i++){ const j = (i + 1) % n; F.push([i, j, n + j, n + i]); }
+  return {V, F};
+}
+function piramide(n, r, h, giro = 0){
+  const V = [];
+  for(let i = 0; i < n; i++){ const a = giro + i * 2 * Math.PI / n; V.push([r * Math.cos(a), -h / 2, r * Math.sin(a)]); }
+  V.push([0, h / 2, 0]);
+  const F = [[...Array(n).keys()].reverse()];
+  for(let i = 0; i < n; i++) F.push([i, (i + 1) % n, n]);
+  return {V, F};
+}
+function ottaedro(){
+  const s = 1.05, V = [[s, 0, 0], [-s, 0, 0], [0, s, 0], [0, -s, 0], [0, 0, s], [0, 0, -s]];
+  const F = [[0, 2, 4], [4, 2, 1], [1, 2, 5], [5, 2, 0], [0, 4, 3], [4, 1, 3], [1, 5, 3], [5, 0, 3]];
+  return {V, F};
+}
+const SOLIDI = [
+  {n:"Cubo", g:() => prisma(4, .85, 1.2, Math.PI / 4), f:6, v:8, s:12},
+  {n:"Tetraedro", g:() => piramide(3, .95, 1.35), f:4, v:4, s:6},
+  {n:"Piramide quadrata", g:() => piramide(4, .95, 1.3, Math.PI / 4), f:5, v:5, s:8},
+  {n:"Piramide pentagonale", g:() => piramide(5, .95, 1.3), f:6, v:6, s:10},
+  {n:"Piramide esagonale", g:() => piramide(6, .95, 1.3), f:7, v:7, s:12},
+  {n:"Prisma triangolare", g:() => prisma(3, .9, 1.3), f:5, v:6, s:9},
+  {n:"Prisma pentagonale", g:() => prisma(5, .85, 1.2), f:7, v:10, s:15},
+  {n:"Prisma esagonale", g:() => prisma(6, .85, 1.1), f:8, v:12, s:18},
+  {n:"Ottaedro", g:ottaedro, f:8, v:6, s:12}
+];
+const SOL1 = pesca(SOLIDI, 3);
+const STELLA1 = rnd(0, 2);
+
+/* enigma 2: i reperti da analizzare (densità dalla tabella delle slide, in g/cm³) */
+const MATERIALI = [{n:"vetro", d:2.5}, {n:"marmo", d:2.7}, {n:"ferro", d:7.8}, {n:"piombo", d:11.3}, {n:"oro", d:19.3}];
+const OGGETTI2 = [
+  {n:"Scarabeo", d:'<ellipse cx="22" cy="24" rx="13" ry="16" fill="#5FCBBE" stroke="#1E2A44" stroke-width="2"/><path d="M22 8v32M10 18l-6-4M34 18l6-4M10 30l-6 4M34 30l6 4" stroke="#1E2A44" stroke-width="2"/>'},
+  {n:"Anello", d:'<circle cx="22" cy="26" r="12" fill="none" stroke="#1E2A44" stroke-width="7"/><circle cx="22" cy="26" r="12" fill="none" stroke="#E0B53A" stroke-width="4"/><path d="M16 10h12l-6 8z" fill="#2F6FDE" stroke="#1E2A44" stroke-width="1.5"/>'},
+  {n:"Statuetta di gatto", d:'<path d="M14 40c-2-10 2-18 6-22l-2-10 6 6h4l6-6-2 10c4 4 8 12 6 22z" fill="#AEB9CA" stroke="#1E2A44" stroke-width="2" stroke-linejoin="round"/>'},
+  {n:"Amuleto", d:'<path d="M22 6c8 0 10 8 6 12h8v6h-8v16h-12V24H8v-6h8c-4-4-2-12 6-12z" fill="#E0B53A" stroke="#1E2A44" stroke-width="2" stroke-linejoin="round"/>'},
+  {n:"Peso da bilancia", d:'<path d="M12 40l4-24h12l4 24z" fill="#7A8699" stroke="#1E2A44" stroke-width="2" stroke-linejoin="round"/><path d="M17 16c0-6 10-6 10 0" fill="none" stroke="#1E2A44" stroke-width="2.5"/>'}
+];
+const REP2 = (() => { const mat = pesca(MATERIALI, 3), vol = pesca([2, 3, 4, 5, 6, 7, 8, 9], 3); return pesca(OGGETTI2, 3).map((o, i) => ({...o, mat:mat[i].n, dens:mat[i].d, V:vol[i], m:Math.round(mat[i].d * vol[i] * 10) / 10})); })();
+const STELLA2 = rnd(0, 2);
+
+/* enigma 3: la piramide di sabbia e la cassa della statua */
+const PIR3 = pesca([[3, 4], [3, 5], [4, 3], [4, 6], [5, 3], [5, 6], [6, 4], [6, 5], [6, 7], [3, 8], [9, 2], [9, 4]], 1)[0];   /* [lato di base, altezza] in dm: lato²·h divisibile per 3 */
+const VPIR3 = PIR3[0] * PIR3[0] * PIR3[1] / 3;
+const CASSA3 = pesca([[1, 2, 2, 3], [2, 4, 4, 6], [2, 3, 6, 7], [1, 4, 8, 9], [4, 4, 7, 9], [3, 6, 6, 9]], 1)[0];   /* a, b, c e diagonale intera, in dm */
+const SCETTRO3 = CASSA3[3] + (Math.random() < .5 ? -1 : 1);
+
+const CODICE = [SOL1[STELLA1].f, REP2[STELLA2].V, CASSA3[3]];
+const INDIZI = [
+  "Quante facce ha il solido con la stella?",
+  "Di quanti millilitri sale l'acqua con il reperto con la stella? (è il suo volume in cm³)",
+  "Quanti decimetri misura la diagonale della cassa?"
+];
+const AIUTI = [
+  "Trascina il solido per farlo ruotare e conta con calma: le facce sono i poligoni, gli spigoli sono i lati delle facce, i vertici sono le punte. Controllo di Eulero: in ogni poliedro convesso facce + vertici = spigoli + 2. Se la riga sotto il solido diventa verde, i conti tornano.",
+  "Metti ogni reperto sulla bilancia (massa in grammi) e nel cilindro graduato: l'acqua sale di tanti ml quanti sono i cm³ del reperto (1 ml = 1 cm³). Densità = massa : volume. Poi confronta con la tabella per scoprire il materiale.",
+  "Versa la piramide di sabbia nel prisma con la stessa base e la stessa altezza: quante volte serve? Volume della piramide = area di base × altezza : 3. La diagonale della cassa si trova con Pitagora due volte: d = √(a² + b² + c²)."
+];
+
+const S = {
+  risolto:[false,false,false], aiuto:[false,false,false],
+  fvs:SOL1.map(() => ({f:"", v:"", s:""})), sbagliati1:new Set(),
+  bil:null, cil:null, misurati:REP2.map(() => ({m:false, V:false})), dens:["","",""], mat:[null,null,null], sbagliati2:new Set(),
+  versate:0, frazione:null, vpir:"", diag:"", scettro:null, dom3:new Set(),
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+};
+const $ = s => document.querySelector(s);
+const annuncia = t => { $("#annuncio").textContent = t; };
+
+/* ===== trascina oppure tocca-e-posa ===== */
+let scelto = null;
+function seleziona(el, posa){
+  if(scelto && scelto.el === el){ deseleziona(); return; }
+  deseleziona();
+  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli"); suona("prendi");
+  annuncia(`Hai preso ${el.getAttribute("aria-label") || el.textContent}. Ora tocca dove vuoi metterlo.`);
+}
+function deseleziona(){ if(scelto) scelto.el.classList.remove("scelto"); scelto = null; document.body.classList.remove("scegli"); }
+const zonaSotto = (x,y) => document.elementFromPoint(x,y)?.closest("[data-zona]");
+function pezzo(el, posa){
+  el.addEventListener("pointerdown", e => {
+    if(e.button > 0) return;
+    avvia();
+    const r = el.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
+    let ombra = null, sopra = null;
+    document.querySelectorAll(".ombra").forEach(o => o.remove());   /* nessuna copia rimasta da un trascinamento precedente */
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    const muovi = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      /* il rilascio del tasto è andato perso (mouse fuori dalla finestra, ctrl-clic...): poso il pezzo qui */
+      if(ev.pointerType === "mouse" && ev.buttons === 0){ fine({type:"pointerup", pointerId:e.pointerId, clientX:ev.clientX, clientY:ev.clientY}); return; }
+      if(!ombra){
+        if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
+        deseleziona();
+        ombra = el.cloneNode(true); ombra.classList.add("ombra");
+        /* la copia che segue il dito resta sempre visibile, qualunque stile abbia il pezzo */
+        Object.assign(ombra.style, {position:"fixed", zIndex:"50", pointerEvents:"none", margin:"0", opacity:"1", visibility:"visible"}); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
+        document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
+      }
+      ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z !== sopra){ sopra?.classList.remove("sopra"); z?.classList.add("sopra"); sopra = z; }
+    };
+    const fine = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      window.removeEventListener("pointermove", muovi); window.removeEventListener("pointerup", fine); window.removeEventListener("pointercancel", fine);
+      if(!ombra) return;
+      ombra.remove(); el.classList.remove("sollevato"); sopra?.classList.remove("sopra");
+      el.dataset.trascinato = "1"; setTimeout(() => { delete el.dataset.trascinato; }, 400);   /* serve solo a ignorare il clic che segue il rilascio */
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z && ev.type === "pointerup") posa(el, z, ev.clientX, ev.clientY);
+    };
+    /* ascolto tutta la pagina: il rilascio arriva anche se il dito o il mouse non è più sopra il pezzo */
+    window.addEventListener("pointermove", muovi); window.addEventListener("pointerup", fine); window.addEventListener("pointercancel", fine);
+  });
+  el.addEventListener("dragstart", ev => ev.preventDefault());
+  el.addEventListener("click", e => {
+    e.stopPropagation();
+    if(el.dataset.trascinato){ delete el.dataset.trascinato; return; }
+    avvia(); seleziona(el, posa);
+  });
+}
+document.addEventListener("click", e => {
+  if(!scelto) return;
+  const z = e.target.closest("[data-zona]");
+  if(z){ const s = scelto; deseleziona(); s.posa(s.el, z, e.clientX, e.clientY); }
+  else if(!e.target.closest(".pezzo")) deseleziona();
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") deseleziona(); });
+
+/* ===== tempo e suoni ===== */
+function avvia(){ if(!S.inizio) S.inizio = Date.now(); }
+const mmss = ms => { const s = Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+setInterval(() => { $("#tempo").textContent = "Tempo " + mmss(S.inizio ? (S.fine || Date.now()) - S.inizio : 0); }, 500);
+let audio;
+let suoniOn = true; try { suoniOn = localStorage.getItem("nicoprof:suoni") !== "no"; } catch {}
+/* [frequenza, ritardo, durata, forma, volume] */
+const SUONI = {
+  si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25,"sawtooth",.07]], bip:[[880,0,.06,"triangle",.05]],
+  prendi:[[520,0,.05,"triangle",.08],[780,.04,.06,"triangle",.08]],
+  posa:[[300,0,.07,"triangle",.13],[200,.05,.09,"triangle",.11]],
+  bilancia:[[660,0,.05,"square",.04],[990,.08,.12,"square",.04]],
+  splash:[[900,0,.06,"sine",.1],[500,.05,.12,"sine",.1],[300,.12,.2,"sine",.07]],
+  sabbia:[[3000,0,.5,"sawtooth",.012],[2400,.1,.5,"sawtooth",.012]],
+  segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[140,0,.5,"sawtooth",.035],[155,.25,.6,"sawtooth",.03]],
+  porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
+};
+function suona(tipo){
+  if(!suoniOn || !SUONI[tipo]) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    SUONI[tipo].forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
+  } catch {}
+}
+function aggiornaSuoni(){ const b = document.querySelector("#suoni"); if(b){ b.textContent = "Suoni: " + (suoniOn ? "sì" : "no"); b.setAttribute("aria-pressed", suoniOn); } }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#suoni")) return;
+  suoniOn = !suoniOn; try { localStorage.setItem("nicoprof:suoni", suoniOn ? "si" : "no"); } catch {}
+  aggiornaSuoni(); suona("bip");
+});
+
+/* ===== coriandoli per la vittoria ===== */
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--verde)", "var(--rosa)"];
+  for(let i = 0; i < 90; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.8 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4500);
+  }
+}
+
+/* ===== segreti nascosti ===== */
+const trovati = new Set();
+function segreto(id, testo){
+  if(trovati.has(id)) return;
+  trovati.add(id); suona("segreto");
+  let t = document.querySelector("#segreto");
+  if(!t){ t = document.createElement("div"); t.id = "segreto"; t.setAttribute("role", "status"); document.body.append(t); }
+  t.innerHTML = `<b>Segreto trovato! (${trovati.size} di ${SEGRETI})</b><span>${testo}</span>`;
+  t.hidden = false; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  clearTimeout(segreto.timer); segreto.timer = setTimeout(() => { t.hidden = true; }, 6500);
+}
+let digitate = "";
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea") || e.key.length !== 1) return;
+  digitate = (digitate + e.key.toLowerCase()).slice(-12);
+  PAROLE_SEGRETE.forEach(([parola, azione]) => { if(digitate.endsWith(parola)) azione(); });
+});
+const fraseSegreti = () => trovati.size === SEGRETI ? "Hai scoperto anche tutti i segreti nascosti!" : `Segreti nascosti trovati: ${trovati.size} su ${SEGRETI}. Gioca di nuovo per scoprirli tutti!`;
+
+/* ===== parti comuni ===== */
+function testa(i, titolo){
+  const chiuso = i > 0 && !S.risolto[i-1];
+  return `<div class="e-head"><h2 id="t${i+1}"><span class="n">${S.risolto[i] ? "✓" : i+1}</span>${titolo}</h2>
+    ${!chiuso && !S.risolto[i] ? `<button class="btn piccolo" type="button" data-aiuto="${i}">${S.aiuto[i] ? "Nascondi aiuto" : "Aiutino"}</button>` : ""}</div>`;
+}
+const chiusoHtml = i => `<p class="nota">Risolvi prima l'enigma ${i} per aprire questo.</p>`;
+const premioHtml = (i, extra = "") => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Cifra n. ${i+1} trovata! ${INDIZI[i]} ${extra}Risposta: ${CODICE[i]}.</span></div>`;
+const aiutoHtml = i => S.aiuto[i] ? `<p class="aiuto">${AIUTI[i]}</p>` : "";
+function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textContent = testo; el.className = "esito "+tipo; } }
+
+
+
+
+
+
+
+
+
+/* ===== il motore 3D: ogni vista ruota da sola e si gira trascinandola ===== */
+const VISTE = {};
+function vista3d(id, solido, colore, linee = []){
+  VISTE[id] = VISTE[id] || {yaw:.6 + Math.random(), pitch:.42, tocco:false};
+  Object.assign(VISTE[id], {solido, colore, linee});
+  return `<div class="vista3d" data-vista="${id}"><svg viewBox="-110 -95 220 190" role="img" aria-label="Solido in 3D: trascinalo per farlo ruotare"><g class="disegno3d"></g></svg></div>`;
+}
+function proietta(p, yaw, pitch){
+  const [x, y, z] = p, cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+  const x1 = x * cy + z * sy, z1 = -x * sy + z * cy;
+  return [x1, y * cp - z1 * sp, y * sp + z1 * cp];
+}
+function disegnaVista(el){
+  const st = VISTE[el.dataset.vista]; if(!st) return;
+  const {V, F} = st.solido, K = 62;
+  const P = V.map(p => proietta(p, st.yaw, st.pitch));
+  /* normale di ogni faccia girata verso l'esterno (il centro del solido è all'interno): verso di me se ha z > 0 */
+  const facce = F.map(f => {
+    const a = P[f[0]], b = P[f[1]], c = P[f[2]];
+    const u = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], w = [c[0] - a[0], c[1] - a[1], c[2] - a[2]];
+    let n = [u[1] * w[2] - u[2] * w[1], u[2] * w[0] - u[0] * w[2], u[0] * w[1] - u[1] * w[0]];
+    const cen = [0, 1, 2].map(k => f.reduce((t, i) => t + P[i][k], 0) / f.length);
+    if(n[0] * cen[0] + n[1] * cen[1] + n[2] * cen[2] < 0) n = n.map(x => -x);
+    const len = Math.hypot(...n) || 1;
+    return {f, z:cen[2], luce:n[2] / len};
+  }).sort((p, q) => p.z - q.z);
+  const pt = i => `${(P[i][0] * K).toFixed(1)},${(-P[i][1] * K).toFixed(1)}`;
+  let h = facce.map(({f, luce}) => { const davanti = luce > 0, ombra = davanti ? .45 * (1 - luce) : 0;
+    return `<polygon points="${f.map(pt).join(" ")}" fill="${st.colore}" fill-opacity="${davanti ? .82 : .35}" stroke="var(--ink)" stroke-width="${davanti ? 2.2 : 1}" stroke-dasharray="${davanti ? "" : "4 3"}" stroke-linejoin="round"/><polygon points="${f.map(pt).join(" ")}" fill="#1E2A44" fill-opacity="${davanti ? ombra * .5 : 0}" pointer-events="none"/>`; }).join("");
+  h += st.linee.map(([i, j, col]) => `<path d="M${pt(i)}L${pt(j)}" stroke="${col}" stroke-width="5" stroke-linecap="round"/>`).join("");
+  h += P.map((p, i) => `<circle cx="${(p[0] * K).toFixed(1)}" cy="${(-p[1] * K).toFixed(1)}" r="3.2" fill="var(--ink)"/>`).join("");
+  el.querySelector(".disegno3d").innerHTML = h;
+}
+const fermo = matchMedia("(prefers-reduced-motion: reduce)").matches;
+(function gira(){
+  document.querySelectorAll("[data-vista]").forEach(el => { const st = VISTE[el.dataset.vista]; if(st && !st.tocco && !fermo) st.yaw += .006; disegnaVista(el); });
+  requestAnimationFrame(gira);
+})();
+document.addEventListener("pointerdown", e => {
+  const el = e.target.closest("[data-vista]"); if(!el || e.button > 0) return;
+  avvia();
+  const st = VISTE[el.dataset.vista], x0 = e.clientX, y0 = e.clientY, a0 = st.yaw, b0 = st.pitch;
+  st.tocco = true; st.giri = st.giri || 0;
+  const muovi = ev => { if(ev.pointerId !== e.pointerId) return; st.yaw = a0 + (ev.clientX - x0) * .012; st.pitch = Math.max(-1.4, Math.min(1.4, b0 + (ev.clientY - y0) * .012)); st.giri = Math.max(st.giri, Math.abs(st.yaw - a0)); if(st.giri > 6.3) segreto("giro", "Hai fatto fare al solido un giro completo: comunque lo giri, facce, vertici e spigoli restano gli stessi!"); };
+  const fine = ev => { if(ev.pointerId !== e.pointerId) return; st.tocco = false; window.removeEventListener("pointermove", muovi); window.removeEventListener("pointerup", fine); window.removeEventListener("pointercancel", fine); };
+  window.addEventListener("pointermove", muovi); window.addEventListener("pointerup", fine); window.addEventListener("pointercancel", fine);
+});
+
+/* ===== enigma 1: la vetrina dei solidi ===== */
+const COLORI1 = ["var(--sabbia)", "var(--turchese)", "var(--oro)"];
+function disegna1(){
+  const sez = $("#e1"), fatto = S.risolto[0];
+  sez.className = "enigma" + (fatto ? " risolto" : "");
+  sez.innerHTML = testa(0, "La vetrina dei solidi") + `
+    <p class="consegna">Nella vetrina del deposito ci sono tre modellini di vetro. Per aprire il cassetto sotto la vetrina bisogna scrivere sulla scheda di ogni solido <b>quante facce, vertici e spigoli ha</b>. Trascina i modellini per girarli e conta bene: la regola di Eulero ti aiuta a controllare.</p>
+    ${aiutoHtml(0)}
+    <div class="solidi">${SOL1.map((s, i) => { const q = fatto ? s : S.fvs[i];
+      return `<div class="solido${S.sbagliati1.has(i) ? " sbagliato" : ""}"><h3>${i === STELLA1 ? '<span class="stella" aria-label="con la stella">★</span> ' : ""}${s.n}</h3>
+        ${vista3d("s" + i, s.g(), COLORI1[i])}
+        <div class="riga">facce f <input type="text" inputmode="numeric" data-q="${i}" data-k="f" value="${q.f}"${fatto ? " disabled" : ""}></div>
+        <div class="riga">vertici v <input type="text" inputmode="numeric" data-q="${i}" data-k="v" value="${q.v}"${fatto ? " disabled" : ""}></div>
+        <div class="riga">spigoli s <input type="text" inputmode="numeric" data-q="${i}" data-k="s" value="${q.s}"${fatto ? " disabled" : ""}></div>
+        <p class="eulero" id="eu${i}"></p></div>`; }).join("")}</div>
+    ${fatto ? premioHtml(0, `${SOL1[STELLA1].n}: ${SOL1[STELLA1].f} facce, ${SOL1[STELLA1].v} vertici, ${SOL1[STELLA1].s} spigoli. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla1">Controlla le schede</button><p class="esito" id="esito0"></p></div>`}`;
+  SOL1.forEach((_, i) => eulero(i));
+  if(fatto) return;
+  sez.querySelectorAll("[data-q]").forEach(inp => inp.addEventListener("input", () => { avvia(); S.fvs[+inp.dataset.q][inp.dataset.k] = inp.value; eulero(+inp.dataset.q); }));
+  $("#controlla1").addEventListener("click", controlla1);
+}
+function eulero(i){
+  const q = S.risolto[0] ? SOL1[i] : S.fvs[i], f = numero(q.f), v = numero(q.v), s = numero(q.s), el = $(`#eu${i}`);
+  if(!el) return;
+  if([f, v, s].some(isNaN)){ el.textContent = "f + v = ?   s + 2 = ?"; el.className = "eulero"; return; }
+  el.textContent = `f + v = ${f + v}   s + 2 = ${s + 2}${f + v === s + 2 ? "  ✓ Eulero" : ""}`;
+  el.className = "eulero" + (f + v === s + 2 ? " ok" : "");
+}
+function controlla1(){
+  if(S.fvs.some(q => [q.f, q.v, q.s].some(x => !String(x).trim()))){ esito(0, "Completa tutte e tre le schede.", "no"); suona("no"); return; }
+  S.sbagliati1 = new Set(SOL1.map((s, i) => numero(S.fvs[i].f) === s.f && numero(S.fvs[i].v) === s.v && numero(S.fvs[i].s) === s.s ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliati1.size){
+    const euleroOk = [...S.sbagliati1].every(i => numero(S.fvs[i].f) + numero(S.fvs[i].v) === numero(S.fvs[i].s) + 2);
+    disegna1();
+    esito(0, (S.sbagliati1.size === 1 ? "Una scheda non è giusta. " : `${S.sbagliati1.size} schede non sono giuste. `) + (euleroOk ? "Eulero torna, ma qualche numero no: gira il solido e riconta." : "Usa la regola di Eulero per trovare l'errore: f + v deve essere uguale a s + 2."), "no"); suona("no"); return;
+  }
+  risolvi(0);
+}
+
+/* ===== enigma 2: il laboratorio di restauro ===== */
+const MAX_ML = 70, MIN_ML = 50;
+function svgBilancia(){
+  const r = S.bil !== null ? REP2[S.bil] : null;
+  return `<svg viewBox="0 0 220 150" aria-hidden="true"><rect x="30" y="96" width="160" height="44" rx="8" fill="var(--metallo)" stroke="var(--ink)" stroke-width="3"/><rect x="60" y="104" width="100" height="26" rx="4" fill="#16241A" stroke="var(--ink)" stroke-width="2"/>
+    <text x="110" y="123" text-anchor="middle" font-family="Courier New, monospace" font-weight="700" font-size="16" fill="#7CFFA0">${r ? virgola(r.m) + " g" : "0,0 g"}</text>
+    <rect x="50" y="84" width="120" height="12" rx="4" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/>
+    ${r ? `<g transform="translate(88 40)"><svg width="44" height="44" viewBox="0 0 44 44">${r.d}</svg></g>` : ""}</svg>`;
+}
+let mlVisto = MIN_ML;
+const yMl = v => 140 - (v - 40) * 3.6;
+function svgCilindro(){
+  const r = S.cil !== null ? REP2[S.cil] : null, ml = MIN_ML + (r ? r.V : 0);
+  const y = yMl;
+  return `<svg viewBox="0 0 220 150" aria-hidden="true">
+    <rect x="80" y="${y(mlVisto).toFixed(1)}" width="60" height="${(140 - y(mlVisto)).toFixed(1)}" fill="var(--acqua)" opacity=".8" class="livello" id="acqua" data-ml="${ml}"/>
+    ${r ? `<g transform="translate(92 ${(y(ml) + 8).toFixed(1)}) scale(.8)"><svg width="44" height="44" viewBox="0 0 44 44">${r.d}</svg></g>` : ""}
+    <path d="M80 8v132h60V8" fill="none" stroke="var(--ink)" stroke-width="3"/><path d="M70 140h80" stroke="var(--ink)" stroke-width="4"/>
+    ${Array.from({length: 31}, (_, k) => { const v = 40 + k; return `<path d="M140 ${y(v).toFixed(1)}h${v % 5 === 0 ? -14 : -7}" stroke="var(--ink)" stroke-width="1"/>${v % 5 === 0 ? `<text x="146" y="${(y(v) + 4).toFixed(1)}" font-size="10" font-weight="700" fill="var(--ink)">${v}</text>` : ""}`; }).join("")}
+    <text x="172" y="20" font-size="10" font-weight="700" fill="var(--ink-soft)">ml</text>
+    <text x="40" y="${(y(ml) + 4).toFixed(1)}" text-anchor="middle" font-family="Courier New, monospace" font-size="12" font-weight="700" fill="var(--ink)">${ml} ml</text></svg>`;
+}
+function disegna2(){
+  const sez = $("#e2"), chiuso = !S.risolto[0], fatto = S.risolto[1];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(1, "Il laboratorio di restauro") + chiusoHtml(1); return; }
+  const oggetto = i => `<button class="pezzo oggetto" type="button" data-o="${i}" aria-label="${REP2[i].n}"${fatto ? " disabled" : ""}><svg viewBox="0 0 44 44" aria-hidden="true">${REP2[i].d}</svg></button>`;
+  sez.innerHTML = testa(1, "Il laboratorio di restauro") + `
+    <p class="consegna">Sul tavolo della restauratrice ci sono tre reperti senza cartellino: di che materiale sono? <b>Trascina ogni reperto sulla bilancia e nel cilindro graduato</b> (che parte da ${MIN_ML} ml), calcola la densità e trova il materiale nella tabella. Tocca uno strumento per svuotarlo.</p>
+    ${aiutoHtml(1)}
+    <div class="lab">
+      <div class="strumento zona" data-zona="bilancia"><h3>La bilancia</h3>${svgBilancia()}</div>
+      <div class="strumento zona" data-zona="cilindro"><h3>Il cilindro graduato</h3>${svgCilindro()}</div>
+    </div>
+    <div class="tabella-d" aria-label="Tabella delle densità">${MATERIALI.map(m => `<span>${m.n}: ${virgola(m.d)} g/cm³</span>`).join("")}</div>
+    <div class="reperti">${REP2.map((r, i) => `<div class="reperto zona${S.sbagliati2.has(i) ? " sbagliato" : ""}" data-zona="r${i}">
+      <h3>${i === STELLA2 ? '<span class="stella" aria-label="con la stella">★</span>' : ""}${r.n}</h3>
+      <div style="display:flex;align-items:center;gap:10px">${oggetto(i)}
+        <span class="misure">m = ${S.misurati[i].m || fatto ? virgola(r.m) + " g" : "?"}<br>V = ${S.misurati[i].V || fatto ? r.V + " cm³" : "?"}</span></div>
+      <div class="riga">densità <input type="text" inputmode="decimal" data-d="${i}" value="${fatto ? virgola(r.dens) : S.dens[i]}"${fatto ? " disabled" : ""}> g/cm³</div>
+      <div class="riga">${MATERIALI.map(m => `<button class="opz" type="button" data-mat="${i}" data-v="${m.n}" aria-pressed="${(fatto ? r.mat : S.mat[i]) === m.n}"${fatto ? " disabled" : ""}>${m.n}</button>`).join("")}</div>
+    </div>`).join("")}</div>
+    ${fatto ? premioHtml(1, `${REP2[STELLA2].n}: l'acqua sale da ${MIN_ML} a ${MIN_ML + REP2[STELLA2].V} ml, quindi V = ${REP2[STELLA2].V} cm³; d = ${virgola(REP2[STELLA2].m)} : ${REP2[STELLA2].V} = ${virgola(REP2[STELLA2].dens)} g/cm³, è ${REP2[STELLA2].mat}. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla2">Controlla i cartellini</button><p class="esito" id="esito1"></p></div>`}`;
+  const acqua = $("#acqua");
+  if(acqua){ const ml = +acqua.dataset.ml; requestAnimationFrame(() => requestAnimationFrame(() => { acqua.style.y = yMl(ml) + "px"; acqua.style.height = (140 - yMl(ml)) + "px"; })); mlVisto = ml; }
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa2));
+  /* il reperto già sugli strumenti si riprende toccando lo strumento */
+  sez.querySelectorAll("[data-d]").forEach(inp => inp.addEventListener("input", () => { avvia(); S.dens[+inp.dataset.d] = inp.value; }));
+  sez.querySelectorAll("[data-mat]").forEach(b => b.addEventListener("click", () => { avvia(); S.mat[+b.dataset.mat] = b.dataset.v; S.sbagliati2.delete(+b.dataset.mat); suona("bip"); disegna2(); }));
+  $("#controlla2").addEventListener("click", controlla2);
+}
+let ultimaPosa = 0;
+function posa2(el, zona){
+  const i = +el.dataset.o, z = zona.dataset.zona;
+  ultimaPosa = performance.now();
+  if(z === "bilancia"){ S.bil = i; if(S.cil === i) S.cil = null; S.misurati[i].m = true; suona("bilancia"); }
+  else if(z === "cilindro"){ S.cil = i; if(S.bil === i) S.bil = null; S.misurati[i].V = true; suona("splash"); }
+  else if(z.startsWith("r")){ if(S.bil === i) S.bil = null; if(S.cil === i) S.cil = null; suona("posa"); }
+  else return;
+  disegna2();
+  if(S.misurati.every(x => x.m && x.V)) segreto("archimede", "Hai misurato tutti i reperti come faceva Archimede con la corona del re: immergendoli nell'acqua scoprì che non era d'oro puro! Eureka!");
+}
+/* toccando la bilancia o il cilindro il reperto torna al suo posto */
+document.addEventListener("click", e => {
+  if(scelto || S.risolto[1] || performance.now() - ultimaPosa < 400) return;
+  const z = e.target.closest('[data-zona="bilancia"],[data-zona="cilindro"]'); if(!z) return;
+  if(z.dataset.zona === "bilancia" && S.bil !== null){ S.bil = null; suona("posa"); disegna2(); }
+  else if(z.dataset.zona === "cilindro" && S.cil !== null){ S.cil = null; suona("posa"); disegna2(); }
+});
+function controlla2(){
+  if(REP2.some((_, i) => !String(S.dens[i]).trim() || !S.mat[i])){ esito(1, "Completa la densità e il materiale di tutti e tre i reperti.", "no"); suona("no"); return; }
+  S.sbagliati2 = new Set(REP2.map((r, i) => Math.abs(numero(S.dens[i]) - r.dens) < .051 && S.mat[i] === r.mat ? -1 : i).filter(i => i >= 0));
+  if(S.sbagliati2.size){
+    disegna2();
+    esito(1, (S.sbagliati2.size === 1 ? "Un cartellino non è giusto. " : `${S.sbagliati2.size} cartellini non sono giusti. `) + "Densità = massa : volume, e il volume è di quanto sale l'acqua nel cilindro.", "no"); suona("no"); return;
+  }
+  risolvi(1);
+}
+
+/* ===== enigma 3: le casse della mostra ===== */
+function svgSabbia(){
+  const pieno = S.versate / 3, Y0 = 30, H = 120;
+  return `<svg viewBox="0 0 300 175" role="img" aria-label="Un prisma e una piramide con la stessa base e la stessa altezza">
+    <defs><clipPath id="clip-pir"><path d="M170 150L235 30L300 150Z"/></clipPath></defs>
+    <rect x="20" y="${(Y0 + H * (1 - pieno)).toFixed(1)}" width="110" height="${(H * pieno).toFixed(1)}" fill="var(--sabbia)" class="sabbia-p"/>
+    <path d="M20 30h110v120H20z" fill="none" stroke="var(--ink)" stroke-width="3"/><path d="M20 30l18-14h110l-18 14M148 16v120l-18 14" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 3"/>
+    <rect id="sabbia-pir" x="170" y="150" width="130" height="0" fill="var(--sabbia-scura)" clip-path="url(#clip-pir)" class="sabbia-t"/>
+    <path d="M170 150L235 30L300 150Z" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+    <text x="75" y="168" text-anchor="middle" font-size="12" font-weight="800" fill="var(--ink)">prisma · versate: ${S.versate}</text><text x="235" y="168" text-anchor="middle" font-size="12" font-weight="800" fill="var(--ink)">piramide</text></svg>`;
+}
+function cassa3d(){
+  const [a, b, c] = CASSA3, m = Math.max(a, b, c), k = 1.7 / m, A = a * k / 2, B = b * k / 2, C = c * k / 2;
+  const V = [[-A, -C, -B], [A, -C, -B], [A, -C, B], [-A, -C, B], [-A, C, -B], [A, C, -B], [A, C, B], [-A, C, B]];
+  const F = [[3, 2, 1, 0], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]];
+  return {V, F};
+}
+function disegna3(){
+  const sez = $("#e3"), chiuso = !S.risolto[1], fatto = S.risolto[2];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(2, "Le casse della mostra") + chiusoHtml(2); return; }
+  const op = (chiave, val, giusto) => `<button class="opz" type="button" data-q3="${chiave}" data-v="${val}" aria-pressed="${(fatto ? giusto : S[chiave]) === val}"${fatto ? " disabled" : ""}>${val}</button>`;
+  const [a, b, c, d] = CASSA3;
+  sez.innerHTML = testa(2, "Le casse della mostra") + `
+    <p class="consegna">Per la mostra bisogna riempire di sabbia il basamento della piramide e spedire lo scettro del faraone nella cassa. <b>Versa la piramide di sabbia nel prisma</b> finché è pieno, poi calcola il volume della piramide e la diagonale della cassa.</p>
+    ${aiutoHtml(2)}
+    <div class="casse">
+      <div style="display:grid;gap:8px"><div class="scena">${svgSabbia()}</div>
+        ${fatto ? "" : `<div class="azioni"><button class="btn piccolo" type="button" id="versa">Riempi la piramide e versala</button><button class="btn piccolo" type="button" id="svuota">Svuota il prisma</button></div>`}</div>
+      <div style="display:grid;gap:8px">${vista3d("cassa", cassa3d(), "var(--legno)", fatto ? [[0, 6, "var(--oro)"]] : [])}
+        <p class="cartello">Cassa: ${a} dm × ${b} dm × ${c} dm · scettro lungo ${SCETTRO3} dm</p></div>
+    </div>
+    <div class="domande">
+      <div class="domanda${S.dom3.has("f") ? " sbagliata" : ""}">Il volume della piramide è… ${["la metà", "un terzo", "un quarto"].map(v => op("frazione", v, "un terzo")).join("")} del prisma con la stessa base e la stessa altezza</div>
+      <label class="domanda${S.dom3.has("p") ? " sbagliata" : ""}">Piramide di base quadrata, lato ${PIR3[0]} dm e altezza ${PIR3[1]} dm: V = <input type="text" inputmode="decimal" id="vpir" value="${fatto ? VPIR3 : S.vpir}"${fatto ? " disabled" : ""}> dm³</label>
+      <label class="domanda${S.dom3.has("d") ? " sbagliata" : ""}">Diagonale della cassa: d = <input type="text" inputmode="decimal" id="diag" value="${fatto ? d : S.diag}"${fatto ? " disabled" : ""}> dm</label>
+      <div class="domanda${S.dom3.has("s") ? " sbagliata" : ""}">Lo scettro (${SCETTRO3} dm) entra nella cassa messo lungo la diagonale? ${["sì", "no"].map(v => op("scettro", v, SCETTRO3 <= d ? "sì" : "no")).join("")}</div>
+    </div>
+    ${fatto ? premioHtml(2, `d = √(${a}² + ${b}² + ${c}²) = √${d * d} = ${d} dm. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla3">Controlla le casse</button><p class="esito" id="esito2"></p></div>`}`;
+  if(fatto) return;
+  $("#versa").addEventListener("click", versa);
+  $("#svuota").addEventListener("click", () => { S.versate = 0; suona("posa"); disegna3(); });
+  sez.querySelectorAll("[data-q3]").forEach(bt => bt.addEventListener("click", () => { avvia(); S[bt.dataset.q3] = bt.dataset.v; S.dom3.delete(bt.dataset.q3 === "frazione" ? "f" : "s"); suona("bip"); disegna3(); }));
+  $("#vpir").addEventListener("input", e => { avvia(); S.vpir = e.target.value; });
+  $("#diag").addEventListener("input", e => { avvia(); S.diag = e.target.value; });
+  $("#controlla3").addEventListener("click", controlla3);
+}
+let versando = false;
+function versa(){
+  if(versando) return;
+  avvia();
+  if(S.versate >= 3){ esito(2, "Il prisma è già pieno: non ci sta più sabbia!", "no"); suona("no"); return; }
+  versando = true;
+  const t = $("#sabbia-pir");
+  t.style.y = "30px"; t.style.height = "120px"; suona("sabbia");
+  setTimeout(() => {
+    t.style.y = "150px"; t.style.height = "0px";
+    S.versate++;
+    const p = document.querySelector(".sabbia-p"), pieno = S.versate / 3;
+    p.style.y = (30 + 120 * (1 - pieno)).toFixed(1) + "px"; p.style.height = (120 * pieno).toFixed(1) + "px";
+    suona("sabbia");
+    setTimeout(() => { versando = false; disegna3(); if(S.versate === 3) annuncia("Il prisma è pieno: sono servite 3 piramidi di sabbia."); }, 950);
+  }, 650);
+}
+function controlla3(){
+  if(!S.frazione || !String(S.vpir).trim() || !String(S.diag).trim() || !S.scettro){ esito(2, "Rispondi a tutte e quattro le domande.", "no"); suona("no"); return; }
+  S.dom3 = new Set();
+  if(S.frazione !== "un terzo") S.dom3.add("f");
+  if(numero(S.vpir) !== VPIR3) S.dom3.add("p");
+  if(numero(S.diag) !== CASSA3[3]) S.dom3.add("d");
+  if(S.scettro !== (SCETTRO3 <= CASSA3[3] ? "sì" : "no")) S.dom3.add("s");
+  if(S.dom3.size){
+    disegna3();
+    const msg = {f:"Quante piramidi di sabbia sono servite per riempire il prisma?", p:"Il volume della piramide non torna: area di base × altezza : 3.", d:"La diagonale non torna: d = √(a² + b² + c²).", s:"Confronta la lunghezza dello scettro con la diagonale."};
+    esito(2, [...S.dom3].map(k => msg[k]).join(" "), "no"); suona("no"); return;
+  }
+  risolvi(2);
+}
+
+/* ===== il lucchetto ===== */
+function disegna4(){
+  const sez = $("#e4"), pronto = S.risolto.every(Boolean);
+  if(S.libero){
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta del deposito è aperta e la restauratrice ti ringrazia per l'aiuto con la mostra: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato i poliedri e la relazione di Eulero, il volume e la densità, la piramide, il prisma e la diagonale del parallelepipedo.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("poliedri")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    $("#ricomincia").addEventListener("click", () => location.reload());
+    $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("poliedri"));
+    return;
+  }
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
+    <h2 id="t4">La porta del deposito</h2>
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
+      <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
+      <output aria-label="Cifra ${i+1}">${v}</output>
+      <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
+    <p class="esito" id="esito3"></p></div></div>`;
+  sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
+    b.parentElement.querySelector("output").textContent = S.rotelle[i];
+  }));
+  $("#apri")?.addEventListener("click", () => {
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
+    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+  });
+}
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
+}
+
+function disegnaIndizi(){
+  $("#indizi").innerHTML = CODICE.map((c,i) => `<span class="cifra-mini${S.risolto[i] ? "" : " vuota"}" title="${INDIZI[i]}">${S.risolto[i] ? c : "?"}</span>`).join("");
+}
+function risolvi(i){
+  S.risolto[i] = true; suona("si");
+  annuncia(`Enigma ${i+1} risolto! La cifra numero ${i+1} è ${CODICE[i]}.`);
+  tutto();
+  const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
+  setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
+}
+function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-aiuto]"); if(!b) return;
+  const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
+  [disegna1, disegna2, disegna3][i]();
+});
+
+
+
+/* segreti: far fare a un solido un giro completo, misurare tutti i reperti, scrivere "eulero" */
+const SEGRETI = 3;
+const PAROLE_SEGRETE = [["eulero", () => segreto("eulero", "Leonhard Eulero scoprì la sua regola nel 1750. Era così bravo che continuò a fare matematica anche dopo essere diventato cieco: faceva i calcoli a mente!")]];
+tutto();
+aggiornaSuoni();
+</script>
+</body>
+</html>
