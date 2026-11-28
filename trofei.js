@@ -17,6 +17,7 @@ const TROFEI = [
   {id:"nervoso", nome:"Il Diadema dei Pensieri Lucenti", gioco:"Lo studio di medicina dello sport", link:"escape-nervoso.html", argomento:"Il sistema nervoso"},
   {id:"poliedri", nome:"La Gemma dei Cinque Elementi", gioco:"Il deposito del museo", link:"escape-poliedri.html", argomento:"I solidi e i poliedri"},
   {id:"genetica", nome:"L'Elica dell'Albero della Vita", gioco:"La serra dell'orto botanico", link:"escape-genetica.html", argomento:"Genetica e DNA"},
+  {id:"riproduttore", nome:"Il Medaglione della Luna Nuova", gioco:"La mostra «Come siamo nati»", link:"escape-riproduttore.html", argomento:"Apparato riproduttore"},
   {id:"materia", nome:"Il Cristallo dell'Alchimista", gioco:"Il laboratorio sigillato", link:"escape-chimica.html", argomento:"Atomi, tavola periodica e legami"}
 ];
 
@@ -93,6 +94,7 @@ const COLORI_TROFEO = {
   nervoso:  {oro:"#FFC7E0", oroScuro:"#D6457F", linea:"#1E2A44", base:"#6A3A5A", extra:"#7FE0E8"},
   poliedri: {oro:"#7FE0D0", oroScuro:"#1F9E8A", linea:"#1E2A44", base:"#B98042", extra:"#FFB36B"},
   genetica: {oro:"#8EDDB4", oroScuro:"#2F9E5B", linea:"#1E2A44", base:"#7A5428", extra:"#FF8FB1"},
+  riproduttore:{oro:"#D8E2FF", oroScuro:"#7A8CE0", linea:"#1E2A44", base:"#5A4A8A", extra:"#FFC7E0"},
   gran:     {oro:"#F5C542", oroScuro:"#D9A21B", linea:"#1E2A44", base:"#B98042", extra:"#E5534B"}
 };
 function svgTrofeo(id, colori){
@@ -190,6 +192,13 @@ function svgTrofeo(id, colori){
                <path d="M44 44c12 6 0 12 12 18s0 12 0 12M56 44c-12 6 0 12-12 18s0 12 0 12" fill="none" stroke="${base}" stroke-width="2.6" stroke-linecap="round"/>
                <path d="M47 50h6M47 68h6" stroke="${oroScuro}" stroke-width="2.5"/>
                ${scintilla(14, 20, 6)}${scintilla(88, 44, 5)}`,
+    /* il medaglione della luna nuova: la luna rinasce ogni 28 giorni, come un ciclo che ricomincia */
+    riproduttore:`<circle cx="50" cy="40" r="27" fill="${oroScuro}" stroke="${linea}" stroke-width="3.5"/>
+               <circle cx="50" cy="40" r="20" fill="${oro}" stroke="${linea}" stroke-width="2"/>
+               <path d="M56 24a16 16 0 1 0 0 32a20 20 0 0 1 0-32z" fill="${extra}" stroke="${linea}" stroke-width="2"/>
+               ${[0, 90, 180, 270].map(a => `<circle cx="${50 + 27 * Math.cos(a * Math.PI / 180)}" cy="${40 + 27 * Math.sin(a * Math.PI / 180)}" r="3.5" fill="#FFFFFF" stroke="${linea}" stroke-width="1.5"/>`).join("")}
+               <path d="M50 10V4" stroke="${linea}" stroke-width="3"/><circle cx="50" cy="4" r="3" fill="none" stroke="${linea}" stroke-width="2"/>
+               ${scintilla(14, 22, 6)}${scintilla(86, 56, 5)}<path d="M50 67v7" stroke="${linea}" stroke-width="4"/>`,
     /* la corona del gran maestro: una gemma per ogni regno */
     gran:     `<path d="M18 58l-4-34 18 16 18-26 18 26 18-16-4 34z" fill="${oro}" stroke="${linea}" stroke-width="3.5" stroke-linejoin="round"/>
                <rect x="17" y="56" width="66" height="12" rx="3" fill="${oroScuro}" stroke="${linea}" stroke-width="3"/>

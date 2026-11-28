@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La mostra «Come siamo nati»</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" sizes="32x32" href="immagini/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="immagini/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="immagini/icon-192.png">
+<link rel="apple-touch-icon" href="immagini/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti del nicoprof; enigma 1 = gameti e viaggio degli spermatozoi (cesti e tappe in ordine),
+   enigma 2 = la ruota dei 28 giorni (fasi, ormoni, calendario), enigma 3 = dalla cellula al feto (linea del tempo e divisioni), poi la porta */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300; --verde:#8EDDB4; --verde-ink:#0B4A2C;
+  --sala:#F3EFFF; --cellula:#FFE3EC; --nucleo:#B58CF0; --sperma:#9FD0FF;
+  --f1:#F4A3B4; --f2:#FFE08A; --f3:#8EDDB4; --f4:#A9C8FF; --luna:#FFF6D8;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --porta:#7A8CE0; --porta-scura:#5A6AB8; --metallo:#D5DCE6;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+  --f-mono:"Courier New",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C;
+  --sala:#1E1A33; --cellula:#5A3040; --nucleo:#7A5AB0; --sperma:#3E6E99;
+  --f1:#8A4A5A; --f2:#6B5A22; --f3:#2F6B4E; --f4:#34507E; --luna:#4A4430;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#4A5AA0; --porta-scura:#2E3A70; --metallo:#5A6680;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C;
+  --sala:#1E1A33; --cellula:#5A3040; --nucleo:#7A5AB0; --sperma:#3E6E99;
+  --f1:#8A4A5A; --f2:#6B5A22; --f3:#2F6B4E; --f4:#34507E; --luna:#4A4430;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#4A5AA0; --porta-scura:#2E3A70; --metallo:#5A6680;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:820px;margin:0 auto;padding-block:20px 56px;display:grid;gap:20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap>*{min-width:0}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna svg{width:16px;height:16px}
+header{display:grid;gap:8px}
+.eyebrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:800;font-size:.85rem}
+.tag{font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.storia{margin:0;font-family:var(--f-hand);font-size:1.3rem;line-height:1.35;max-width:60ch}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.indizi{display:flex;gap:8px;flex-wrap:wrap}
+.cifra-mini{display:inline-grid;place-items:center;width:34px;height:40px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.cifra-mini.vuota{border-style:dashed;color:var(--ink-soft);background:transparent}
+
+.enigma{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px;display:grid;gap:14px;min-width:0}
+.enigma>*{min-width:0}
+.enigma.chiuso{box-shadow:none;border-style:dashed;border-color:var(--line);background:transparent}
+.enigma.risolto{border-color:var(--ok);box-shadow:5px 5px 0 var(--ok)}
+.e-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.e-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.1;display:flex;align-items:center;gap:10px}
+.e-head h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);font-size:1.1rem;flex:none}
+.enigma.chiuso h2{color:var(--ink-soft)}
+.enigma.chiuso .e-head h2 .n{background:transparent;color:var(--ink-soft);border-color:var(--line)}
+.consegna{margin:0;font-size:1.02rem;max-width:65ch}
+.consegna b{font-weight:800}
+.nota{margin:0;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+.esito{margin:0;min-height:1.5em;font-weight:800}
+.esito.si{color:var(--ok)} .esito.no{color:var(--errore)}
+.azioni{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+.btn.piccolo{font-size:.92rem;padding:5px 12px;box-shadow:2px 2px 0 var(--ink)}
+.aiuto{margin:0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--giallo) 30%,transparent);border:1.5px dashed var(--giallo-ink);font-family:var(--f-hand);font-size:1.15rem}
+.premio{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:var(--ok-bg);color:var(--ok);font-weight:800}
+.premio .cifra-mini{border-color:var(--ok);flex:none}
+
+/* pezzi che si spostano */
+.pezzo{all:unset;box-sizing:border-box;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-width:40px;height:40px;padding:0 10px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:1.1rem;box-shadow:0 3px 0 var(--ink);font-variant-numeric:tabular-nums}
+.pezzo:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pezzo.scelto{background:var(--marker);transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
+.pezzo.sollevato{opacity:.3}
+.pezzo.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+.ombra{position:fixed!important;z-index:50!important;pointer-events:none!important;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
+.scegli .zona{outline:2px dashed var(--accent);outline-offset:-2px}
+.zona.sopra{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
+.banco{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:58px;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
+.banco .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.1rem}
+.etichetta{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin:0 0 -6px}
+.display{font-family:var(--f-mono);font-weight:700;background:#16241A;color:#7CFFA0;padding:10px 14px;border-radius:10px;border:3px solid var(--ink);font-size:1.15rem;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 6px rgba(124,255,160,.5)}
+.display small{display:block;font-size:.75rem;color:#4FBF73;text-shadow:none}
+
+.c-verde{background:var(--verde);color:var(--verde-ink)}
+.e-head h2 .n{background:var(--verde);color:var(--verde-ink)}
+.domande{display:grid;gap:8px}
+.domanda{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:800;padding:10px;border-radius:12px;background:var(--pill)}
+.domanda.sbagliata{background:var(--errore-bg)}
+.domanda input{width:70px;font:inherit;font-family:var(--f-mono);font-size:1.1rem;padding:4px 8px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+.opz{all:unset;box-sizing:border-box;cursor:pointer;padding:3px 10px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-weight:800;font-size:.88rem}
+.opz[aria-pressed="true"]{background:var(--marker)}
+.opz:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opz:disabled{cursor:default}
+.cartello{font-family:var(--f-hand);font-size:1.2rem;padding:8px 14px;border-radius:10px;border:3px solid var(--ink);background:var(--sala);color:var(--ink);justify-self:start;transform:rotate(-1deg);max-width:100%}
+.stella{color:var(--giallo);-webkit-text-stroke:1.2px var(--ink)}
+.carta{height:auto;min-height:40px;padding:6px 10px;font-family:var(--f-body);font-size:.88rem;font-weight:800;line-height:1.2;text-align:center;max-width:240px}
+.carta.sbagliato{background:var(--errore-bg)}
+.fila{display:grid;gap:6px}
+.posto{display:flex;align-items:center;gap:8px;min-height:50px;padding:4px 8px;border-radius:12px;border:2px dashed var(--line);background:var(--pill)}
+.posto .num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);background:var(--card);font-family:var(--f-display);font-weight:800;flex:none}
+.posto .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.05rem}
+.posto.sbagliato{border-color:var(--errore);background:var(--errore-bg)}
+
+/* enigma 1: i gameti */
+.cesti{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.cesti{grid-template-columns:1fr}}
+.cesto{display:grid;align-content:start;gap:6px;min-height:150px;padding:10px;border-radius:14px;border:3px solid var(--ink);background:var(--sala)}
+.cesto h3{margin:0;font-family:var(--f-display);font-size:1.1rem;display:flex;align-items:center;gap:8px}
+.cesto h3 svg{width:64px;height:40px;flex:none}
+.cesto .dentro{display:flex;flex-wrap:wrap;gap:6px}
+.risolto .coda{animation:nuota .5s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:0 50%}
+@keyframes nuota{to{transform:skewY(10deg)}}
+
+/* enigma 2: la ruota del ciclo */
+.ciclo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:start}
+@media (max-width:640px){.ciclo{grid-template-columns:1fr}}
+.ruota{border-radius:14px;border:2px solid var(--ink);background:var(--card)}
+.ruota svg{display:block;width:100%;height:auto}
+.arco{cursor:pointer;transition:filter .2s}
+.arco.sopra,.scegli .arco{filter:brightness(1.1);stroke-width:4}
+.scegli .arco{outline:none}
+#lunetta{transform-box:view-box;transform-origin:150px 150px}
+.risolto #lunetta{animation:mese 6s linear infinite}
+@keyframes mese{to{transform:rotate(360deg)}}
+.ormoni{display:grid;gap:6px}
+.ormone{display:grid;gap:4px;padding:8px;border-radius:12px;background:var(--pill)}
+.ormone.sbagliato{background:var(--errore-bg)}
+.ormone b{font-family:var(--f-display)}
+.ormone .scelte{display:flex;flex-wrap:wrap;gap:4px}
+
+/* enigma 3: dalla cellula al feto */
+.sviluppo{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:12px;align-items:start}
+@media (max-width:640px){.sviluppo{grid-template-columns:1fr}}
+.vetrino{display:grid;justify-items:center;gap:8px;padding:10px;border-radius:14px;border:2px solid var(--ink);background:var(--card)}
+.vetrino svg{width:100%;max-width:230px;height:auto}
+.cell{transform-box:fill-box;transform-origin:center;animation:nasce .45s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes nasce{from{transform:scale(.2);opacity:.3}}
+.contatore{font-family:var(--f-mono);font-weight:700}
+@media (prefers-reduced-motion:reduce){.risolto .coda,.risolto #lunetta,.cell{animation:none}}
+
+/* il lucchetto */
+.porta{display:grid;gap:16px;justify-items:center;text-align:center;background:var(--porta);background-image:repeating-linear-gradient(90deg,transparent 0 46px,var(--porta-scura) 46px 48px);border:3px solid var(--ink);border-radius:18px 18px 6px 6px;padding:22px 14px;box-shadow:5px 5px 0 var(--ink);color:#FFF8EC}
+.porta h2{margin:0;font-family:var(--f-display);font-size:1.5rem}
+.porta.chiuso .lucchetto{opacity:.6}
+.lucchetto{display:flex;gap:10px;padding:16px 18px;border-radius:18px;background:var(--metallo);border:3px solid var(--ink);box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.rotella{display:grid;gap:4px;justify-items:center}
+.rotella button{all:unset;cursor:pointer;width:44px;height:28px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);font-weight:800}
+.rotella button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rotella button:disabled{cursor:default;opacity:.6}
+.rotella output{display:grid;place-items:center;width:52px;height:62px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:2.2rem;font-variant-numeric:tabular-nums}
+.porta .esito{color:#FFF8EC}
+.libero{display:grid;gap:10px;justify-items:center;text-align:center;padding:24px 16px;border-radius:18px;background:var(--ok-bg);border:3px solid var(--ok);color:var(--ink)}
+.libero b{font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--ok)}
+.libero p{margin:0;font-weight:700}
+
+.suoni{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+#segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
+#segreto b{font-family:var(--f-display);font-size:1.1rem}
+@keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
+@keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.scuoti{animation:scuoti .3s ease 2}
+@media (max-width:480px){.enigma{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.firma{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.1);font-family:var(--f-body);font-size:.75rem;color:var(--ink-soft);pointer-events:none}
+.firma img{width:30px;height:30px;border-radius:50%;background:#FFFFFF;border:1px solid var(--line);flex:none}
+.firma b{font-weight:800;color:var(--ink)}
+@media (max-width:480px){.firma{padding:3px}.firma span{display:none}}
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>ilnicoprof</a>
+  <header>
+    <div class="eyebrow"><span class="tag c-verde">Scienze</span> 3ª media · Apparato riproduttore · escape room</div>
+    <h1>la mostra «come siamo <span class="hl">nati</span>»</h1>
+    <p class="storia">La classe visita la mostra «Come siamo nati» al centro della scienza. Mentre guardi i pannelli dell'ultima sala, la guida va a prendere le cuffie per il video e la porta della sala si chiude: il lucchetto ha un codice di 3 cifre. Per uscire devi ricostruire il viaggio più incredibile di tutti: quello che ti ha portato qui!</p>
+    <div class="barra">
+      <span class="pill" id="tempo">Tempo 00:00</span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
+      <div class="indizi" id="indizi" aria-label="Cifre trovate"></div>
+    </div>
+  </header>
+
+  <section class="enigma" id="e1" aria-labelledby="t1"></section>
+  <section class="enigma" id="e2" aria-labelledby="t2"></section>
+  <section class="enigma" id="e3" aria-labelledby="t3"></section>
+  <section id="e4" aria-labelledby="t4"></section>
+  <p class="sr" aria-live="polite" id="annuncio"></p>
+</div>
+
+<div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js?v=0e06068c"></script>
+<script src="oggetto-segreto.js?v=b1e400c9"></script>
+<script>
+/* ===== dati ===== */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mescola = a => { const b = [...a]; for(let i = b.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]] = [b[j],b[i]]; } return b; };
+const pesca = (a, n) => mescola(a).slice(0, n);
+const numero = v => { const t = String(v).trim().replace(",", "."); return t === "" ? NaN : +t; };
+
+/* enigma 1: caratteristiche dei gameti (7 carte, la cifra = quante sono dello spermatozoo) e tappe del viaggio */
+const CARATT = {
+  spermatozoo:["È piccolissimo", "Si muove da solo con la coda", "Viene prodotto in continuazione", "Ha i mitocondri nel collo", "Si forma nei testicoli", "Nel corpo femminile vive circa 3 giorni"],
+  ovocita:["È la cellula più grande del corpo", "Ne matura uno al mese", "È pieno di sostanze nutritive", "Ci sono già tutti dalla nascita", "Matura nelle ovaie", "Se non viene fecondato vive circa un giorno"]
+};
+const N_SP1 = rnd(2, 5);
+const CARTE1 = mescola([...pesca(CARATT.spermatozoo, N_SP1).map(t => ({t, z:"spermatozoo"})), ...pesca(CARATT.ovocita, 7 - N_SP1).map(t => ({t, z:"ovocita"}))]);
+const TAPPE1 = ["Testicoli: si formano", "Epididimo: maturano", "Dotti deferenti: viaggiano", "Vescicole seminali e prostata: si aggiunge il liquido seminale", "Uretra: escono"];
+const ORD1 = mescola(TAPPE1.map((_, i) => i));
+
+/* enigma 2: la ruota dei 28 giorni, gli ormoni e il calendario */
+const FASI = [{n:"Mestruazione", da:1, a:6, c:"var(--f1)"}, {n:"Pre-ovulatoria", da:7, a:12, c:"var(--f2)"}, {n:"Ovulazione", da:13, a:15, c:"var(--f3)"}, {n:"Post-ovulatoria", da:16, a:28, c:"var(--f4)"}];
+const ORD2 = mescola([0, 1, 2, 3]);
+const GIORNO2 = rnd(1, 28);
+const FASE2 = FASI.findIndex(f => GIORNO2 >= f.da && GIORNO2 <= f.a) + 1;
+const ORMONI = [{n:"FSH", da:"ipofisi", r:"fa crescere il follicolo"}, {n:"LH", da:"ipofisi", r:"provoca l'ovulazione"}, {n:"Estrogeni", da:"ovaie", r:"ispessiscono l'endometrio"}, {n:"Progesterone", da:"ovaie", r:"mantiene l'endometrio"}];
+const RUOLI = mescola(ORMONI.map(o => o.r));
+const INIZIO2 = rnd(1, 8), DURATA2 = rnd(26, 30), OVUL2 = INIZIO2 + DURATA2 - 14;
+
+/* enigma 3: dalla cellula al feto e le divisioni */
+const TAPPE3 = ["Fecondazione nella tuba di Falloppio", "Zigote: la prima cellula", "Morula: come una mora", "Blastocisti: si impianta nell'endometrio", "Embrione: si formano gli organi", "Feto: gli organi crescono e maturano"];
+const ORD3 = mescola(TAPPE3.map((_, i) => i));
+const K3 = rnd(3, 9);
+
+const CODICE = [N_SP1, FASE2, K3];
+const INDIZI = [
+  "Quante caratteristiche sono dello spermatozoo?",
+  "In quale fase (1 = mestruazione, 2 = pre-ovulatoria, 3 = ovulazione, 4 = post-ovulatoria) cade il giorno con la stella?",
+  `Quante divisioni servono per arrivare a ${2 ** K3} cellule?`
+];
+const AIUTI = [
+  "Lo spermatozoo è piccolissimo, nuota con la coda, ha i mitocondri nel collo e si forma ogni giorno nei testicoli. L'ovocita è la cellula più grande, è pieno di nutrimento e matura nelle ovaie, uno al mese. Il viaggio: testicoli → epididimo → dotti deferenti → vescicole seminali e prostata → uretra.",
+  "Il ciclo dura circa 28 giorni: mestruazione 1-6, pre-ovulatoria 7-12, ovulazione 13-15, post-ovulatoria 16-28. L'ipofisi produce FSH (follicolo) e LH (ovulazione); le ovaie producono estrogeni (ispessiscono l'endometrio) e progesterone (lo mantengono). L'ovulazione avviene circa 14 giorni prima dell'inizio del ciclo successivo.",
+  "Dopo la fecondazione nella tuba nasce lo zigote, che si divide e diventa morula, poi blastocisti, che si impianta nell'endometrio; fino all'8ª settimana si chiama embrione, poi feto. A ogni divisione le cellule raddoppiano: 1 → 2 → 4 → 8 → 16…"
+];
+
+const S = {
+  risolto:[false,false,false], aiuto:[false,false,false],
+  cat1:CARTE1.map(() => null), sbagliate1:new Set(), tappe1:{}, sbagliati1:new Set(),
+  fasi2:{}, sbagliate2:new Set(), ruoli:[null,null,null,null], sbagliati2:new Set(), ovul:"", dom2:new Set(),
+  tappe3:{}, sbagliati3:new Set(), div:0, k3:"", gemelli:null, dom3:new Set(),
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+};
+const $ = s => document.querySelector(s);
+const annuncia = t => { $("#annuncio").textContent = t; };
+
+/* ===== trascina oppure tocca-e-posa ===== */
+let scelto = null;
+function seleziona(el, posa){
+  if(scelto && scelto.el === el){ deseleziona(); return; }
+  deseleziona();
+  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli"); suona("prendi");
+  annuncia(`Hai preso ${el.getAttribute("aria-label") || el.textContent}. Ora tocca dove vuoi metterlo.`);
+}
+function deseleziona(){ if(scelto) scelto.el.classList.remove("scelto"); scelto = null; document.body.classList.remove("scegli"); }
+const zonaSotto = (x,y) => document.elementFromPoint(x,y)?.closest("[data-zona]");
+function pezzo(el, posa){
+  el.addEventListener("pointerdown", e => {
+    if(e.button > 0) return;
+    avvia();
+    const r = el.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
+    let ombra = null, sopra = null;
+    document.querySelectorAll(".ombra").forEach(o => o.remove());   /* nessuna copia rimasta da un trascinamento precedente */
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    const muovi = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      /* il rilascio del tasto è andato perso (mouse fuori dalla finestra, ctrl-clic...): poso il pezzo qui */
+      if(ev.pointerType === "mouse" && ev.buttons === 0){ fine({type:"pointerup", pointerId:e.pointerId, clientX:ev.clientX, clientY:ev.clientY}); return; }
+      if(!ombra){
+        if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
+        deseleziona();
+        ombra = el.cloneNode(true); ombra.classList.add("ombra");
+        /* la copia che segue il dito resta sempre visibile, qualunque stile abbia il pezzo */
+        Object.assign(ombra.style, {position:"fixed", zIndex:"50", pointerEvents:"none", margin:"0", opacity:"1", visibility:"visible"}); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
+        document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
+      }
+      ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z !== sopra){ sopra?.classList.remove("sopra"); z?.classList.add("sopra"); sopra = z; }
+    };
+    const fine = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      window.removeEventListener("pointermove", muovi); window.removeEventListener("pointerup", fine); window.removeEventListener("pointercancel", fine);
+      if(!ombra) return;
+      ombra.remove(); el.classList.remove("sollevato"); sopra?.classList.remove("sopra");
+      el.dataset.trascinato = "1"; setTimeout(() => { delete el.dataset.trascinato; }, 400);   /* serve solo a ignorare il clic che segue il rilascio */
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z && ev.type === "pointerup") posa(el, z, ev.clientX, ev.clientY);
+    };
+    /* ascolto tutta la pagina: il rilascio arriva anche se il dito o il mouse non è più sopra il pezzo */
+    window.addEventListener("pointermove", muovi); window.addEventListener("pointerup", fine); window.addEventListener("pointercancel", fine);
+  });
+  el.addEventListener("dragstart", ev => ev.preventDefault());
+  el.addEventListener("click", e => {
+    e.stopPropagation();
+    if(el.dataset.trascinato){ delete el.dataset.trascinato; return; }
+    avvia(); seleziona(el, posa);
+  });
+}
+document.addEventListener("click", e => {
+  if(!scelto) return;
+  const z = e.target.closest("[data-zona]");
+  if(z){ const s = scelto; deseleziona(); s.posa(s.el, z, e.clientX, e.clientY); }
+  else if(!e.target.closest(".pezzo")) deseleziona();
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") deseleziona(); });
+
+/* ===== tempo e suoni ===== */
+function avvia(){ if(!S.inizio) S.inizio = Date.now(); }
+const mmss = ms => { const s = Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+setInterval(() => { $("#tempo").textContent = "Tempo " + mmss(S.inizio ? (S.fine || Date.now()) - S.inizio : 0); }, 500);
+let audio;
+let suoniOn = true; try { suoniOn = localStorage.getItem("nicoprof:suoni") !== "no"; } catch {}
+/* [frequenza, ritardo, durata, forma, volume] */
+const SUONI = {
+  si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25,"sawtooth",.07]], bip:[[880,0,.06,"triangle",.05]],
+  prendi:[[520,0,.05,"triangle",.08],[780,.04,.06,"triangle",.08]],
+  posa:[[300,0,.07,"triangle",.13],[200,.05,.09,"triangle",.11]],
+  divide:[[600,0,.06,"sine",.1],[900,.06,.08,"sine",.1]],
+  segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[140,0,.5,"sawtooth",.035],[155,.25,.6,"sawtooth",.03]],
+  porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
+};
+function suona(tipo){
+  if(!suoniOn || !SUONI[tipo]) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    SUONI[tipo].forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
+  } catch {}
+}
+function aggiornaSuoni(){ const b = document.querySelector("#suoni"); if(b){ b.textContent = "Suoni: " + (suoniOn ? "sì" : "no"); b.setAttribute("aria-pressed", suoniOn); } }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#suoni")) return;
+  suoniOn = !suoniOn; try { localStorage.setItem("nicoprof:suoni", suoniOn ? "si" : "no"); } catch {}
+  aggiornaSuoni(); suona("bip");
+});
+
+/* ===== coriandoli per la vittoria ===== */
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--verde)", "var(--rosa)"];
+  for(let i = 0; i < 90; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.8 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4500);
+  }
+}
+
+/* ===== segreti nascosti ===== */
+const trovati = new Set();
+function segreto(id, testo){
+  if(trovati.has(id)) return;
+  trovati.add(id); suona("segreto");
+  let t = document.querySelector("#segreto");
+  if(!t){ t = document.createElement("div"); t.id = "segreto"; t.setAttribute("role", "status"); document.body.append(t); }
+  t.innerHTML = `<b>Segreto trovato! (${trovati.size} di ${SEGRETI})</b><span>${testo}</span>`;
+  t.hidden = false; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  clearTimeout(segreto.timer); segreto.timer = setTimeout(() => { t.hidden = true; }, 6500);
+}
+let digitate = "";
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea") || e.key.length !== 1) return;
+  digitate = (digitate + e.key.toLowerCase()).slice(-12);
+  PAROLE_SEGRETE.forEach(([parola, azione]) => { if(digitate.endsWith(parola)) azione(); });
+});
+const fraseSegreti = () => trovati.size === SEGRETI ? "Hai scoperto anche tutti i segreti nascosti!" : `Segreti nascosti trovati: ${trovati.size} su ${SEGRETI}. Gioca di nuovo per scoprirli tutti!`;
+
+/* ===== parti comuni ===== */
+function testa(i, titolo){
+  const chiuso = i > 0 && !S.risolto[i-1];
+  return `<div class="e-head"><h2 id="t${i+1}"><span class="n">${S.risolto[i] ? "✓" : i+1}</span>${titolo}</h2>
+    ${!chiuso && !S.risolto[i] ? `<button class="btn piccolo" type="button" data-aiuto="${i}">${S.aiuto[i] ? "Nascondi aiuto" : "Aiutino"}</button>` : ""}</div>`;
+}
+const chiusoHtml = i => `<p class="nota">Risolvi prima l'enigma ${i} per aprire questo.</p>`;
+const premioHtml = (i, extra = "") => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Cifra n. ${i+1} trovata! ${INDIZI[i]} ${extra}Risposta: ${CODICE[i]}.</span></div>`;
+const aiutoHtml = i => S.aiuto[i] ? `<p class="aiuto">${AIUTI[i]}</p>` : "";
+function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textContent = testo; el.className = "esito "+tipo; } }
+
+
+
+
+
+
+
+
+
+/* ===== aiuto comune: mettere le carte in fila nei posti numerati ===== */
+function filaHtml(chiave, testi, ordine, posti, fatto, sbagliati, banco){
+  const carta = i => `<button class="pezzo carta" type="button" data-${chiave}="${i}" aria-label="${testi[i]}"${fatto ? " disabled" : ""}>${testi[i]}</button>`;
+  const usati = new Set(Object.values(posti));
+  return `<div class="fila">${testi.map((_, n) => { const i = fatto ? n : posti[n];
+      return `<div class="posto zona${sbagliati.has(n) ? " sbagliato" : ""}" data-zona="${chiave}${n}"><span class="num">${n + 1}</span>${i !== undefined ? carta(i) : '<span class="vuoto">trascina qui una tappa</span>'}</div>`; }).join("")}</div>
+    ${fatto ? "" : `<div class="banco zona" data-zona="${banco}">${ordine.filter(i => !usati.has(i)).map(carta).join("") || '<span class="vuoto">Tutte le tappe sono in fila.</span>'}</div>`}`;
+}
+function posaFila(posti, chiave, banco, el, zona){
+  const i = +el.dataset[chiave], z = zona.dataset.zona;
+  for(const k of Object.keys(posti)) if(posti[k] === i) delete posti[k];
+  if(z.startsWith(chiave) && /\d+$/.test(z)){ posti[+z.slice(chiave.length)] = i; return true; }
+  return z === banco;
+}
+
+/* ===== enigma 1: i gameti e il viaggio ===== */
+const SVG_SPERMA = '<svg viewBox="0 0 64 40" aria-hidden="true"><path class="coda" d="M22 20c10-8 16 8 26 0s10 6 14 2" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="12" cy="20" rx="9" ry="7" fill="var(--sperma)" stroke="var(--ink)" stroke-width="2.5"/><rect x="20" y="17" width="6" height="6" rx="2" fill="var(--nucleo)" stroke="var(--ink)" stroke-width="1.5"/></svg>';
+const SVG_OVOCITA = '<svg viewBox="0 0 64 40" aria-hidden="true"><circle cx="32" cy="20" r="18" fill="none" stroke="var(--giallo)" stroke-width="4" stroke-dasharray="3 3"/><circle cx="32" cy="20" r="14" fill="var(--cellula)" stroke="var(--ink)" stroke-width="2.5"/><circle cx="35" cy="17" r="5" fill="var(--nucleo)" stroke="var(--ink)" stroke-width="1.5"/></svg>';
+function disegna1(){
+  const sez = $("#e1"), fatto = S.risolto[0];
+  sez.className = "enigma" + (fatto ? " risolto" : "");
+  const carta = i => `<button class="pezzo carta${S.sbagliate1.has(i) ? " sbagliato" : ""}" type="button" data-c="${i}" aria-label="${CARTE1[i].t}"${fatto ? " disabled" : ""}>${CARTE1[i].t}</button>`;
+  const dove = i => fatto ? CARTE1[i].z : S.cat1[i];
+  const fuori = CARTE1.map((_, i) => i).filter(i => dove(i) === null);
+  sez.innerHTML = testa(0, "Le due cellule speciali") + `
+    <p class="consegna">Nella prima vetrina della sala ci sono le due cellule sessuali, i gameti, ma i cartellini sono caduti. <b>Rimetti ogni caratteristica sotto la cellula giusta</b>, poi metti in ordine le tappe del viaggio degli spermatozoi.</p>
+    ${aiutoHtml(0)}
+    <div class="cesti">
+      <div class="cesto zona" data-zona="spermatozoo"><h3>${SVG_SPERMA}Spermatozoo</h3><div class="dentro">${CARTE1.map((_, i) => i).filter(i => dove(i) === "spermatozoo").map(carta).join("")}</div></div>
+      <div class="cesto zona" data-zona="ovocita" id="ovocita"><h3>${SVG_OVOCITA}Ovocita</h3><div class="dentro">${CARTE1.map((_, i) => i).filter(i => dove(i) === "ovocita").map(carta).join("")}</div></div>
+    </div>
+    ${fatto ? "" : `<p class="etichetta">I cartellini caduti</p>
+    <div class="banco zona" data-zona="banco1">${fuori.length ? fuori.map(carta).join("") : '<span class="vuoto">Tutti i cartellini sono al loro posto.</span>'}</div>`}
+    <p class="etichetta">Il viaggio degli spermatozoi, dalla produzione all'uscita</p>
+    ${filaHtml("t", TAPPE1, ORD1, S.tappe1, fatto, S.sbagliati1, "bancot")}
+    ${fatto ? premioHtml(0, `Le caratteristiche dello spermatozoo erano ${N_SP1}. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla1">Controlla la vetrina</button><p class="esito" id="esito0"></p></div>`}`;
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo[data-c]").forEach(b => pezzo(b, posa1));
+  sez.querySelectorAll(".pezzo[data-t]").forEach(b => pezzo(b, (el, z) => { if(posaFila(S.tappe1, "t", "bancot", el, z)){ S.sbagliati1.clear(); suona("posa"); disegna1(); } }));
+  $("#controlla1").addEventListener("click", controlla1);
+}
+function posa1(el, zona){
+  const i = +el.dataset.c, z = zona.dataset.zona;
+  if(z === "banco1") S.cat1[i] = null;
+  else if(z === "spermatozoo" || z === "ovocita") S.cat1[i] = z;
+  else return;
+  S.sbagliate1.delete(i); suona("posa"); disegna1();
+}
+function controlla1(){
+  const fuori = S.cat1.filter(v => v === null).length;
+  if(fuori){ esito(0, `Mancano ancora ${fuori} ${fuori === 1 ? "cartellino" : "cartellini"}.`, "no"); suona("no"); return; }
+  if(Object.keys(S.tappe1).length < TAPPE1.length){ esito(0, "Metti in fila tutte le tappe del viaggio.", "no"); suona("no"); return; }
+  S.sbagliate1 = new Set(CARTE1.map((c, i) => S.cat1[i] === c.z ? -1 : i).filter(i => i >= 0));
+  S.sbagliati1 = new Set(Object.entries(S.tappe1).filter(([n, i]) => +n !== i).map(([n]) => +n));
+  if(S.sbagliate1.size || S.sbagliati1.size){
+    disegna1();
+    esito(0, (S.sbagliate1.size ? (S.sbagliate1.size === 1 ? "1 cartellino è sotto la cellula sbagliata. " : `${S.sbagliate1.size} cartellini sono sotto la cellula sbagliata. `) : "") + (S.sbagliati1.size ? "Qualche tappa del viaggio non è al suo posto: si parte dai testicoli, dove si formano." : ""), "no"); suona("no"); return;
+  }
+  risolvi(0);
+}
+let tocchiOvocita = 0;
+document.addEventListener("click", e => {
+  if(!e.target.closest("#ovocita h3")) return;
+  if(++tocchiOvocita >= 3) segreto("ovocita", "L'ovocita misura circa 0,1 mm: è la cellula più grande del corpo umano e si vede appena a occhio nudo, come un puntino!");
+});
+
+/* ===== enigma 2: la ruota dei 28 giorni ===== */
+const RC = 150, RE = 126, RI = 84;
+const angGiorno = g => -90 + (g - 1) * 360 / 28;
+const pRuota = (a, r) => [RC + r * Math.cos(a * Math.PI / 180), RC + r * Math.sin(a * Math.PI / 180)].map(v => +v.toFixed(1));
+function svgRuota(){
+  const fatto = S.risolto[1];
+  const archi = FASI.map((f, k) => {
+    const a1 = angGiorno(f.da), a2 = angGiorno(f.a + 1), large = a2 - a1 > 180 ? 1 : 0;
+    const [x1, y1] = pRuota(a1, RE), [x2, y2] = pRuota(a2, RE), [x3, y3] = pRuota(a2, RI), [x4, y4] = pRuota(a1, RI);
+    const nome = fatto ? f.n : (S.fasi2[k] !== undefined ? FASI[S.fasi2[k]].n : "");
+    const [tx, ty] = pRuota((a1 + a2) / 2, (RE + RI) / 2);
+    return `<path class="arco zona" data-zona="f${k}" d="M${x1} ${y1}A${RE} ${RE} 0 ${large} 1 ${x2} ${y2}L${x3} ${y3}A${RI} ${RI} 0 ${large} 0 ${x4} ${y4}Z" fill="${nome ? FASI[fatto ? k : S.fasi2[k]].c : "var(--pill)"}" stroke="var(--ink)" stroke-width="2.5"/>
+      ${nome ? `<text x="${tx}" y="${ty + 4}" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="800" font-size="${f.a - f.da < 4 ? 8 : 10}" fill="var(--ink)" pointer-events="none">${nome.replace("-ovulatoria", "-ovul.")}</text>` : ""}`;
+  }).join("");
+  const tacche = Array.from({length: 28}, (_, i) => { const g = i + 1, a = angGiorno(g) + 180 / 28, [x, y] = pRuota(a, RE + 12); return g === 1 || g % 7 === 0 || g === 13 || g === 16 ? `<text x="${x}" y="${y + 4}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--ink-soft)">${g}</text>` : ""; }).join("");
+  const [sx, sy] = pRuota(angGiorno(GIORNO2) + 180 / 28, RI - 14);
+  const [lx, ly] = pRuota(-90 + 180 / 28, RE + 2);
+  return `<svg viewBox="0 0 300 300" role="img" aria-label="La ruota del ciclo di 28 giorni, con 4 fasi">
+    ${archi}${tacche}
+    <circle cx="${RC}" cy="${RC}" r="${RI - 26}" fill="var(--luna)" stroke="var(--ink)" stroke-width="2"/>
+    <text x="${RC}" y="${RC - 4}" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="20" fill="var(--ink)">28</text>
+    <text x="${RC}" y="${RC + 14}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink-soft)">giorni</text>
+    <text x="${sx}" y="${sy + 7}" text-anchor="middle" font-size="20" class="stella" fill="var(--giallo)" stroke="var(--ink)" stroke-width="1">★</text>
+    <g id="lunetta"><circle cx="${lx}" cy="${ly}" r="7" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/></g>
+  </svg>`;
+}
+function disegna2(){
+  const sez = $("#e2"), chiuso = !S.risolto[0], fatto = S.risolto[1];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(1, "La ruota dei 28 giorni") + chiusoHtml(1); return; }
+  const tag = k => `<button class="pezzo carta" type="button" data-f="${k}" aria-label="${FASI[k].n}"${fatto ? " disabled" : ""}>${FASI[k].n}</button>`;
+  const usate = new Set(Object.values(S.fasi2));
+  sez.innerHTML = testa(1, "La ruota dei 28 giorni") + `
+    <p class="consegna">Il pannello successivo mostra il ciclo ovarico e mestruale come una ruota di 28 giorni, ma i nomi delle fasi sono spariti. <b>Trascina ogni fase sul suo spicchio della ruota</b>, abbina ogni ormone al suo compito e risolvi il calendario.</p>
+    ${aiutoHtml(1)}
+    <div class="ciclo">
+      <div class="ruota">${svgRuota()}</div>
+      <div style="display:grid;gap:8px">
+        <p class="cartello">Spicchi: giorni 1-6 · 7-12 · 13-15 · 16-28</p>
+        ${fatto ? "" : `<div class="banco zona" data-zona="bancof">${[0, 1, 2, 3].filter(k => !usate.has(ORD2[k])).map(k => tag(ORD2[k])).join("") || '<span class="vuoto">Tutte le fasi sono sulla ruota.</span>'}</div>`}
+        <div class="domanda${S.dom2.has("s") ? " sbagliata" : ""}" style="background:var(--pill)">Il giorno con la stella (giorno ${GIORNO2}) cade nella fase n° ${fatto ? `<b>${FASE2}</b>` : "…"} <small style="font-weight:700;color:var(--ink-soft)">(si conta da 1 = mestruazione)</small></div>
+      </div>
+    </div>
+    <div class="ormoni">${ORMONI.map((o, i) => `<div class="ormone${S.sbagliati2.has(i) ? " sbagliato" : ""}"><b>${o.n} <small style="font-family:var(--f-body);font-weight:700;color:var(--ink-soft)">(dall'${o.da === "ipofisi" ? "ipofisi" : "ovaia"})</small></b>
+      <div class="scelte">${RUOLI.map(r => `<button class="opz" type="button" data-orm="${i}" data-v="${r}" aria-pressed="${(fatto ? o.r : S.ruoli[i]) === r}"${fatto ? " disabled" : ""}>${r}</button>`).join("")}</div></div>`).join("")}</div>
+    <label class="domanda${S.dom2.has("o") ? " sbagliata" : ""}">Il calendario di Giulia: ciclo regolare di ${DURATA2} giorni, ultime mestruazioni iniziate il ${INIZIO2} marzo. L'ovulazione sarà più o meno il <input type="text" inputmode="numeric" id="ovul" value="${fatto ? OVUL2 : S.ovul}"${fatto ? " disabled" : ""}> marzo</label>
+    ${fatto ? premioHtml(1, `Il giorno ${GIORNO2} è nella fase «${FASI[FASE2 - 1].n.toLowerCase()}» (giorni ${FASI[FASE2 - 1].da}-${FASI[FASE2 - 1].a}). `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla2">Controlla il pannello</button><p class="esito" id="esito1"></p></div>`}`;
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo[data-f]").forEach(b => pezzo(b, posa2));
+  sez.querySelectorAll("[data-orm]").forEach(b => b.addEventListener("click", () => { avvia(); S.ruoli[+b.dataset.orm] = b.dataset.v; S.sbagliati2.delete(+b.dataset.orm); suona("bip"); disegna2(); }));
+  $("#ovul").addEventListener("input", e => { avvia(); S.ovul = e.target.value; });
+  $("#controlla2").addEventListener("click", controlla2);
+}
+function posa2(el, zona){
+  const f = +el.dataset.f, z = zona.dataset.zona;
+  for(const k of Object.keys(S.fasi2)) if(S.fasi2[k] === f) delete S.fasi2[k];
+  if(/^f\d$/.test(z)) S.fasi2[+z[1]] = f;
+  else if(z !== "bancof") return;
+  S.sbagliate2.clear(); suona("posa"); disegna2();
+}
+function controlla2(){
+  if(Object.keys(S.fasi2).length < 4){ esito(1, "Metti tutte e quattro le fasi sulla ruota.", "no"); suona("no"); return; }
+  if(S.ruoli.some(r => !r) || !String(S.ovul).trim()){ esito(1, "Abbina tutti gli ormoni e completa il calendario.", "no"); suona("no"); return; }
+  const fasiNo = Object.entries(S.fasi2).filter(([k, f]) => +k !== f).length;
+  S.sbagliati2 = new Set(ORMONI.map((o, i) => S.ruoli[i] === o.r ? -1 : i).filter(i => i >= 0));
+  S.dom2 = new Set(numero(S.ovul) !== OVUL2 ? ["o"] : []);
+  if(fasiNo || S.sbagliati2.size || S.dom2.size){
+    if(fasiNo) S.fasi2 = {};
+    disegna2();
+    esito(1, (fasiNo ? `${fasiNo === 1 ? "Una fase era" : fasiNo + " fasi erano"} sullo spicchio sbagliato: le ho rimesse sul banco. ` : "") + (S.sbagliati2.size ? "Qualche ormone non ha il compito giusto. " : "") + (S.dom2.size ? `L'ovulazione è circa 14 giorni prima del ciclo successivo, che inizia il ${INIZIO2} + ${DURATA2}.` : ""), "no"); suona("no"); return;
+  }
+  risolvi(1);
+}
+
+/* ===== enigma 3: dalla cellula al feto ===== */
+function svgCellule(){
+  /* la griglia di cellule sta tutta dentro la membrana: la sua diagonale non supera il diametro */
+  const n = 2 ** Math.min(S.div, 6), R = 92, lato = Math.ceil(Math.sqrt(n)), passo = n === 1 ? 0 : 2 * R / (lato * Math.SQRT2) * .97, r = n === 1 ? 62 : passo * .47;
+  const celle = [];
+  for(let i = 0; i < n; i++){
+    const riga = Math.floor(i / lato), col = i % lato, righe = Math.ceil(n / lato);
+    const x = 110 + (col - (lato - 1) / 2) * passo, y = 110 + (riga - (righe - 1) / 2) * passo;
+    celle.push(`<circle class="cell" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="var(--cellula)" stroke="var(--ink)" stroke-width="${n > 16 ? 1 : 2}" style="animation-delay:${(i % 8) * 25}ms"/>`);
+  }
+  return `<svg viewBox="0 0 220 220" role="img" aria-label="Lo zigote dopo ${S.div} divisioni"><circle cx="110" cy="110" r="100" fill="none" stroke="var(--giallo)" stroke-width="6" stroke-dasharray="5 4"/>${celle.join("")}</svg>`;
+}
+function disegna3(){
+  const sez = $("#e3"), chiuso = !S.risolto[1], fatto = S.risolto[2];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(2, "Dalla cellula al feto") + chiusoHtml(2); return; }
+  const op = (val, giusto) => `<button class="opz" type="button" data-gem="${val}" aria-pressed="${(fatto ? giusto : S.gemelli) === val}"${fatto ? " disabled" : ""}>${val}</button>`;
+  sez.innerHTML = testa(2, "Dalla cellula al feto") + `
+    <p class="consegna">L'ultima sala racconta i nove mesi prima della nascita. <b>Metti in ordine le tappe</b>, poi guarda al microscopio lo zigote che si divide: prova a farlo dividere tu!</p>
+    ${aiutoHtml(2)}
+    <div class="sviluppo">
+      <div style="display:grid;gap:8px">${filaHtml("s", TAPPE3, ORD3, S.tappe3, fatto, S.sbagliati3, "bancos")}</div>
+      <div class="vetrino"><div id="vetrino">${svgCellule()}</div>
+        <p class="contatore" id="contatore" aria-live="polite">divisioni: ${S.div} · cellule: ${(2 ** S.div).toLocaleString("it-IT")}</p>
+        <div class="azioni"><button class="btn piccolo blu" type="button" id="dividi">Dividi</button><button class="btn piccolo" type="button" id="azzera">Ricomincia</button></div>
+        <p class="nota" style="text-align:center">tutte insieme restano grandi come lo zigote!</p></div>
+    </div>
+    <div class="domande">
+      <label class="domanda${S.dom3.has("k") ? " sbagliata" : ""}">Quante divisioni servono per arrivare a ${(2 ** K3).toLocaleString("it-IT")} cellule? <input type="text" inputmode="numeric" id="k3" value="${fatto ? K3 : S.k3}"${fatto ? " disabled" : ""}></label>
+      <div class="domanda${S.dom3.has("g") ? " sbagliata" : ""}">Due gemelli identici (nati dallo stesso zigote) possono essere un maschio e una femmina? ${["sì", "no"].map(v => op(v, "no")).join("")}</div>
+    </div>
+    ${fatto ? premioHtml(2, `2 elevato alla ${K3} fa ${(2 ** K3).toLocaleString("it-IT")}: servono ${K3} divisioni. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla3">Controlla la sala</button><p class="esito" id="esito2"></p></div>`}`;
+  $("#dividi").addEventListener("click", () => { avvia(); if(S.div >= 12) return; S.div++; suona("divide"); aggiornaVetrino(); if(S.div === 8) segreto("blastocisti", "256 cellule: più o meno come la blastocisti, che dopo 5-6 giorni ha circa 200 cellule e si prepara all'impianto!"); });
+  $("#azzera").addEventListener("click", () => { S.div = 0; suona("posa"); aggiornaVetrino(); });
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo[data-s]").forEach(b => pezzo(b, (el, z) => { if(posaFila(S.tappe3, "s", "bancos", el, z)){ S.sbagliati3.clear(); suona("posa"); disegna3(); } }));
+  sez.querySelectorAll("[data-gem]").forEach(b => b.addEventListener("click", () => { avvia(); S.gemelli = b.dataset.gem; S.dom3.delete("g"); suona("bip"); disegna3(); }));
+  $("#k3").addEventListener("input", e => { avvia(); S.k3 = e.target.value; });
+  $("#controlla3").addEventListener("click", controlla3);
+}
+function aggiornaVetrino(){
+  $("#vetrino").innerHTML = svgCellule();
+  $("#contatore").textContent = `divisioni: ${S.div} · cellule: ${(2 ** S.div).toLocaleString("it-IT")}${S.div > 6 ? " (al microscopio se ne vedono solo una parte)" : ""}`;
+}
+function controlla3(){
+  if(Object.keys(S.tappe3).length < TAPPE3.length){ esito(2, "Metti in fila tutte le tappe.", "no"); suona("no"); return; }
+  if(!String(S.k3).trim() || !S.gemelli){ esito(2, "Rispondi anche alle due domande.", "no"); suona("no"); return; }
+  S.sbagliati3 = new Set(Object.entries(S.tappe3).filter(([n, i]) => +n !== i).map(([n]) => +n));
+  S.dom3 = new Set();
+  if(numero(S.k3) !== K3) S.dom3.add("k");
+  if(S.gemelli !== "no") S.dom3.add("g");
+  if(S.sbagliati3.size || S.dom3.size){
+    disegna3();
+    esito(2, (S.sbagliati3.size ? "Qualche tappa non è al suo posto: tutto comincia con la fecondazione nella tuba. " : "") + (S.dom3.has("k") ? "Usa il microscopio: premi «Dividi» e conta quante volte serve. " : "") + (S.dom3.has("g") ? "I gemelli identici hanno lo stesso DNA: quindi anche lo stesso sesso." : ""), "no"); suona("no"); return;
+  }
+  risolvi(2);
+}
+
+/* ===== il lucchetto ===== */
+function disegna4(){
+  const sez = $("#e4"), pronto = S.risolto.every(Boolean);
+  if(S.libero){
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta della sala è aperta e la guida torna con le cuffie per il video: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato i gameti, gli apparati, il ciclo ovarico e mestruale con i suoi ormoni, la fecondazione e lo sviluppo dallo zigote al feto.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("riproduttore")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    $("#ricomincia").addEventListener("click", () => location.reload());
+    $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("riproduttore"));
+    return;
+  }
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
+    <h2 id="t4">La porta della sala</h2>
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
+      <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
+      <output aria-label="Cifra ${i+1}">${v}</output>
+      <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
+    <p class="esito" id="esito3"></p></div></div>`;
+  sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
+    b.parentElement.querySelector("output").textContent = S.rotelle[i];
+  }));
+  $("#apri")?.addEventListener("click", () => {
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
+    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+  });
+}
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
+}
+
+function disegnaIndizi(){
+  $("#indizi").innerHTML = CODICE.map((c,i) => `<span class="cifra-mini${S.risolto[i] ? "" : " vuota"}" title="${INDIZI[i]}">${S.risolto[i] ? c : "?"}</span>`).join("");
+}
+function risolvi(i){
+  S.risolto[i] = true; suona("si");
+  annuncia(`Enigma ${i+1} risolto! La cifra numero ${i+1} è ${CODICE[i]}.`);
+  tutto();
+  const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
+  setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
+}
+function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-aiuto]"); if(!b) return;
+  const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
+  [disegna1, disegna2, disegna3][i]();
+});
+
+
+
+/* segreti: toccare 3 volte l'ovocita, arrivare a 8 divisioni, scrivere "zigote" */
+const SEGRETI = 3;
+const PAROLE_SEGRETE = [["zigote", () => segreto("zigote", "Ognuno di noi è stato uno zigote, una sola cellula più piccola di un granello di sabbia: oggi il tuo corpo ha circa 30 000 miliardi di cellule!")]];
+tutto();
+aggiornaSuoni();
+</script>
+</body>
+</html>

@@ -7,10 +7,10 @@ const OggettoSegreto = (() => {
   const OGGETTI = ["diario", "barattolo", "scatola", "mappamondo"];
   /* ogni escape room ha il suo oggetto, legato alla sua storia; gli altri 4 restano per le escape room nuove */
   const PER_STANZA = {insiemi:"astuccio", naturali:"grattaevinci", relativi:"pacco", materia:"provetta", letterale:"attrezzi",
-                      elementi:"pergamena", misure:"orologio", segmenti:"biglietto", stati:"ghiaccio", trasforma:"torta", cerchio:"palloncino", nervoso:"cardio", poliedri:"sarcofago", genetica:"baccello"};
+                      elementi:"pergamena", misure:"orologio", segmenti:"biglietto", stati:"ghiaccio", trasforma:"torta", cerchio:"palloncino", nervoso:"cardio", poliedri:"sarcofago", genetica:"baccello", riproduttore:"carillon"};
   let scelto = OGGETTI[Math.floor(Math.random() * OGGETTI.length)];
   /* se la pagina non dice quale oggetto usare (per esempio una pagina vecchia rimasta in memoria nel browser), lo ricavo dal nome del file */
-  const DA_PAGINA = {insiemi:"insiemi", numeri:"naturali", relativi:"relativi", chimica:"materia", letterale:"letterale", elementi:"elementi", misure:"misure", segmenti:"segmenti", stati:"stati", trasforma:"trasforma", cerchio:"cerchio", nervoso:"nervoso", poliedri:"poliedri", genetica:"genetica"};
+  const DA_PAGINA = {insiemi:"insiemi", numeri:"naturali", relativi:"relativi", chimica:"materia", letterale:"letterale", elementi:"elementi", misure:"misure", segmenti:"segmenti", stati:"stati", trasforma:"trasforma", cerchio:"cerchio", nervoso:"nervoso", poliedri:"poliedri", genetica:"genetica", riproduttore:"riproduttore"};
   const daPagina = () => { const m = /^escape-([a-z]+)\.html$/.exec(location.pathname.split("/").pop()); return m ? DA_PAGINA[m[1]] : null; };
   const scegli = id => { const k = (id && PER_STANZA[id]) ? id : daPagina(); if(k && PER_STANZA[k]) scelto = PER_STANZA[k]; };
   let codice = null, trovato = false, idTrofeo = null;
@@ -37,11 +37,12 @@ const OggettoSegreto = (() => {
     cardio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="22" y="4" width="20" height="14" rx="3" fill="#2A2F3A" stroke="#1E2A44" stroke-width="2.5"/><rect x="22" y="46" width="20" height="14" rx="3" fill="#2A2F3A" stroke="#1E2A44" stroke-width="2.5"/><rect x="14" y="14" width="36" height="36" rx="10" fill="#3A4560" stroke="#1E2A44" stroke-width="3"/><rect x="19" y="19" width="26" height="26" rx="6" fill="#101826"/><path d="M22 34h6l3-7 4 12 3-5h5" fill="none" stroke="#7CFFA0" stroke-width="2.2" stroke-linejoin="round"/><rect x="50" y="26" width="5" height="10" rx="2" fill="#E5534B" stroke="#1E2A44" stroke-width="1.5"/></svg>',
     sarcofago:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M22 6h20c6 0 8 6 8 12v32c0 6-6 10-18 10S14 56 14 50V18c0-6 2-12 8-12z" fill="#E0B53A" stroke="#1E2A44" stroke-width="3"/><ellipse cx="32" cy="18" rx="8" ry="9" fill="#F2D59A" stroke="#1E2A44" stroke-width="2"/><path d="M24 12h16v4H24z" fill="#2F6FDE"/><path d="M20 32h24M20 38h24M20 44h24" stroke="#2F6FDE" stroke-width="2.5"/></svg>',
     baccello:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 40C14 18 44 10 58 18c-6 18-34 30-52 22z" fill="#8BC34A" stroke="#1E2A44" stroke-width="3" stroke-linejoin="round"/><path d="M10 38c14-4 30-12 44-18" fill="none" stroke="#1E2A44" stroke-width="2"/><path d="M56 18c2-6 6-8 6-12" fill="none" stroke="#5A8A2A" stroke-width="3" stroke-linecap="round"/></svg>',
+    carillon:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="28" width="44" height="26" rx="4" fill="#C9935A" stroke="#1E2A44" stroke-width="3"/><path d="M10 28l6-12h32l6 12z" fill="#E0B07A" stroke="#1E2A44" stroke-width="3" stroke-linejoin="round"/><path d="M54 40h6v-6" fill="none" stroke="#1E2A44" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="41" r="5" fill="#FFC7E0" stroke="#1E2A44" stroke-width="2"/></svg>',
     ghiaccio:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="12" width="40" height="40" rx="8" fill="#DDF3FF" stroke="#1E2A44" stroke-width="3"/><path d="M18 18l10 0" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="24" y="28" width="18" height="12" fill="#FFF8EC" stroke="#1E2A44" stroke-width="1.5" opacity=".7"/></svg>'
   });
   const NOMI = {diario:"un vecchio diario", barattolo:"un barattolo", scatola:"una scatola misteriosa", mappamondo:"un piccolo mappamondo",
     astuccio:"un astuccio dimenticato", grattaevinci:"un gratta e vinci del supermercato", pacco:"il pacco del drone", provetta:"una provetta misteriosa",
-    attrezzi:"la cassetta degli attrezzi", pergamena:"una cartina arrotolata", orologio:"un vecchio orologio da taschino", biglietto:"un biglietto del treno", ghiaccio:"un cubetto di ghiaccio", torta:"una torta del pasticcere", palloncino:"un palloncino del luna park", cardio:"il cardiofrequenzimetro del medico", sarcofago:"un sarcofago in miniatura", baccello:"un baccello di pisello gigante"};
+    attrezzi:"la cassetta degli attrezzi", pergamena:"una cartina arrotolata", orologio:"un vecchio orologio da taschino", biglietto:"un biglietto del treno", ghiaccio:"un cubetto di ghiaccio", torta:"una torta del pasticcere", palloncino:"un palloncino del luna park", cardio:"il cardiofrequenzimetro del medico", sarcofago:"un sarcofago in miniatura", baccello:"un baccello di pisello gigante", carillon:"un carillon della mostra"};
   const ISTRUZIONI = {
     diario:"Sfoglia il diario pagina per pagina: da qualche parte qualcuno ha scritto il codice.",
     barattolo:"Dentro il barattolo c'è un bigliettino. Scuotilo forte (anche trascinandolo a destra e a sinistra) finché il tappo salta!",
@@ -60,6 +61,7 @@ const OggettoSegreto = (() => {
     cardio:"Il cardiofrequenzimetro è acceso: premi il pulsante rosso sul lato (o tocca lo schermo) per sfogliare le schermate. Nell'ultima c'è il codice!",
     sarcofago:"Il coperchio del piccolo sarcofago è chiuso: fallo scorrere trascinandolo verso destra (o usa il pulsante) e guarda dentro.",
     baccello:"È un baccello delle piante di Mendel, ma un po' troppo gonfio: aprilo (tocca il baccello o il pulsante) e guarda tra i piselli.",
+    carillon:"Il carillon della mostra si apre solo quando la musica arriva alla fine: gira la manovella (toccala o usa il pulsante) finché il coperchio scatta.",
     ghiaccio:"Dentro il cubetto c'è un bigliettino congelato: scaldalo strofinandoci sopra il dito (o con il pulsante) finché si scioglie."
   };
 
@@ -213,6 +215,14 @@ const OggettoSegreto = (() => {
 .os-valva{transition:transform .6s cubic-bezier(.3,1.3,.5,1);transform-box:view-box;transform-origin:140px 110px}
 .os-pisello{transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
 @media (prefers-reduced-motion:reduce){.os-valva,.os-pisello{transition:none}}
+/* carillon */
+.os-musica{width:280px;max-width:100%;height:230px;display:grid;place-items:center}
+.os-musica svg{width:100%;height:100%;overflow:visible}
+.os-manovella{cursor:pointer;transform-box:fill-box;transform-origin:0 50%;transition:transform .35s ease}
+.os-coperchio-c{transform-box:view-box;transform-origin:40px 100px;transition:transform .8s cubic-bezier(.3,1.3,.5,1)}
+.os-nota-m{animation:os-vola-nota 1.6s ease-out forwards}
+@keyframes os-vola-nota{from{opacity:1;transform:translate(0,0)}to{opacity:0;transform:translate(30px,-60px)}}
+@media (prefers-reduced-motion:reduce){.os-manovella,.os-coperchio-c{transition:none}.os-nota-m{animation:none;opacity:0}}
 @media (prefers-reduced-motion:reduce){.os-pall.trema,.os-pezzetto,.os-scende{animation:none!important}.os-scende{transform:translate(-50%,70px)}.os-pezzetto{display:none}}
 @media (prefers-reduced-motion:reduce){.os-cade,.os-cade svg,.os-pag.gira,.os-vaso.scuoti,.os-cubo.gira,.os-bigliettino,.os-aperto,.os-trovato{animation:none!important}.os-tappo{transition:none}}
 `;
@@ -266,7 +276,7 @@ const OggettoSegreto = (() => {
       <div class="os-scena" id="os-scena"></div>
       <div class="os-riga" id="os-comandi"></div>
       <div id="os-premio" style="width:100%"></div></div>`;
-    ({diario, barattolo, scatola, mappamondo, astuccio, grattaevinci, pacco, provetta, attrezzi, pergamena, orologio, biglietto, ghiaccio, torta, palloncino, cardio, sarcofago, baccello})[scelto]();
+    ({diario, barattolo, scatola, mappamondo, astuccio, grattaevinci, pacco, provetta, attrezzi, pergamena, orologio, biglietto, ghiaccio, torta, palloncino, cardio, sarcofago, baccello, carillon})[scelto]();
     if(trovato) mostraCodice();
   }
   function mostraCodice(){
@@ -778,6 +788,36 @@ const OggettoSegreto = (() => {
     disegna();
     comandi(`<button class="os-btn blu" type="button" id="os-apri-b">Apri il baccello</button><span class="os-nota" id="os-aperto">Aperto: 0 su ${PASSI}</span>`);
     fin.querySelector("#os-apri-b").addEventListener("click", apri);
+  }
+
+  /* ---- il carillon (La mostra «Come siamo nati»): ogni giro di manovella suona una frase, al quarto il coperchio si apre ---- */
+  function carillon(){
+    let giri = 0;
+    const GIRI = 4, FRASI = ["bip", "prendi", "bip", "sblocco"];
+    const disegna = () => {
+      const aperto = giri >= GIRI;
+      scena().innerHTML = `<div class="os-musica"><svg viewBox="0 0 280 230" role="img" aria-label="Carillon ${aperto ? "aperto" : "chiuso"}">
+        <rect x="40" y="100" width="200" height="100" rx="10" fill="#C9935A" stroke="#1E2A44" stroke-width="4"/>
+        <rect x="56" y="114" width="168" height="72" rx="6" fill="#8A5A34"/>
+        ${aperto ? `<g transform="rotate(-4 140 140)"><rect x="84" y="124" width="112" height="30" rx="4" fill="#FFF8EC" stroke="#1E2A44" stroke-width="2"/><text x="140" y="145" text-anchor="middle" font-family="Courier New, monospace" font-weight="700" font-size="17" fill="#1E2A44">${codice}</text></g>
+          <path d="M140 186v-24" stroke="#AEB9CA" stroke-width="4"/><circle cx="140" cy="160" r="8" fill="#FFC7E0" stroke="#1E2A44" stroke-width="2"/>` : ""}
+        <g class="os-coperchio-c" style="transform:rotate(${aperto ? -28 : 0}deg)"><path d="M40 100l14-34h172l14 34z" fill="#E0B07A" stroke="#1E2A44" stroke-width="4" stroke-linejoin="round"/>
+          <circle cx="140" cy="84" r="10" fill="#FFC7E0" stroke="#1E2A44" stroke-width="2.5"/></g>
+        <g class="os-manovella" id="os-manovella" style="transform:rotate(${giri * 90}deg)"><rect x="234" y="112" width="44" height="48" fill="transparent"/><path d="M240 150h22v-22" fill="none" stroke="#1E2A44" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="262" cy="126" r="7" fill="#E5534B" stroke="#1E2A44" stroke-width="2.5"/></g>
+        ${giri > 0 && !aperto ? `<text class="os-nota-m" x="200" y="90" font-size="26" fill="#7A8CE0">♪</text>` : ""}
+      </svg></div>`;
+      fin.querySelector("#os-manovella").addEventListener("click", gira);
+    };
+    const gira = () => {
+      if(giri >= GIRI) return;
+      giri++; suono(FRASI[giri - 1]);
+      fin.querySelector("#os-giri").textContent = `Giri: ${giri} su ${GIRI}`;
+      disegna();
+      if(giri === GIRI){ fin.querySelector("#os-gira")?.remove(); setTimeout(mostraCodice, 900); }
+    };
+    disegna();
+    comandi(`<button class="os-btn blu" type="button" id="os-gira">Gira la manovella</button><span class="os-nota" id="os-giri">Giri: 0 su ${GIRI}</span>`);
+    fin.querySelector("#os-gira").addEventListener("click", gira);
   }
 
   return {bottone, apri};
