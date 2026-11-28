@@ -18,7 +18,7 @@
   --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
   --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066; --veil:rgba(20,27,43,.45);
   --giallo:#FFD966; --giallo-ink:#5A4300;
-  --verde:#8EDDB4; --verde-ink:#0B4A2C;
+  --verde:#8EDDB4; --verde-ink:#0B4A2C; --ok:#0B6B3F;
   --azzurro:#9FD0FF; --azzurro-ink:#0D3B6E;
   --viola:#C9B8FF; --viola-ink:#35207A;
   --incl-icon:#0B4A2C;
@@ -30,13 +30,13 @@
   --paper:#141B2B; --grid:#212C42;
   --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
   --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12; --veil:rgba(0,0,0,.6);
-  --giallo:#E8C24F; --verde:#6FCB9C; --azzurro:#86BEF5; --viola:#B3A0F5; --incl-icon:#6FCB9C;
+  --giallo:#E8C24F; --verde:#6FCB9C; --ok:#7FE0AE; --azzurro:#86BEF5; --viola:#B3A0F5; --incl-icon:#6FCB9C;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --paper:#141B2B; --grid:#212C42;
   --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
   --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12; --veil:rgba(0,0,0,.6);
-  --giallo:#E8C24F; --verde:#6FCB9C; --azzurro:#86BEF5; --viola:#B3A0F5; --incl-icon:#6FCB9C;
+  --giallo:#E8C24F; --verde:#6FCB9C; --ok:#7FE0AE; --azzurro:#86BEF5; --viola:#B3A0F5; --incl-icon:#6FCB9C;
   color-scheme:dark}
 
 *{box-sizing:border-box}
@@ -116,7 +116,17 @@ h2{font-family:var(--f-display);font-weight:700;font-size:1.6rem;margin:0;text-w
 .gioco .vai{font-weight:800;color:var(--accent);display:flex;align-items:center;gap:6px}
 .gioco .vai svg{width:18px;height:18px;flex:none}
 .giochi.prof{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.giochi.escape{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .giochi.escape .gioco{background:color-mix(in srgb,var(--viola) 28%,var(--card))}
+/* riquadro compatto delle escape room: il trofeo a sinistra, l'argomento e il nome del trofeo a destra */
+.gioco.esc{grid-template-columns:58px minmax(0,1fr);align-items:center;gap:12px;padding:10px 14px 10px 10px}
+.gioco.esc .coppa{width:58px;height:58px}
+.gioco.esc .coppa svg{width:100%;height:100%}
+.gioco.esc b{font-size:1.08rem}
+.gioco.esc .testo{display:grid;gap:3px;min-width:0}
+.gioco.esc .meta{font-size:.78rem}
+.gioco.esc .trofeo{font-size:.82rem;font-weight:800;color:var(--ink)}
+.gioco.esc .trofeo.preso{color:var(--ok)}
 .premio-tag{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--card);border:1.5px solid var(--ink);color:var(--ink)}
 .premio-tag svg{width:16px;height:16px}
 .premio-tag.preso{background:var(--giallo);color:var(--giallo-ink)}
@@ -364,9 +374,15 @@ function disegnaEscape(){
     .sort((a, b) => CLASSI.indexOf(a.classe) - CLASSI.indexOf(b.classe) || ordMat.indexOf(a.materia) - ordMat.indexOf(b.materia));
   const presi = typeof Trofei !== "undefined" ? Trofei.sbloccati() : {};
   const trofeoDi = g => typeof TROFEI !== "undefined" ? TROFEI.find(t => t.link === g.link) : null;
+  /* nel riquadro solo l'argomento e il trofeo (grigio finché non è conquistato) */
   $("#giochi-escape").innerHTML = res.length ? res.map(g => {
-    const t = trofeoDi(g);
-    return cartaGioco(g, t ? `<span class="premio-tag${presi[t.id] ? " preso" : ""}">${IC.coppa} ${presi[t.id] ? "Trofeo conquistato" : "In palio: " + esc(t.nome)}</span>` : "");
+    const t = trofeoDi(g), preso = t && presi[t.id], m = MATERIE[g.materia] || {nome:""};
+    const coppa = t && typeof svgTrofeo === "function" ? svgTrofeo(t.id, preso ? COLORI_ORO : COLORI_SPENTO) : IC.coppa;
+    return `<a class="gioco esc" href="${encodeURI(g.link)}" aria-label="Escape room: ${esc(g.titolo)}">
+      <span class="coppa">${coppa}</span>
+      <span class="testo"><b>${[].concat(g.capitolo || g.titolo).map(esc).join(" e ")}</b>
+        <span class="meta">${[m.nome, g.classe].filter(Boolean).join(" · ")}</span>
+        ${t ? `<span class="trofeo${preso ? " preso" : ""}">${preso ? "✓ " : ""}${esc(t.nome)}</span>` : ""}</span></a>`;
   }).join("") : `<div class="vuoto" style="grid-column:1/-1">${tutte.length ? "Nessuna escape room per questa scelta… per ora!" : "Presto qui troverai le escape room!"}</div>`;
   if(typeof TROFEI !== "undefined"){
     const n = TROFEI.filter(t => presi[t.id]).length;
