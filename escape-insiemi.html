@@ -245,6 +245,7 @@ tfoot td{font-weight:800}
 <script src="oggetto-segreto.js?v=155ecfba"></script>
 <script>window.HA_GUIDATA = true;</script>
 <script src="guidata.js?v=28812963"></script>
+<script src="segreti.js?v=18e11d77"></script>
 <script>
 /* ===== dati degli enigmi ===== */
 const NUMERI = [2,3,4,5,6,7,8,9,10,12];
@@ -638,7 +639,7 @@ function disegna4(){
   }));
   $("#apri")?.addEventListener("click", () => {
     if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
-    else { if(GUIDATA){ suona("no"); esito(3, "Non si apre ancora: controlla i tre numeri, uno alla volta.", "no"); Guidata.parlaAuto("Non si apre ancora. Controlla i tre numeri, uno alla volta."); return; } if(S.rotelle.join("") === "123") segreto("123", "1-2-3? È il codice che tutti provano per primo... ed è proprio per questo che nessuno lo usa!"); suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+    else { if(S.rotelle.join("") === "123") segreto("123", "1-2-3? È il codice che tutti provano per primo... ed è proprio per questo che nessuno lo usa!"); if(GUIDATA){ suona("no"); esito(3, "Non si apre ancora: controlla i tre numeri, uno alla volta.", "no"); Guidata.parlaAuto("Non si apre ancora. Controlla i tre numeri, uno alla volta."); return; } suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
   });
 }
 
@@ -756,7 +757,7 @@ document.addEventListener("click", e => {
   [disegna1, disegna2, disegna3][i]();
 });
 /* segreti: scrivere "venn" sulla tastiera, tutte le colonne al massimo, provare 1-2-3 sul lucchetto */
-const SEGRETI = 3;
+const SEGRETI = GUIDATA ? 2 : 3;   /* in modalità guidata non c'è l'istogramma con le colonne */
 const PAROLE_SEGRETE = [["venn", () => {
   const v = $(".venn"); if(v){ v.classList.remove("balla"); void v.offsetWidth; v.classList.add("balla"); }
   segreto("venn", "Ciao da John Venn! È il matematico inglese che nel 1880 inventò questi diagrammi.");
@@ -768,6 +769,11 @@ if(GUIDATA){
 Guidata.montaBarra();
 tutto();
 aggiornaSuoni();
+Segreti.imposta([
+  {id:"venn", dove:GUIDATA ? "#e1 .g-figura" : ".venn", indizio:"I due cerchi che si intrecciano hanno il nome del matematico inglese che li ha inventati: ha 4 lettere e comincia con la V. Scrivilo!"},
+  ...(GUIDATA ? [] : [{id:"palizzata", dove:".grafico", quando:() => S.risolto[1] && !S.risolto[2], indizio:"E se alzassi tutte le colonne dell'istogramma fino in cima? Prova a vedere cosa succede!"}]),
+  {id:"123", dove:".lucchetto", quando:() => S.risolto.every(Boolean) && !S.libero, indizio:"Sul lucchetto della porta prova il codice che tutti provano per primo: uno, due, tre…"}
+]);
 </script>
 </body>
 </html>
