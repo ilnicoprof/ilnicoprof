@@ -457,6 +457,57 @@ const CAPITOLI = [
   ]
  },
  {
+  "materia": "algebra",
+  "classe": "3ª",
+  "titolo": "Il calcolo letterale",
+  "file": [
+   {
+    "nome": "Appunti",
+    "formato": "PDF",
+    "kb": 1183,
+    "link": "materiali/ALGEBRA/3 - Il calcolo letterale/Il calcolo letterale - Appunti.pdf"
+   },
+   {
+    "nome": "Mappa concettuale",
+    "formato": "PDF",
+    "kb": 44,
+    "link": "materiali/ALGEBRA/3 - Il calcolo letterale/Il calcolo letterale - Mappa concettuale.pdf"
+   }
+  ],
+  "inclusione": [
+   {
+    "nome": "Scheda PEI",
+    "formato": "PDF",
+    "kb": 357,
+    "link": "materiali/ALGEBRA/3 - Il calcolo letterale/Il calcolo letterale - Scheda PEI.pdf"
+   },
+   {
+    "nome": "Scheda PEI semplificata",
+    "formato": "PDF",
+    "kb": 526,
+    "link": "materiali/ALGEBRA/3 - Il calcolo letterale/Il calcolo letterale - Scheda PEI semplificata.pdf"
+   },
+   {
+    "nome": "Scheda visuale",
+    "formato": "PDF",
+    "kb": 69,
+    "link": "materiali/ALGEBRA/3 - Il calcolo letterale/Il calcolo letterale - Scheda visuale.pdf"
+   },
+   {
+    "nome": "Esercizi PEI",
+    "formato": "PDF",
+    "kb": 324,
+    "link": "materiali/ALGEBRA/3 - Il calcolo letterale/Il calcolo letterale - Esercizi PEI.pdf"
+   },
+   {
+    "nome": "Esercizi PEI semplificati",
+    "formato": "PDF",
+    "kb": 149,
+    "link": "materiali/ALGEBRA/3 - Il calcolo letterale/Il calcolo letterale - Esercizi PEI semplificata.pdf"
+   }
+  ]
+ },
+ {
   "materia": "scienze",
   "classe": "1ª",
   "titolo": "Metodo, grandezze e misure",
