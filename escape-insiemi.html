@@ -244,7 +244,7 @@ tfoot td{font-weight:800}
 <script src="trofei.js?v=86d2ee20"></script>
 <script src="oggetto-segreto.js?v=b1e400c9"></script>
 <script>window.HA_GUIDATA = true;</script>
-<script src="guidata.js?v=d3a1175a"></script>
+<script src="guidata.js?v=28812963"></script>
 <script>
 /* ===== dati degli enigmi ===== */
 const NUMERI = [2,3,4,5,6,7,8,9,10,12];
@@ -265,7 +265,7 @@ const G1 = (() => {
   return {k, comune:nomi.slice(0, k), soloA:nomi.slice(k, k + soloA), soloB:nomi.slice(k + soloA, k + soloA + soloB), fuori:nomi.slice(k + soloA + soloB, k + soloA + soloB + 1)};
 })();
 /* gioco 2: la tabella con le stanghette */
-const G2 = (() => { const c = mescolaG([2, 3, 4, 5, 6]).slice(0, 3); return {sport:[{n:"CALCIO", c:c[0]}, {n:"NUOTO", c:c[1]}, {n:"DANZA", c:c[2]}]}; })();
+const G2 = (() => { const c = mescolaG([2, 3, 4, 5, 6]).slice(0, 3); return {sport:[{n:"CALCIO", del:"del", c:c[0]}, {n:"NUOTO", del:"del", c:c[1]}, {n:"DANZA", del:"della", c:c[2]}]}; })();
 G2.max = Math.max(...G2.sport.map(s => s.c));
 /* gioco 3: il grafico a barre dei libri letti */
 const G3 = (() => { const v = mescolaG([1, 2, 3, 4, 5, 6]).slice(0, 3); return {bambini:[{n:"ALE", v:v[0]}, {n:"BIA", v:v[1]}, {n:"CRI", v:v[2]}]}; })();
@@ -718,7 +718,7 @@ function figuraTabella(){
 }
 function disegna2g(){
   if(!S.g[1].passi){
-    const conta = G2.sport.map(s => { const ops = opzioniNumero(s.c); return {testo:`Conta le stanghette del ${s.n}. Quante sono?`, figura:figuraTabella(), opzioni:ops, giusta:ops.indexOf(String(s.c)), aiuto:"Tocca le stanghette con il dito, una alla volta."}; });
+    const conta = G2.sport.map(s => { const ops = opzioniNumero(s.c); return {testo:`Conta le stanghette ${s.del} ${s.n}. Quante sono?`, figura:figuraTabella(), opzioni:ops, giusta:ops.indexOf(String(s.c)), aiuto:"Tocca le stanghette con il dito, una alla volta."}; });
     const ops = mescolaG(G2.sport.map(s => s.n)), piu = G2.sport.find(s => s.c === G2.max).n;
     S.g[1].passi = [...conta, {testo:"Lo sport più scelto è…", figura:figuraTabella(), opzioni:ops, giusta:ops.indexOf(piu), aiuto:"È lo sport con più stanghette."}];
   }

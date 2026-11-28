@@ -131,5 +131,16 @@ html.maiuscolo .wrap input,html.maiuscolo .wrap textarea{text-transform:none}
     }));
   }
 
-  return {get attiva(){ return attiva; }, montaBarra, passi, parla, parlaAuto, bottoneVoce};
+  /* piccoli aiuti per scrivere le domande */
+  const mescola = a => { const b = [...a]; for(let i = b.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]] = [b[j],b[i]]; } return b; };
+  /* tre risposte vicine (n-d, n, n+d) in ordine sparso, mai negative; restituisce {opzioni, giusta} */
+  function vicini(n, d = 1, fmt = String){
+    let lista = [n - d, n, n + d]; if(n - d < 0) lista = [n, n + d, n + 2 * d];
+    const opzioni = mescola(lista).map(fmt);
+    return {opzioni, giusta:opzioni.indexOf(fmt(n))};
+  }
+  /* risposte date come testi: la giusta è la prima, le mescolo */
+  function scelte(giusta, ...altre){ const opzioni = mescola([giusta, ...altre]); return {opzioni, giusta:opzioni.indexOf(giusta)}; }
+
+  return {get attiva(){ return attiva; }, montaBarra, passi, parla, parlaAuto, bottoneVoce, mescola, vicini, scelte};
 })();

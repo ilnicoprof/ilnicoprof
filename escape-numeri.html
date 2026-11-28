@@ -259,6 +259,8 @@ h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
 <script src="trofei.js?v=86d2ee20"></script>
 <script src="oggetto-segreto.js?v=b1e400c9"></script>
+<script>window.HA_GUIDATA = true;</script>
+<script src="guidata.js?v=28812963"></script>
 <script>
 /* ===== dati ===== */
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
@@ -322,8 +324,20 @@ const RIGHE = MODELLI.map((m, i) => {
     difetto: fmtNum(giu / div, rd) + m.u, eccesso: fmtNum((giu + step) / div, rd) + m.u};
 });
 
-const CODICE = [CARTELLINI.filter(c => c.val >= 1000).length, ORDINE.indexOf(STELLA) + 1, N_ECC];
-const INDIZI = [
+/* ===== modalità guidata: gli stessi tre giochi, al livello della scheda PEI semplificata ===== */
+const GUIDATA = Guidata.attiva;
+const G = (() => {
+  const cifre = Guidata.mescola([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 3);
+  const dopo = rnd(11, 98), pesoA = rnd(1, 8) * 10 + rnd(1, 9);
+  const pesoB = (pesoA % 10) * 10 + Math.floor(pesoA / 10);   /* le stesse cifre scambiate, come 45 e 54 */
+  const arr = (() => { const d = rnd(1, 8) * 10, u = Guidata.mescola([1, 2, 3, 4, 6, 7, 8, 9])[0]; return d + u; })();
+  const sacchi = Guidata.mescola(["NOCI", "MANDORLE", "PISTACCHI", "UVETTA", "NOCCIOLE"]).slice(0, 2);
+  return {cifre, numero:cifre[0] * 100 + cifre[1] * 10 + cifre[2], dopo, bottiglie:rnd(3, 9),
+    sacchi, pesi:pesoA === pesoB ? [pesoA, pesoA + 9] : [pesoA, pesoB], fette:rnd(1, 9), posto:rnd(2, 8),
+    arr, prezzoX:rnd(1, 8), euro:rnd(1, 9), cent:Guidata.mescola([20, 50, 80])[0]};
+})();
+const CODICE = GUIDATA ? [G.bottiglie, G.posto, G.euro] : [CARTELLINI.filter(c => c.val >= 1000).length, ORDINE.indexOf(STELLA) + 1, N_ECC];
+const INDIZI = GUIDATA ? ["Quante bottiglie ci sono sullo scaffale?", "Su quale numero sta la lettera A?", "Quanti euro interi ci sono nel prezzo?"] : [
   "Quante cifre evidenziate valgono 1000 o di più?",
   "In che posto è il sacchetto con la stella, dal più leggero al più pesante?",
   "Quante righe dello scontrino si arrotondano per eccesso?"
@@ -339,7 +353,8 @@ const S = {
   val: Array(5).fill(null), sbagliati1:new Set(), cassaAperta:false,
   scaff: Array(6).fill(null), sbagliati2:new Set(), pesato:false,
   scelte: RIGHE.map(() => null), sbagliate3:new Set(), stampato:false,
-  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null,
+  g:[{passo:0}, {passo:0}, {passo:0}]
 };
 const $ = s => document.querySelector(s);
 const annuncia = t => { $("#annuncio").textContent = t; };
@@ -659,7 +674,7 @@ function controlla3(){
 function disegna4(){
   const sez = $("#e4"), pronto = S.risolto.every(Boolean);
   if(S.libero){
-    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta sul retro è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato il valore posizionale delle cifre, il confronto tra numeri decimali, numeri ordinali e arrotondamento per difetto e per eccesso.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("naturali")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta sul retro è aperta: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>${GUIDATA ? "Hai contato, letto i numeri e i prezzi come un vero commesso!" : "Hai ripassato il valore posizionale delle cifre, il confronto tra numeri decimali, numeri ordinali e arrotondamento per difetto e per eccesso."}</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("naturali")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
     $("#ricomincia").addEventListener("click", () => location.reload());
     $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("naturali"));
     return;
@@ -670,6 +685,7 @@ function disegna4(){
       <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
       <output aria-label="Cifra ${i+1}">${v}</output>
       <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${GUIDATA && pronto ? `<div class="g-riga" style="justify-content:center"><p class="g-cifre">I tuoi numeri: ${CODICE.join(" · ")}</p>${Guidata.bottoneVoce("I tuoi numeri sono " + CODICE.join(", ") + ". Mettili nel lucchetto con le frecce e premi Apri la porta.")}</div>` : ""}
     ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
     <p class="esito" id="esito3"></p></div></div>`;
   sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
@@ -678,7 +694,7 @@ function disegna4(){
   }));
   $("#apri")?.addEventListener("click", () => {
     if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
-    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+    else { if(GUIDATA){ suona("no"); esito(3, "Non si apre ancora: controlla i tre numeri, uno alla volta.", "no"); Guidata.parlaAuto("Non si apre ancora. Controlla i tre numeri, uno alla volta."); return; } suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
   });
 }
 /* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
@@ -711,7 +727,111 @@ function risolvi(i){
   const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
   setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
 }
-function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+function tutto(){ disegnaIndizi(); if(GUIDATA){ disegna1g(); disegna2g(); disegna3g(); } else { disegna1(); disegna2(); disegna3(); } disegna4(); }
+
+/* ===== i tre giochi della modalità guidata ===== */
+const FONT_G = 'font-family="Lexend, Nunito, sans-serif" font-weight="800"';
+const premioG = i => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Hai trovato il numero ${i+1}: è <b>${CODICE[i]}</b>!</span>${Guidata.bottoneVoce("Hai trovato il numero " + (i+1) + ". È " + CODICE[i] + "!")}</div>`;
+const virgola = x => String(x).replace(".", ",");
+function figCartellino(){
+  return `<svg viewBox="0 0 320 150" role="img" aria-label="Cartellino con il numero ${G.numero}">
+    <rect x="40" y="8" width="240" height="134" rx="12" fill="#FFF3B0" stroke="var(--ink)" stroke-width="2.5"/>
+    ${G.cifre.map((c, i) => `<rect x="${72 + i * 62}" y="28" width="52" height="64" rx="8" fill="#FFFFFF" stroke="var(--ink)" stroke-width="2"/>
+      <text x="${98 + i * 62}" y="62" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="40" fill="#1E2A44">${c}</text>
+      <text x="${98 + i * 62}" y="116" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="18" fill="#1E2A44">${["h", "da", "u"][i]}</text>`).join("")}
+  </svg>`;
+}
+function figBottiglie(){
+  const n = G.bottiglie, passo = 300 / n;
+  return `<svg viewBox="0 0 320 150" role="img" aria-label="Uno scaffale con delle bottiglie d'acqua">
+    <rect x="4" y="120" width="312" height="12" rx="3" fill="#C9935A" stroke="var(--ink)" stroke-width="2"/>
+    ${Array.from({length:n}, (_, i) => { const x = 10 + passo * i + passo / 2;
+      return `<path d="M${x - 7} 30h14v10c6 4 9 10 9 16v58a6 6 0 0 1-6 6h-20a6 6 0 0 1-6-6V56c0-6 3-12 9-16z" fill="#9FD0FF" stroke="var(--ink)" stroke-width="2"/><rect x="${x - 6}" y="22" width="12" height="9" rx="2" fill="#2F6FDE" stroke="var(--ink)" stroke-width="1.5"/>`; }).join("")}
+  </svg>`;
+}
+function figSacchetti(){
+  return `<svg viewBox="0 0 320 170" role="img" aria-label="Due sacchetti di frutta secca con il loro peso">
+    ${[0, 1].map(i => { const x = 20 + i * 150;
+      return `<path d="M${x + 20} 34h90l12 120a8 8 0 0 1-8 9H${x + 16}a8 8 0 0 1-8-9z" fill="${i ? "#F2D59A" : "#E0B07A"}" stroke="var(--ink)" stroke-width="2.5"/>
+        <path d="M${x + 26} 34c6-16 72-16 78 0" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+        <text x="${x + 65}" y="76" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="14" fill="#1E2A44">${G.sacchi[i]}</text>
+        <rect x="${x + 25}" y="98" width="80" height="40" rx="8" fill="#FFFFFF" stroke="var(--ink)" stroke-width="2"/>
+        <text x="${x + 65}" y="118" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="24" fill="#1E2A44">${G.pesi[i]} g</text>`; }).join("")}
+  </svg>`;
+}
+function figPizza(){
+  const cx = 160, cy = 85, rr = 72, p = a => [cx + rr * Math.cos(a), cy + rr * Math.sin(a)].map(v => v.toFixed(1));
+  return `<svg viewBox="0 0 320 170" role="img" aria-label="Una pizza tagliata in 10 fette, ${G.fette} colorate">
+    ${Array.from({length:10}, (_, i) => { const a1 = -Math.PI / 2 + i * Math.PI / 5, a2 = a1 + Math.PI / 5, [x1, y1] = p(a1), [x2, y2] = p(a2);
+      return `<path d="M${cx} ${cy}L${x1} ${y1}A${rr} ${rr} 0 0 1 ${x2} ${y2}z" fill="${i < G.fette ? "#E5534B" : "#FFF3D6"}" stroke="var(--ink)" stroke-width="2.5"/>`; }).join("")}
+  </svg>`;
+}
+function figSemiretta(){
+  const x = k => 20 + k * 33;
+  return `<svg viewBox="0 0 320 130" role="img" aria-label="La semiretta dei numeri da 0 a 8 con la lettera A">
+    <path d="M12 82H312" stroke="var(--ink)" stroke-width="3"/><path d="M304 74l10 8-10 8" fill="none" stroke="var(--ink)" stroke-width="3"/>
+    ${Array.from({length:9}, (_, k) => `<path d="M${x(k)} 72V92" stroke="var(--ink)" stroke-width="3"/><text x="${x(k)}" y="110" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="18" fill="var(--ink)">${k}</text>`).join("")}
+    <circle cx="${x(G.posto)}" cy="38" r="16" fill="#FFD966" stroke="var(--ink)" stroke-width="2.5"/><text x="${x(G.posto)}" y="39" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="18" fill="#1E2A44">A</text>
+    <path d="M${x(G.posto)} 55V70" stroke="var(--ink)" stroke-width="3"/><path d="M${x(G.posto) - 6} 63l6 8 6-8" fill="none" stroke="var(--ink)" stroke-width="3"/>
+  </svg>`;
+}
+function figArrotonda(){
+  const d = Math.floor(G.arr / 10) * 10, x = v => 30 + (v - d) * 26;
+  return `<svg viewBox="0 0 320 120" role="img" aria-label="La linea dei numeri da ${d} a ${d + 10} con il numero ${G.arr}">
+    <path d="M30 70H290" stroke="var(--ink)" stroke-width="3"/>
+    ${Array.from({length:11}, (_, k) => `<path d="M${x(d + k)} ${k % 10 ? 62 : 56}V${k % 10 ? 78 : 84}" stroke="var(--ink)" stroke-width="${k % 10 ? 2 : 3.5}"/>`).join("")}
+    <text x="${x(d)}" y="102" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="20" fill="var(--ink)">${d}</text>
+    <text x="${x(d + 10)}" y="102" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="20" fill="var(--ink)">${d + 10}</text>
+    <circle cx="${x(G.arr)}" cy="70" r="8" fill="#E5534B" stroke="var(--ink)" stroke-width="2"/>
+    <rect x="${x(G.arr) - 26}" y="14" width="52" height="30" rx="8" fill="#FFD966" stroke="var(--ink)" stroke-width="2"/><text x="${x(G.arr)}" y="29" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="18" fill="#1E2A44">${G.arr}</text>
+  </svg>`;
+}
+function figPrezzo(testo){
+  return `<svg viewBox="0 0 320 110" role="img" aria-label="Il cartellino del prezzo: ${testo}">
+    <path d="M60 18h200l30 37-30 37H60a10 10 0 0 1-10-10V28a10 10 0 0 1 10-10z" fill="#FFF3B0" stroke="var(--ink)" stroke-width="2.5"/>
+    <circle cx="266" cy="55" r="6" fill="#FFFFFF" stroke="var(--ink)" stroke-width="2"/>
+    <text x="150" y="56" text-anchor="middle" dominant-baseline="central" ${FONT_G} font-size="38" fill="#1E2A44">${testo}</text>
+  </svg>`;
+}
+function disegna1g(){
+  if(!S.g[0].passi){
+    const [h, da, u] = G.cifre, s1 = Guidata.vicini(G.dopo + 1), s2 = Guidata.scelte(String(h * 100), String(h * 10), String(h)), s3 = Guidata.scelte(String(u), String(u * 10), String(u * 100)), s4 = Guidata.vicini(G.bottiglie);
+    S.g[0].passi = [
+      {testo:`Che numero viene dopo ${G.dopo}?`, ...s1, aiuto:"Conta in avanti di uno."},
+      {testo:`Nel numero ${G.numero}, quanto vale la cifra ${h}?`, figura:figCartellino(), ...s2, aiuto:"Il primo numero è al posto delle centinaia (h)."},
+      {testo:`E quanto vale la cifra ${u}?`, figura:figCartellino(), ...s3, aiuto:"L'ultimo numero è al posto delle unità (u)."},
+      {testo:"Conta le bottiglie sullo scaffale. Quante sono?", figura:figBottiglie(), ...s4, aiuto:"Tocca le bottiglie con il dito, una alla volta."}
+    ];
+  }
+  Guidata.passi({sez:$("#e1"), num:1, titolo:"Il magazzino", intro:"Nel magazzino del supermercato bisogna contare la merce e leggere i numeri sui cartellini.",
+    passi:S.g[0].passi, stato:S.g[0], fatto:S.risolto[0], figuraFinale:`<div class="g-figura">${figBottiglie()}</div>`, premio:premioG(0), quandoFinito:() => risolvi(0)});
+}
+function disegna2g(){
+  if(!S.g[1].passi){
+    const piu = G.pesi[0] > G.pesi[1] ? G.sacchi[0] : G.sacchi[1], meno = piu === G.sacchi[0] ? G.sacchi[1] : G.sacchi[0];
+    const s1 = Guidata.scelte(piu, meno), s2 = Guidata.scelte("0," + G.fette, G.fette + ",0", "0,0" + G.fette), s3 = Guidata.vicini(G.posto);
+    S.g[1].passi = [
+      {testo:"Quale sacchetto pesa di più?", figura:figSacchetti(), ...s1, aiuto:"Guarda la prima cifra di ogni peso: chi ha la cifra più grande?"},
+      {testo:`La pizza ha 10 fette. Le fette rosse sono ${G.fette}. Che numero è?`, figura:figPizza(), ...s2, aiuto:`${G.fette} fette su 10 si scrive zero virgola ${G.fette}.`},
+      {testo:"Su quale numero sta la lettera A?", figura:figSemiretta(), ...s3, aiuto:"Segui la freccia sotto la A fino al numero."}
+    ];
+  }
+  Guidata.passi({sez:$("#e2"), num:2, titolo:"Lo scaffale della frutta secca", intro:"Allo scaffale della frutta secca si confrontano i pesi e si leggono i numeri.",
+    passi:S.g[1].passi, stato:S.g[1], fatto:S.risolto[1], chiuso:!S.risolto[0], figuraFinale:`<div class="g-figura">${figSemiretta()}</div>`, premio:premioG(1), quandoFinito:() => risolvi(1)});
+}
+function disegna3g(){
+  if(!S.g[2].passi){
+    const giu = Math.floor(G.arr / 10) * 10, su = giu + 10, vicino = G.arr % 10 < 5 ? giu : su, lontano = vicino === giu ? su : giu;
+    const s1 = Guidata.scelte(String(vicino), String(lontano)), s2 = Guidata.scelte(`${G.prezzoX + 1} €`, `${G.prezzoX} €`), s3 = Guidata.vicini(G.euro);
+    S.g[2].passi = [
+      {testo:`Arrotonda alla decina: ${G.arr} è circa…`, figura:figArrotonda(), ...s1, aiuto:`Guarda la linea: ${G.arr} è più vicino a ${vicino}.`},
+      {testo:`Un gioco costa ${G.prezzoX},90 €. Circa quanti euro costa?`, figura:figPrezzo(`${G.prezzoX},90 €`), ...s2, aiuto:`${G.prezzoX},90 è quasi ${G.prezzoX + 1}.`},
+      {testo:`Leggi il prezzo: ${G.euro},${G.cent} €. Quanti euro interi ci sono?`, figura:figPrezzo(`${G.euro},${G.cent} €`), ...s3, aiuto:"Gli euro interi sono il numero prima della virgola."}
+    ];
+  }
+  Guidata.passi({sez:$("#e3"), num:3, titolo:"Lo scontrino", intro:"Alla cassa si leggono i prezzi e si arrotonda.",
+    passi:S.g[2].passi, stato:S.g[2], fatto:S.risolto[2], chiuso:!S.risolto[1], figuraFinale:`<div class="g-figura">${figPrezzo(`${G.euro},${G.cent} €`)}</div>`, premio:premioG(2), quandoFinito:() => risolvi(2)});
+}
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-aiuto]"); if(!b) return;
   const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
@@ -721,6 +841,11 @@ document.addEventListener("click", e => {
 /* segreti: bussare 3 volte alla cassaforte, toccare 3 volte la bilancia, scrivere "euro" sulla tastiera */
 const SEGRETI = 3;
 const PAROLE_SEGRETE = [["euro", () => segreto("euro", "1 euro = 100 centesimi, quindi 1 centesimo = 0,01 €: è la seconda cifra dopo la virgola!")]];
+if(GUIDATA){
+  const st = $(".storia"), testo = "Sei rimasto chiuso nel supermercato! Il lucchetto della porta ha 3 numeri. Fai i 3 giochi: ogni gioco ti dà un numero. Poi metti i numeri nel lucchetto.";
+  st.outerHTML = `<div class="g-riga"><p class="storia">${testo}</p>${Guidata.bottoneVoce(testo)}</div>`;
+}
+Guidata.montaBarra();
 tutto();
 aggiornaSuoni();
 </script>
