@@ -209,11 +209,6 @@ dialog::backdrop{background:var(--veil)}
     <div id="elenco" aria-live="polite"></div>
   </section>
 
-  <section aria-labelledby="t-giochi">
-    <div class="sec-head"><h2 id="t-giochi">Giochi di ripasso</h2><span class="note">ripassa giocando</span></div>
-    <div class="giochi" id="giochi"></div>
-  </section>
-
   <section aria-labelledby="t-escape">
     <div class="sec-head"><h2 id="t-escape">Escape room</h2><a class="bacheca-btn" href="bacheca.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4M12 14v4M8 21h8M9 18h6"/></svg>Bacheca dei trofei <span id="conta-trofei"></span></a></div>
     <div class="esc-filtri">
@@ -221,6 +216,11 @@ dialog::backdrop{background:var(--veil)}
       <div class="classi" id="esc-materie" role="group" aria-label="Escape room: filtra per materia"></div>
     </div>
     <div class="giochi escape" id="giochi-escape"></div>
+  </section>
+
+  <section aria-labelledby="t-giochi">
+    <div class="sec-head"><h2 id="t-giochi">Giochi di ripasso</h2><span class="note">ripassa giocando</span></div>
+    <div class="giochi" id="giochi"></div>
   </section>
 
   <section aria-labelledby="t-prof">
@@ -243,7 +243,7 @@ dialog::backdrop{background:var(--veil)}
 
 <div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
 <script src="materiali.js?v=b5467d08"></script>
-<script src="giochi.js?v=174fc10f"></script>
+<script src="giochi.js?v=f5697943"></script>
 <script src="frasi.js?v=abf57d0f"></script>
 <script src="trofei.js?v=0e06068c"></script>
 <script>
@@ -422,9 +422,9 @@ function apri(id){
     return blocco(b.titolo, b.icona, presi);
   });
   const giochi = GIOCHI.filter(g => g.materia===c.materia && [].concat(g.capitolo||[]).includes(c.titolo));
-  /* Eureka solitario compare da solo nei capitoli che hanno frasi con lo stesso argomento */
+  /* Eureka Game Lite compare da solo nei capitoli che hanno frasi con lo stesso argomento */
   const frasiCap = (typeof FRASI !== "undefined" ? FRASI : []).filter(f => f.materia===c.materia && f.argomento===c.titolo).length;
-  if(frasiCap) giochi.unshift({titolo:"Eureka solitario", tipo:"minigioco", sotto:`${frasiCap} frasi da indovinare`,
+  if(frasiCap) giochi.unshift({titolo:"Eureka Game Lite", tipo:"minigioco", sotto:`${frasiCap} frasi da indovinare`,
     link:"eureka-solo.html#" + norm(c.materia+"-"+c.titolo).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")});
   const bloccoGiochi = giochi.length ? `<section class="blocco"><h3>${IC.gioco} Gioca e ripassa</h3><div class="files">${giochi.map(g => {
     const t = tipoGioco(g);

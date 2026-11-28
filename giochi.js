@@ -7,7 +7,7 @@
    Un gioco senza materia è "generale": si vede sempre, con qualsiasi filtro.
 */
 const GIOCHI = [
-  {titolo:"Eureka solitario", tipo:"minigioco",
+  {titolo:"Eureka Game Lite", tipo:"minigioco",
    descr:"Indovina la frase misteriosa di aritmetica, geometria, algebra o scienze, una lettera alla volta.",
    link:"eureka-solo.html"},
   {titolo:"L'aula chiusa", tipo:"escape", materia:"aritmetica", classe:"1ª", capitolo:"Insiemi, tabelle e grafici",
