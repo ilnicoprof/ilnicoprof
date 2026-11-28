@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La serra dell'orto botanico</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" sizes="32x32" href="immagini/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="immagini/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="immagini/icon-192.png">
+<link rel="apple-touch-icon" href="immagini/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: il foglio a quadretti del nicoprof; enigma 1 = i piselli di Mendel (quadrato di Punnett),
+   enigma 2 = la doppia elica (basi complementari), enigma 3 = il messaggio segreto (trascrizione e traduzione), poi la porta */
+:root{
+  --paper:#FBFCFF; --grid:#D9E4F2;
+  --ink:#1E2A44; --ink-soft:#56627A; --card:#FFFFFF; --line:#C9D5E6; --pill:#F1F5FB;
+  --accent:#2F6FDE; --accent-ink:#FFFFFF; --marker:#FFE066;
+  --giallo:#FFD966; --giallo-ink:#5A4300; --verde:#8EDDB4; --verde-ink:#0B4A2C;
+  --foglia:#8BC34A; --foglia-scura:#5A8A2A; --pisello-g:#F5D04A; --pisello-v:#8BC34A; --fiore-v:#9B6CF0; --fiore-b:#FFFFFF;
+  --serra:#EEF8EA; --vaso:#C9784A; --p1:#FF8FB1; --p2:#6FB3F2;
+  --b-A:#FF8A80; --b-T:#FFD54F; --b-C:#81D4FA; --b-G:#A5D6A7; --b-U:#CE93D8; --zucchero:#5A6680;
+  --errore:#C2410C; --errore-bg:#FDE7DC; --ok:#0B6B3F; --ok-bg:#D7F5E5;
+  --porta:#5A8A2A; --porta-scura:#3E6420; --metallo:#D5DCE6;
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hand:"Patrick Hand","Comic Sans MS","Chalkboard SE",cursive;
+  --f-mono:"Courier New",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C;
+  --foglia:#5E8A30; --foglia-scura:#3E6420; --serra:#17261C; --vaso:#8A5030; --p1:#C2577A; --p2:#3E7AB8;
+  --b-A:#C8524A; --b-T:#B8962A; --b-C:#3E86B0; --b-G:#4E8A52; --b-U:#8A4E96; --zucchero:#AEB9CA;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#3E6420; --porta-scura:#24400F; --metallo:#5A6680;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141B2B; --grid:#212C42;
+  --ink:#EEF2FA; --ink-soft:#A6B1C7; --card:#1B2438; --line:#2E3A55; --pill:#232E46;
+  --accent:#7FB0FF; --accent-ink:#0B1A33; --marker:#6B5A12;
+  --giallo:#E8C24F; --verde:#6FCB9C;
+  --foglia:#5E8A30; --foglia-scura:#3E6420; --serra:#17261C; --vaso:#8A5030; --p1:#C2577A; --p2:#3E7AB8;
+  --b-A:#C8524A; --b-T:#B8962A; --b-C:#3E86B0; --b-G:#4E8A52; --b-U:#8A4E96; --zucchero:#AEB9CA;
+  --errore:#FF9466; --errore-bg:#4A2416; --ok:#7FE0AE; --ok-bg:#163A2A;
+  --porta:#3E6420; --porta-scura:#24400F; --metallo:#5A6680;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.wrap{max-width:820px;margin:0 auto;padding-block:20px 56px;display:grid;gap:20px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap>*{min-width:0}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.torna{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:var(--ink);text-decoration:none;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--card)}
+.torna svg{width:16px;height:16px}
+header{display:grid;gap:8px}
+.eyebrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:800;font-size:.85rem}
+.tag{font-size:.8rem;font-weight:800;padding:3px 10px;border-radius:999px}
+.c-giallo{background:var(--giallo);color:var(--giallo-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.1rem,7vw,3rem);line-height:1;margin:0}
+h1 .hl{background:linear-gradient(transparent 58%,var(--marker) 58%,var(--marker) 92%,transparent 92%);padding:0 .12em}
+.storia{margin:0;font-family:var(--f-hand);font-size:1.3rem;line-height:1.35;max-width:60ch}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.indizi{display:flex;gap:8px;flex-wrap:wrap}
+.cifra-mini{display:inline-grid;place-items:center;width:34px;height:40px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.cifra-mini.vuota{border-style:dashed;color:var(--ink-soft);background:transparent}
+
+.enigma{background:var(--card);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px;display:grid;gap:14px;min-width:0}
+.enigma>*{min-width:0}
+.enigma.chiuso{box-shadow:none;border-style:dashed;border-color:var(--line);background:transparent}
+.enigma.risolto{border-color:var(--ok);box-shadow:5px 5px 0 var(--ok)}
+.e-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.e-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.1;display:flex;align-items:center;gap:10px}
+.e-head h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);font-size:1.1rem;flex:none}
+.enigma.chiuso h2{color:var(--ink-soft)}
+.enigma.chiuso .e-head h2 .n{background:transparent;color:var(--ink-soft);border-color:var(--line)}
+.consegna{margin:0;font-size:1.02rem;max-width:65ch}
+.consegna b{font-weight:800}
+.nota{margin:0;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft)}
+.esito{margin:0;min-height:1.5em;font-weight:800}
+.esito.si{color:var(--ok)} .esito.no{color:var(--errore)}
+.azioni{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem;padding:8px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{transform:translateY(-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.blu{background:var(--accent);color:var(--accent-ink)}
+.btn.piccolo{font-size:.92rem;padding:5px 12px;box-shadow:2px 2px 0 var(--ink)}
+.aiuto{margin:0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--giallo) 30%,transparent);border:1.5px dashed var(--giallo-ink);font-family:var(--f-hand);font-size:1.15rem}
+.premio{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:var(--ok-bg);color:var(--ok);font-weight:800}
+.premio .cifra-mini{border-color:var(--ok);flex:none}
+
+/* pezzi che si spostano */
+.pezzo{all:unset;box-sizing:border-box;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-width:40px;height:40px;padding:0 10px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:1.1rem;box-shadow:0 3px 0 var(--ink);font-variant-numeric:tabular-nums}
+.pezzo:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pezzo.scelto{background:var(--marker);transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
+.pezzo.sollevato{opacity:.3}
+.pezzo.sbagliato{background:var(--errore-bg);color:var(--errore);border-color:var(--errore)}
+.ombra{position:fixed!important;z-index:50!important;pointer-events:none!important;transform:rotate(-4deg) scale(1.08);box-shadow:0 10px 18px rgba(0,0,0,.25);margin:0}
+.scegli .zona{outline:2px dashed var(--accent);outline-offset:-2px}
+.zona.sopra{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
+.banco{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:58px;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--pill)}
+.banco .vuoto{font-family:var(--f-hand);color:var(--ink-soft);font-size:1.1rem}
+.etichetta{font-weight:800;font-size:.85rem;color:var(--ink-soft);margin:0 0 -6px}
+.display{font-family:var(--f-mono);font-weight:700;background:#16241A;color:#7CFFA0;padding:10px 14px;border-radius:10px;border:3px solid var(--ink);font-size:1.15rem;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 6px rgba(124,255,160,.5)}
+.display small{display:block;font-size:.75rem;color:#4FBF73;text-shadow:none}
+
+.c-verde{background:var(--verde);color:var(--verde-ink)}
+.e-head h2 .n{background:var(--verde);color:var(--verde-ink)}
+.domande{display:grid;gap:8px}
+.domanda{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:800;padding:10px;border-radius:12px;background:var(--pill)}
+.domanda.sbagliata{background:var(--errore-bg)}
+.domanda input{width:70px;font:inherit;font-family:var(--f-mono);font-size:1.1rem;padding:4px 8px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);text-align:right}
+.opz{all:unset;box-sizing:border-box;cursor:pointer;padding:3px 10px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-weight:800;font-size:.9rem}
+.opz[aria-pressed="true"]{background:var(--marker)}
+.opz:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opz:disabled{cursor:default}
+.cartello{font-family:var(--f-hand);font-size:1.2rem;padding:8px 14px;border-radius:10px;border:3px solid var(--ink);background:var(--serra);color:var(--ink);justify-self:start;transform:rotate(-1deg);max-width:100%}
+
+/* enigma 1: Punnett */
+.serra{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px;align-items:start}
+@media (max-width:640px){.serra{grid-template-columns:1fr}}
+.genitori{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pianta{display:grid;justify-items:center;gap:4px;padding:8px;border-radius:12px;border:2px solid var(--ink);background:var(--serra);cursor:pointer}
+.pianta svg{width:90px;height:110px}
+.pianta b{font-family:var(--f-display);font-size:1.05rem}
+.pianta small{font-weight:700;color:var(--ink-soft);font-size:.8rem;text-align:center}
+.punnett{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;max-width:340px}
+.punnett>div{min-height:64px;border-radius:10px;display:grid;place-items:center;gap:2px;font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.casella{border:2px solid var(--ink);background:var(--card)}
+.testata{border:2px dashed var(--line);background:var(--pill)}
+.testata.sbagliata{border-color:var(--errore);background:var(--errore-bg)}
+.angolo{font-size:.75rem!important;font-family:var(--f-body)!important;color:var(--ink-soft);text-align:center;line-height:1.2}
+.allele{min-width:46px;font-size:1.3rem}
+.allele.p1{background:color-mix(in srgb,var(--p1) 35%,var(--card))}
+.allele.p2{background:color-mix(in srgb,var(--p2) 35%,var(--card))}
+.semino{width:22px;height:22px;border-radius:50%;border:2px solid var(--ink)}
+.risolto .semino{animation:spunta .6s cubic-bezier(.3,1.6,.5,1) both}
+.risolto .casella:nth-child(5) .semino{animation-delay:.1s}.risolto .casella:nth-child(6) .semino{animation-delay:.25s}.risolto .casella:nth-child(8) .semino{animation-delay:.4s}.risolto .casella:nth-child(9) .semino{animation-delay:.55s}
+@keyframes spunta{from{transform:scale(0)}}
+
+/* enigma 2: la doppia elica */
+.elica{display:grid;gap:5px;justify-items:center;padding:12px;border-radius:14px;border:2px solid var(--ink);background:var(--card)}
+.piolo{display:grid;grid-template-columns:52px 70px 52px;align-items:center;justify-items:center}
+.piolo .base{width:48px;height:42px;border-radius:10px;border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:1.3rem;color:#1E2A44}
+.piolo .legame{width:100%;height:4px;background:var(--ink);opacity:.5}
+.piolo .posto{width:52px;height:44px;border-radius:10px;border:2px dashed var(--line);background:var(--pill);display:grid;place-items:center}
+.piolo .posto.sbagliato{border-color:var(--errore);background:var(--errore-bg)}
+.piolo .posto .base{width:44px;height:38px}
+.risolto .piolo{animation:avvita 2.4s ease-in-out infinite}
+@keyframes avvita{0%,100%{transform:scaleX(1)}50%{transform:scaleX(-1)}}
+.sorgenti{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.sorgente{font-size:1.4rem;min-width:52px;height:48px;color:#1E2A44}
+
+/* enigma 3: il messaggio segreto */
+.codice-gen{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:4px;font-family:var(--f-mono);font-weight:700;font-size:.9rem}
+.codice-gen span{padding:3px 6px;border-radius:6px;background:var(--pill);border:1.5px solid var(--line);text-align:center}
+.filo{display:flex;flex-wrap:wrap;gap:8px}
+.codone{display:grid;gap:4px;justify-items:center;padding:6px;border-radius:10px;border:2px solid var(--ink);background:var(--card)}
+.codone.sbagliato{border-color:var(--errore);background:var(--errore-bg)}
+.codone .dna{font-family:var(--f-mono);font-weight:700;font-size:1.05rem;letter-spacing:.12em}
+.codone input{width:62px;font:inherit;font-family:var(--f-mono);font-weight:700;font-size:1.05rem;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:3px;border-radius:8px;border:2px solid var(--ink);background:var(--card);color:var(--ink)}
+.proteina{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:52px;padding:8px;border-radius:12px;background:var(--serra);border:2px solid var(--ink)}
+.perla{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);background:var(--b-U);font-family:var(--f-display);font-weight:800;font-size:1.2rem;color:#1E2A44;animation:perla .5s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes perla{from{transform:scale(0) translateX(-30px)}}
+@media (prefers-reduced-motion:reduce){.risolto .piolo,.perla,.risolto .semino{animation:none}}
+
+/* il lucchetto */
+.porta{display:grid;gap:16px;justify-items:center;text-align:center;background:var(--porta);background-image:repeating-linear-gradient(90deg,transparent 0 46px,var(--porta-scura) 46px 48px);border:3px solid var(--ink);border-radius:18px 18px 6px 6px;padding:22px 14px;box-shadow:5px 5px 0 var(--ink);color:#FFF8EC}
+.porta h2{margin:0;font-family:var(--f-display);font-size:1.5rem}
+.porta.chiuso .lucchetto{opacity:.6}
+.lucchetto{display:flex;gap:10px;padding:16px 18px;border-radius:18px;background:var(--metallo);border:3px solid var(--ink);box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.rotella{display:grid;gap:4px;justify-items:center}
+.rotella button{all:unset;cursor:pointer;width:44px;height:28px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);font-weight:800}
+.rotella button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rotella button:disabled{cursor:default;opacity:.6}
+.rotella output{display:grid;place-items:center;width:52px;height:62px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:2.2rem;font-variant-numeric:tabular-nums}
+.porta .esito{color:#FFF8EC}
+.libero{display:grid;gap:10px;justify-items:center;text-align:center;padding:24px 16px;border-radius:18px;background:var(--ok-bg);border:3px solid var(--ok);color:var(--ink)}
+.libero b{font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--ok)}
+.libero p{margin:0;font-weight:700}
+
+.suoni{all:unset;cursor:pointer;font-weight:800;font-size:.92rem;padding:5px 12px;border-radius:999px;background:var(--card);border:2px solid var(--ink)}
+.suoni:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.coriandolo{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:30;pointer-events:none;animation:cade 2.5s ease-in forwards}
+@keyframes cade{to{transform:translateY(105vh) rotate(var(--giro))}}
+#segreto{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:25;display:grid;gap:2px;width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--giallo);color:var(--giallo-ink);box-shadow:4px 4px 0 var(--ink);animation:spuntaSeg .35s ease both}
+#segreto b{font-family:var(--f-display);font-size:1.1rem}
+@keyframes spuntaSeg{from{transform:translate(-50%,20px);opacity:0}}
+.uscita{position:relative;perspective:1400px}
+.uscita .luce{position:absolute;inset:0;border-radius:18px 18px 6px 6px;border:3px solid var(--ink);background:radial-gradient(circle at 25% 50%,#FFFBE6,var(--giallo) 45%,var(--ok-bg) 100%);opacity:0;transition:opacity .7s ease}
+.uscita.aperta .luce{opacity:1}
+.porta{position:relative;transform-origin:left center;transition:transform 1.3s cubic-bezier(.55,0,.3,1),box-shadow 1.3s ease}
+.uscita.aperta .porta{transform:rotateY(-104deg);box-shadow:0 0 0 var(--ink)}
+.lucchetto{position:relative;margin-top:30px}
+.arco{position:absolute;left:50%;top:-40px;width:84px;height:50px;margin-left:-42px;transform-origin:16% 100%;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lucchetto.aperto .arco{transform:translateY(-12px) rotate(-22deg)}
+.rotella output.giusta{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);animation:clicca .25s ease}
+@keyframes clicca{50%{transform:scale(1.18)}}
+.libero.appare{animation:appare .7s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes appare{from{transform:scale(.6);opacity:0}}
+@keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.scuoti{animation:scuoti .3s ease 2}
+@media (max-width:480px){.enigma{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.firma{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.1);font-family:var(--f-body);font-size:.75rem;color:var(--ink-soft);pointer-events:none}
+.firma img{width:30px;height:30px;border-radius:50%;background:#FFFFFF;border:1px solid var(--line);flex:none}
+.firma b{font-weight:800;color:var(--ink)}
+@media (max-width:480px){.firma{padding:3px}.firma span{display:none}}
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="torna" href="index.html#t-escape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>ilnicoprof</a>
+  <header>
+    <div class="eyebrow"><span class="tag c-verde">Scienze</span> 3ª media · Genetica e DNA · escape room</div>
+    <h1>la serra dell'orto <span class="hl">botanico</span></h1>
+    <p class="storia">La classe visita la serra dell'orto botanico, dove una ricercatrice studia i piselli come faceva Mendel. Mentre lei va a prendere le fragole per l'estrazione del DNA, la porta automatica della serra si blocca: il lucchetto ha un codice di 3 cifre. Le istruzioni per uscire sono scritte nel DNA!</p>
+    <div class="barra">
+      <span class="pill" id="tempo">Tempo 00:00</span>
+      <button class="suoni" id="suoni" type="button" aria-pressed="true">Suoni: sì</button>
+      <div class="indizi" id="indizi" aria-label="Cifre trovate"></div>
+    </div>
+  </header>
+
+  <section class="enigma" id="e1" aria-labelledby="t1"></section>
+  <section class="enigma" id="e2" aria-labelledby="t2"></section>
+  <section class="enigma" id="e3" aria-labelledby="t3"></section>
+  <section id="e4" aria-labelledby="t4"></section>
+  <p class="sr" aria-live="polite" id="annuncio"></p>
+</div>
+
+<div class="firma" aria-hidden="true"><img src="immagini/logo-mini.png" alt=""><span>Powered by <b>ilnicoprof</b></span></div>
+<script src="trofei.js?v=e2bab88c"></script>
+<script src="oggetto-segreto.js?v=dc03d9c6"></script>
+<script>
+/* ===== dati ===== */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mescola = a => { const b = [...a]; for(let i = b.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]] = [b[j],b[i]]; } return b; };
+const pesca = (a, n) => mescola(a).slice(0, n);
+const numero = v => { const t = String(v).trim().replace(",", "."); return t === "" ? NaN : +t; };
+
+/* enigma 1: il carattere e l'incrocio (la cifra = semi recessivi attesi su N) */
+const CARATTERI = [
+  {n:"colore del seme", L:"G", dom:"giallo", rec:"verde", cd:"var(--pisello-g)", cr:"var(--pisello-v)", cosa:"semi", sing:"seme"},
+  {n:"colore del fiore", L:"V", dom:"viola", rec:"bianco", cd:"var(--fiore-v)", cr:"var(--fiore-b)", cosa:"fiori", sing:"fiore"}
+];
+const CAR1 = pesca(CARATTERI, 1)[0];
+const INCROCI = [
+  {p:["Dd", "Dd"], fr:1 / 4, w:4}, {p:["Dd", "dd"], fr:1 / 2, w:3}, {p:["DD", "dd"], fr:0, w:1}, {p:["dd", "dd"], fr:1, w:1}, {p:["DD", "Dd"], fr:0, w:1}
+];
+function scegliIncrocio(){
+  const lista = INCROCI.flatMap(x => Array(x.w).fill(x)), x = lista[rnd(0, lista.length - 1)];
+  const sost = s => s.replace(/D/g, CAR1.L).replace(/d/g, CAR1.L.toLowerCase());
+  const p = mescola(x.p.map(sost));
+  let cifra, N;
+  if(x.fr === 0){ cifra = 0; N = 4 * rnd(2, 6); }
+  else { cifra = x.fr === 1 ? rnd(3, 9) : x.fr === .5 ? rnd(2, 9) : rnd(2, 9); N = Math.round(cifra / x.fr); }
+  return {p, fr:x.fr, cifra, N};
+}
+const INC1 = scegliIncrocio();
+const fenotipo = g => /[A-Z]/.test(g) ? "dom" : "rec";
+const ordina = (a, b) => a === a.toUpperCase() ? a + b : b === b.toUpperCase() ? b + a : a + b;
+const QUADRATO = [0, 1].map(j => [0, 1].map(i => ordina(INC1.p[0][i], INC1.p[1][j])));   /* QUADRATO[riga][colonna] */
+const REC_QUAD = QUADRATO.flat().filter(g => fenotipo(g) === "rec").length;
+/* i 4 alleli da trascinare: due del genitore 1 (rosa) e due del genitore 2 (azzurri) */
+const ALLELI1 = mescola([0, 1].flatMap(g => [0, 1].map(k => ({g, k, l:INC1.p[g][k]}))));
+
+/* enigma 2: il filamento stampo (8 basi, almeno una A) */
+const COMPL = {A:"T", T:"A", C:"G", G:"C"};
+function scegliFilo(){ for(;;){ const f = Array.from({length: 8}, () => "ATCG"[rnd(0, 3)]); if(f.includes("A") && new Set(f).size >= 3) return f; } }
+const FILO2 = scegliFilo();
+const N_T2 = FILO2.filter(b => b === "A").length;
+
+/* enigma 3: il codice genetico delle slide (mRNA → lettera) e la parola nascosta */
+const CODICE_GEN = {AUG:"M", GAA:"E", GAG:"E", AAU:"N", GAU:"D", CUU:"L", GCU:"A", GUU:"V", UGG:"W", CCU:"P", GGU:"G", UAA:"STOP"};
+const PER_LETTERA = {M:["AUG"], E:["GAA", "GAG"], N:["AAU"], D:["GAU"], L:["CUU"], A:["GCU"], V:["GUU"], W:["UGG"], P:["CCU"], G:["GGU"]};
+const PAROLA3 = pesca(["MELA", "MANGA", "MENDEL", "MANDALA"], 1)[0];
+const MRNA3 = [...PAROLA3].map(l => pesca(PER_LETTERA[l], 1)[0]).concat(["UAA"]);
+const TRASC = {A:"U", T:"A", C:"G", G:"C"}, STAMPO = {U:"A", A:"T", G:"C", C:"G"};
+const DNA3 = MRNA3.map(c => [...c].map(b => STAMPO[b]).join(""));
+/* la mutazione nel 2° codone */
+const MUT3 = (() => {
+  const tipi = PAROLA3[1] === "E" ? ["nessun effetto", "la proteina cambia", "la proteina si interrompe"] : ["la proteina cambia", "la proteina si interrompe"];
+  const tipo = pesca(tipi, 1)[0];
+  const nuovo = tipo === "nessun effetto" ? (MRNA3[1] === "GAA" ? "GAG" : "GAA") : tipo === "la proteina cambia" ? (MRNA3[1] === "GUU" ? "GAU" : "GUU") : "UAA";
+  return {tipo, nuovo};
+})();
+
+const CODICE = [INC1.cifra, N_T2, PAROLA3.length];
+const INDIZI = [
+  `Quanti ${CAR1.cosa} ${CAR1.rec === "verde" ? "verdi" : "bianchi"} ti aspetti su ${INC1.N}?`,
+  "Quante T ci sono nel filamento che hai costruito?",
+  "Di quante lettere (amminoacidi) è fatta la proteina?"
+];
+const AIUTI = [
+  `Sopra il quadrato metti i due alleli del genitore 1 (rosa), a lato quelli del genitore 2 (azzurri): ogni casella prende una lettera da sopra e una da lato. La maiuscola è dominante: basta una per vedere il carattere ${CAR1.dom}; il ${CAR1.sing} è ${CAR1.rec} solo con due minuscole. Se 1 casella su 4 è ${CAR1.rec}, su ${INC1.N} ${CAR1.cosa} te ne aspetti ${INC1.N} : 4.`,
+  "Le basi si appaiano sempre così: A con T e C con G. Trascina dalla scorta la base giusta accanto a ogni base del filamento stampo.",
+  "Trascrizione: ogni base del DNA diventa la sua complementare nell'mRNA, ma con la U al posto della T (A→U, T→A, C→G, G→C). Poi leggi l'mRNA a gruppi di 3 basi (i codoni) e cerca ogni codone nel codice: AUG è l'inizio, UAA è lo stop e non dà una lettera."
+];
+
+const S = {
+  risolto:[false,false,false], aiuto:[false,false,false],
+  testate:{t0:null, t1:null, s0:null, s1:null}, sbagliate1:new Set(), recq:"", attesi:"", dom1:new Set(),
+  filo:FILO2.map(() => null), sbagliate2:new Set(), gameti:null, dom2:new Set(),
+  mrna:MRNA3.map(() => ""), parola:"", mut:null, sbagliati3:new Set(), dom3:new Set(),
+  rotelle:[0,0,0], libero:false, inizio:null, fine:null
+};
+const $ = s => document.querySelector(s);
+const annuncia = t => { $("#annuncio").textContent = t; };
+
+/* ===== trascina oppure tocca-e-posa ===== */
+let scelto = null;
+function seleziona(el, posa){
+  if(scelto && scelto.el === el){ deseleziona(); return; }
+  deseleziona();
+  scelto = {el, posa}; el.classList.add("scelto"); document.body.classList.add("scegli"); suona("prendi");
+  annuncia(`Hai preso ${el.getAttribute("aria-label") || el.textContent}. Ora tocca dove vuoi metterlo.`);
+}
+function deseleziona(){ if(scelto) scelto.el.classList.remove("scelto"); scelto = null; document.body.classList.remove("scegli"); }
+const zonaSotto = (x,y) => document.elementFromPoint(x,y)?.closest("[data-zona]");
+function pezzo(el, posa){
+  el.addEventListener("pointerdown", e => {
+    if(e.button > 0) return;
+    avvia();
+    const r = el.getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY;
+    let ombra = null, sopra = null;
+    document.querySelectorAll(".ombra").forEach(o => o.remove());   /* nessuna copia rimasta da un trascinamento precedente */
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    const muovi = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      /* il rilascio del tasto è andato perso (mouse fuori dalla finestra, ctrl-clic...): poso il pezzo qui */
+      if(ev.pointerType === "mouse" && ev.buttons === 0){ fine({type:"pointerup", pointerId:e.pointerId, clientX:ev.clientX, clientY:ev.clientY}); return; }
+      if(!ombra){
+        if(Math.hypot(ev.clientX-x0, ev.clientY-y0) < 6) return;
+        deseleziona();
+        ombra = el.cloneNode(true); ombra.classList.add("ombra");
+        /* la copia che segue il dito resta sempre visibile, qualunque stile abbia il pezzo */
+        Object.assign(ombra.style, {position:"fixed", zIndex:"50", pointerEvents:"none", margin:"0", opacity:"1", visibility:"visible"}); ombra.style.width = r.width+"px"; ombra.style.height = r.height+"px";
+        document.body.append(ombra); el.classList.add("sollevato"); suona("prendi");
+      }
+      ombra.style.left = (ev.clientX-(x0-r.left))+"px"; ombra.style.top = (ev.clientY-(y0-r.top))+"px";
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z !== sopra){ sopra?.classList.remove("sopra"); z?.classList.add("sopra"); sopra = z; }
+    };
+    const fine = ev => {
+      if(ev.pointerId !== e.pointerId) return;
+      window.removeEventListener("pointermove", muovi); window.removeEventListener("pointerup", fine); window.removeEventListener("pointercancel", fine);
+      if(!ombra) return;
+      ombra.remove(); el.classList.remove("sollevato"); sopra?.classList.remove("sopra");
+      el.dataset.trascinato = "1"; setTimeout(() => { delete el.dataset.trascinato; }, 400);   /* serve solo a ignorare il clic che segue il rilascio */
+      const z = zonaSotto(ev.clientX, ev.clientY);
+      if(z && ev.type === "pointerup") posa(el, z, ev.clientX, ev.clientY);
+    };
+    /* ascolto tutta la pagina: il rilascio arriva anche se il dito o il mouse non è più sopra il pezzo */
+    window.addEventListener("pointermove", muovi); window.addEventListener("pointerup", fine); window.addEventListener("pointercancel", fine);
+  });
+  el.addEventListener("dragstart", ev => ev.preventDefault());
+  el.addEventListener("click", e => {
+    e.stopPropagation();
+    if(el.dataset.trascinato){ delete el.dataset.trascinato; return; }
+    avvia(); seleziona(el, posa);
+  });
+}
+document.addEventListener("click", e => {
+  if(!scelto) return;
+  const z = e.target.closest("[data-zona]");
+  if(z){ const s = scelto; deseleziona(); s.posa(s.el, z, e.clientX, e.clientY); }
+  else if(!e.target.closest(".pezzo")) deseleziona();
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") deseleziona(); });
+
+/* ===== tempo e suoni ===== */
+function avvia(){ if(!S.inizio) S.inizio = Date.now(); }
+const mmss = ms => { const s = Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+setInterval(() => { $("#tempo").textContent = "Tempo " + mmss(S.inizio ? (S.fine || Date.now()) - S.inizio : 0); }, 500);
+let audio;
+let suoniOn = true; try { suoniOn = localStorage.getItem("nicoprof:suoni") !== "no"; } catch {}
+/* [frequenza, ritardo, durata, forma, volume] */
+const SUONI = {
+  si:[[523,0,.12],[784,.1,.2]], no:[[200,0,.25,"sawtooth",.07]], bip:[[880,0,.06,"triangle",.05]],
+  prendi:[[520,0,.05,"triangle",.08],[780,.04,.06,"triangle",.08]],
+  posa:[[300,0,.07,"triangle",.13],[200,.05,.09,"triangle",.11]],
+  zip:[[1200,0,.04,"square",.03],[1400,.05,.04,"square",.03],[1600,.1,.04,"square",.03],[1800,.15,.04,"square",.03],[2000,.2,.04,"square",.03],[2200,.25,.1,"square",.03]],
+  ribosoma:[[440,0,.12,"sine",.1],[554,.25,.12,"sine",.1],[659,.5,.12,"sine",.1],[880,.75,.3,"sine",.12]],
+  segreto:[[1047,0,.1],[1319,.08,.1],[1568,.16,.1],[2093,.24,.3]],
+  clic:[[1900,0,.025,"square",.05],[1200,.02,.03,"square",.04]],
+  sblocco:[[180,0,.07,"square",.09],[520,.07,.14,"triangle",.14]],
+  cigolio:[[140,0,.5,"sawtooth",.035],[155,.25,.6,"sawtooth",.03]],
+  porta:[[392,0,.15],[523,.13,.15],[659,.26,.15],[784,.39,.15],[1047,.52,.35],[784,.8,.12],[1047,.92,.6]]
+};
+function suona(tipo){
+  if(!suoniOn || !SUONI[tipo]) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    SUONI[tipo].forEach(([fr, da, dur, forma = "triangle", vol = .16]) => {
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime + da;
+      o.type = forma; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + dur + .02);
+    });
+  } catch {}
+}
+function aggiornaSuoni(){ const b = document.querySelector("#suoni"); if(b){ b.textContent = "Suoni: " + (suoniOn ? "sì" : "no"); b.setAttribute("aria-pressed", suoniOn); } }
+document.addEventListener("click", e => {
+  if(!e.target.closest("#suoni")) return;
+  suoniOn = !suoniOn; try { localStorage.setItem("nicoprof:suoni", suoniOn ? "si" : "no"); } catch {}
+  aggiornaSuoni(); suona("bip");
+});
+
+/* ===== coriandoli per la vittoria ===== */
+function coriandoli(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colori = ["var(--giallo)", "var(--accent)", "var(--ok)", "var(--verde)", "var(--rosa)"];
+  for(let i = 0; i < 90; i++){
+    const c = document.createElement("span"); c.className = "coriandolo";
+    c.style.left = Math.random()*100 + "vw"; c.style.background = colori[i % colori.length];
+    c.style.animationDelay = Math.random()*.8 + "s"; c.style.animationDuration = 2 + Math.random()*1.5 + "s";
+    c.style.setProperty("--giro", (Math.random()*720 - 360) + "deg");
+    document.body.append(c); setTimeout(() => c.remove(), 4500);
+  }
+}
+
+/* ===== segreti nascosti ===== */
+const trovati = new Set();
+function segreto(id, testo){
+  if(trovati.has(id)) return;
+  trovati.add(id); suona("segreto");
+  let t = document.querySelector("#segreto");
+  if(!t){ t = document.createElement("div"); t.id = "segreto"; t.setAttribute("role", "status"); document.body.append(t); }
+  t.innerHTML = `<b>Segreto trovato! (${trovati.size} di ${SEGRETI})</b><span>${testo}</span>`;
+  t.hidden = false; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  clearTimeout(segreto.timer); segreto.timer = setTimeout(() => { t.hidden = true; }, 6500);
+}
+let digitate = "";
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea") || e.key.length !== 1) return;
+  digitate = (digitate + e.key.toLowerCase()).slice(-12);
+  PAROLE_SEGRETE.forEach(([parola, azione]) => { if(digitate.endsWith(parola)) azione(); });
+});
+const fraseSegreti = () => trovati.size === SEGRETI ? "Hai scoperto anche tutti i segreti nascosti!" : `Segreti nascosti trovati: ${trovati.size} su ${SEGRETI}. Gioca di nuovo per scoprirli tutti!`;
+
+/* ===== parti comuni ===== */
+function testa(i, titolo){
+  const chiuso = i > 0 && !S.risolto[i-1];
+  return `<div class="e-head"><h2 id="t${i+1}"><span class="n">${S.risolto[i] ? "✓" : i+1}</span>${titolo}</h2>
+    ${!chiuso && !S.risolto[i] ? `<button class="btn piccolo" type="button" data-aiuto="${i}">${S.aiuto[i] ? "Nascondi aiuto" : "Aiutino"}</button>` : ""}</div>`;
+}
+const chiusoHtml = i => `<p class="nota">Risolvi prima l'enigma ${i} per aprire questo.</p>`;
+const premioHtml = (i, extra = "") => `<div class="premio"><span class="cifra-mini">${CODICE[i]}</span><span>Cifra n. ${i+1} trovata! ${INDIZI[i]} ${extra}Risposta: ${CODICE[i]}.</span></div>`;
+const aiutoHtml = i => S.aiuto[i] ? `<p class="aiuto">${AIUTI[i]}</p>` : "";
+function esito(i, testo, tipo){ const el = $(`#esito${i}`); if(el){ el.textContent = testo; el.className = "esito "+tipo; } }
+
+
+
+
+
+
+
+
+
+/* ===== enigma 1: i piselli di Mendel ===== */
+const colore = g => fenotipo(g) === "dom" ? CAR1.cd : CAR1.cr;
+function svgPianta(g){
+  return `<svg viewBox="0 0 90 110" aria-hidden="true"><path d="M28 86h34l-4 20H32z" fill="var(--vaso)" stroke="var(--ink)" stroke-width="2.5"/>
+    <path d="M45 86V30M45 62c-12-2-18-10-18-18 10 0 16 6 18 14M45 48c12-2 18-10 18-18-10 0-16 6-18 14" fill="var(--foglia)" stroke="var(--foglia-scura)" stroke-width="2.5"/>
+    ${CAR1.L === "G" ? `<path d="M48 70c10-6 22-4 28 2-8 8-22 8-28-2z" fill="var(--foglia)" stroke="var(--ink)" stroke-width="2"/>${[56, 63, 70].map(x => `<circle cx="${x}" cy="71" r="3.6" fill="${colore(g)}" stroke="var(--ink)" stroke-width="1.2"/>`).join("")}`
+      : `${[0, 72, 144, 216, 288].map(a => `<ellipse cx="${45 + 8 * Math.cos(a * Math.PI / 180)}" cy="${22 + 8 * Math.sin(a * Math.PI / 180)}" rx="7" ry="5" transform="rotate(${a} ${45 + 8 * Math.cos(a * Math.PI / 180)} ${22 + 8 * Math.sin(a * Math.PI / 180)})" fill="${colore(g)}" stroke="var(--ink)" stroke-width="1.5"/>`).join("")}<circle cx="45" cy="22" r="4" fill="var(--giallo)" stroke="var(--ink)" stroke-width="1.2"/>`}</svg>`;
+}
+function disegna1(){
+  const sez = $("#e1"), fatto = S.risolto[0];
+  sez.className = "enigma" + (fatto ? " risolto" : "");
+  const T = fatto ? {t0:ALLELI1.findIndex(a => a.g === 0 && a.k === 0), t1:ALLELI1.findIndex(a => a.g === 0 && a.k === 1), s0:ALLELI1.findIndex(a => a.g === 1 && a.k === 0), s1:ALLELI1.findIndex(a => a.g === 1 && a.k === 1)} : S.testate;
+  const tile = i => `<button class="pezzo allele p${ALLELI1[i].g + 1}" type="button" data-a="${i}" aria-label="Allele ${ALLELI1[i].l} del genitore ${ALLELI1[i].g + 1}"${fatto ? " disabled" : ""}>${ALLELI1[i].l}</button>`;
+  const usati = new Set(Object.values(T).filter(v => v !== null));
+  const testata = k => `<div class="testata zona${S.sbagliate1.has(k) ? " sbagliata" : ""}" data-zona="${k}">${T[k] !== null ? tile(T[k]) : ""}</div>`;
+  const pieno = Object.values(T).every(v => v !== null);
+  const cella = (r, c) => { if(!pieno) return `<div class="casella"></div>`; const g = ordina(ALLELI1[T["t" + c]].l, ALLELI1[T["s" + r]].l); return `<div class="casella">${g}<span class="semino" style="background:${colore(g)}"></span></div>`; };
+  sez.innerHTML = testa(0, "I piselli di Mendel") + `
+    <p class="consegna">Sul bancone ci sono due piante di pisello e la ricercatrice vuole sapere che ${CAR1.cosa} nasceranno incrociandole (carattere: ${CAR1.n}; ${CAR1.L} = ${CAR1.dom}, dominante; ${CAR1.L.toLowerCase()} = ${CAR1.rec}, recessivo). <b>Costruisci il quadrato di Punnett</b>: trascina gli alleli del genitore 1 sopra e quelli del genitore 2 a lato.</p>
+    ${aiutoHtml(0)}
+    <div class="serra">
+      <div class="genitori">${INC1.p.map((g, k) => `<div class="pianta" data-pianta="${k}"><b style="color:var(--p${k + 1})">Genitore ${k + 1}</b>${svgPianta(g)}<b>${g}</b><small>${fenotipo(g) === "dom" ? CAR1.dom : CAR1.rec} · ${g[0] === g[1] ? "omozigote" : "eterozigote"}</small></div>`).join("")}</div>
+      <div style="display:grid;gap:8px">
+        <div class="punnett"><div class="angolo">gen. 1 →<br>gen. 2 ↓</div>${testata("t0")}${testata("t1")}${testata("s0")}${cella(0, 0)}${cella(0, 1)}${testata("s1")}${cella(1, 0)}${cella(1, 1)}</div>
+        ${fatto ? "" : `<div class="banco zona" data-zona="banco1">${ALLELI1.map((_, i) => i).filter(i => !usati.has(i)).map(tile).join("") || '<span class="vuoto">Tutti gli alleli sono nel quadrato.</span>'}</div>`}
+      </div>
+    </div>
+    <div class="domande">
+      <label class="domanda${S.dom1.has("q") ? " sbagliata" : ""}">Quante caselle su 4 danno ${CAR1.cosa} ${CAR1.rec === "verde" ? "verdi" : "bianchi"}? <input type="text" inputmode="numeric" id="recq" value="${fatto ? REC_QUAD : S.recq}"${fatto ? " disabled" : ""}></label>
+      <label class="domanda${S.dom1.has("a") ? " sbagliata" : ""}">La ricercatrice ottiene ${INC1.N} ${CAR1.cosa}: quanti ${CAR1.rec === "verde" ? "verdi" : "bianchi"} si aspetta? <input type="text" inputmode="numeric" id="attesi" value="${fatto ? INC1.cifra : S.attesi}"${fatto ? " disabled" : ""}></label>
+    </div>
+    ${fatto ? premioHtml(0, `${REC_QUAD === 1 ? "1 casella" : REC_QUAD + " caselle"} su 4: ${INC1.N} × ${REC_QUAD}/4 = ${INC1.cifra}. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla1">Controlla il quadrato</button><p class="esito" id="esito0"></p></div>`}`;
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa1));
+  $("#recq").addEventListener("input", e => { avvia(); S.recq = e.target.value; });
+  $("#attesi").addEventListener("input", e => { avvia(); S.attesi = e.target.value; });
+  $("#controlla1").addEventListener("click", controlla1);
+}
+function posa1(el, zona){
+  const a = +el.dataset.a, z = zona.dataset.zona;
+  for(const k of Object.keys(S.testate)) if(S.testate[k] === a) S.testate[k] = null;
+  if(z in S.testate){ S.testate[z] = a; S.sbagliate1.delete(z); }
+  else if(z !== "banco1") return;
+  suona("posa"); disegna1();
+}
+function controlla1(){
+  if(Object.values(S.testate).some(v => v === null)){ esito(0, "Metti tutti e quattro gli alleli intorno al quadrato.", "no"); suona("no"); return; }
+  if(!String(S.recq).trim() || !String(S.attesi).trim()){ esito(0, "Rispondi anche alle due domande.", "no"); suona("no"); return; }
+  S.sbagliate1 = new Set(Object.entries(S.testate).filter(([k, a]) => ALLELI1[a].g !== (k[0] === "t" ? 0 : 1)).map(([k]) => k));
+  S.dom1 = new Set();
+  if(numero(S.recq) !== REC_QUAD) S.dom1.add("q");
+  if(numero(S.attesi) !== INC1.cifra) S.dom1.add("a");
+  if(S.sbagliate1.size || S.dom1.size){
+    disegna1();
+    esito(0, (S.sbagliate1.size ? "Sopra vanno gli alleli del genitore 1 (rosa), a lato quelli del genitore 2 (azzurri). " : "") + (S.dom1.has("q") ? `Conta le caselle con due lettere minuscole. ` : "") + (S.dom1.has("a") ? `Se ${REC_QUAD} caselle su 4 sono ${CAR1.rec}, su ${INC1.N} ${CAR1.cosa} quante?` : ""), "no"); suona("no"); return;
+  }
+  risolvi(0);
+}
+let tocchiPianta = 0;
+document.addEventListener("click", e => {
+  if(!e.target.closest("[data-pianta]")) return;
+  suona("bip");
+  if(++tocchiPianta >= 3) segreto("piselli", "Mendel coltivò e contò quasi 28 000 piante di pisello in 8 anni, nell'orto del suo monastero a Brno!");
+});
+
+/* ===== enigma 2: la doppia elica ===== */
+const baseHtml = b => `<span class="base" style="background:var(--b-${b})">${b}</span>`;
+function disegna2(){
+  const sez = $("#e2"), chiuso = !S.risolto[0], fatto = S.risolto[1];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(1, "La doppia elica") + chiusoHtml(1); return; }
+  const op = (val, giusto) => `<button class="opz" type="button" data-gam="${val}" aria-pressed="${(fatto ? giusto : S.gameti) === val}"${fatto ? " disabled" : ""}>${val}</button>`;
+  sez.innerHTML = testa(1, "La doppia elica") + `
+    <p class="consegna">Nel frigorifero della serra c'è il DNA estratto dalle fragole, ma un filamento si è staccato. <b>Ricostruisci il filamento complementare</b>: trascina dalla scorta la base giusta accanto a ogni base del filamento stampo.</p>
+    ${aiutoHtml(1)}
+    <div class="elica">${FILO2.map((b, k) => { const v = fatto ? COMPL[b] : S.filo[k];
+      return `<div class="piolo" style="animation-delay:${-k * .3}s">${baseHtml(b)}<span class="legame"></span><span class="posto zona${S.sbagliate2.has(k) ? " sbagliato" : ""}" data-zona="p${k}">${v ? baseHtml(v) : ""}</span></div>`; }).join("")}</div>
+    ${fatto ? "" : `<p class="etichetta">La scorta di nucleotidi</p>
+    <div class="sorgenti">${["A", "T", "C", "G"].map(b => `<button class="pezzo sorgente" type="button" data-b="${b}" style="background:var(--b-${b})" aria-label="Base ${b}">${b}</button>`).join("")}</div>`}
+    <div class="domande">
+      <div class="domanda${S.dom2.has("g") ? " sbagliata" : ""}">Un ovocita o uno spermatozoo (un gamete) ha… ${["23 cromosomi", "46 cromosomi", "92 cromosomi"].map(v => op(v, "23 cromosomi")).join("")}</div>
+    </div>
+    ${fatto ? premioHtml(1, `Il filamento stampo ha ${N_T2} ${N_T2 === 1 ? "A" : "A"}, quindi nel tuo filamento ci sono ${N_T2} T. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla2">Controlla l'elica</button><p class="esito" id="esito1"></p></div>`}`;
+  if(fatto) return;
+  sez.querySelectorAll(".pezzo").forEach(b => pezzo(b, posa2));
+  sez.querySelectorAll("[data-gam]").forEach(b => b.addEventListener("click", () => { avvia(); S.gameti = b.dataset.gam; S.dom2.delete("g"); suona("bip"); disegna2(); }));
+  $("#controlla2").addEventListener("click", controlla2);
+}
+let tentativi2 = 0;
+function posa2(el, zona){
+  const z = zona.dataset.zona;
+  if(!z.startsWith("p")) return;
+  const k = +z.slice(1); S.filo[k] = el.dataset.b; S.sbagliate2.delete(k);
+  suona("posa"); disegna2();
+}
+function controlla2(){
+  const mancano = S.filo.filter(v => !v).length;
+  if(mancano){ esito(1, `Mancano ancora ${mancano} ${mancano === 1 ? "base" : "basi"}.`, "no"); suona("no"); return; }
+  if(!S.gameti){ esito(1, "Rispondi anche alla domanda sui gameti.", "no"); suona("no"); return; }
+  tentativi2++;
+  S.sbagliate2 = new Set(FILO2.map((b, k) => S.filo[k] === COMPL[b] ? -1 : k).filter(k => k >= 0));
+  S.dom2 = new Set(S.gameti !== "23 cromosomi" ? ["g"] : []);
+  if(S.sbagliate2.size || S.dom2.size){
+    disegna2();
+    esito(1, (S.sbagliate2.size ? `${S.sbagliate2.size === 1 ? "1 base non si appaia" : S.sbagliate2.size + " basi non si appaiano"}: ricorda A con T, C con G. ` : "") + (S.dom2.size ? "Con la meiosi i gameti hanno metà dei cromosomi." : ""), "no"); suona("no"); return;
+  }
+  if(tentativi2 === 1) segreto("elica", "Elica perfetta al primo colpo! Watson e Crick costruirono il loro modello della doppia elica nel 1953, grazie alle foto ai raggi X di Rosalind Franklin.");
+  risolvi(1); suona("zip");
+}
+
+/* ===== enigma 3: il messaggio segreto ===== */
+function disegna3(){
+  const sez = $("#e3"), chiuso = !S.risolto[1], fatto = S.risolto[2];
+  sez.className = "enigma" + (chiuso ? " chiuso" : fatto ? " risolto" : "");
+  if(chiuso){ sez.innerHTML = testa(2, "Il messaggio segreto") + chiusoHtml(2); return; }
+  const op = (val, giusto) => `<button class="opz" type="button" data-mut="${val}" aria-pressed="${(fatto ? giusto : S.mut) === val}"${fatto ? " disabled" : ""}>${val}</button>`;
+  sez.innerHTML = testa(2, "Il messaggio segreto") + `
+    <p class="consegna">Sul computer della ricercatrice c'è un pezzo di DNA con la password della porta. <b>Trascrivilo in mRNA</b>, un codone alla volta, poi <b>traducilo</b> con il codice genetico: ogni codone diventa una lettera.</p>
+    ${aiutoHtml(2)}
+    <p class="etichetta">Il codice genetico (mRNA → lettera)</p>
+    <div class="codice-gen">${Object.entries(CODICE_GEN).map(([c, l]) => `<span>${c} → ${l}</span>`).join("")}</div>
+    <div class="filo">${DNA3.map((d, k) => `<div class="codone${S.sbagliati3.has(k) ? " sbagliato" : ""}"><span class="dna">${d}</span><span aria-hidden="true">↓</span>
+      <input type="text" maxlength="3" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Codone ${k + 1} dell'mRNA" data-c="${k}" value="${fatto ? MRNA3[k] : S.mrna[k]}"${fatto ? " disabled" : ""}></div>`).join("")}</div>
+    <label class="domanda${S.dom3.has("p") ? " sbagliata" : ""}">La parola (la proteina): <input type="text" id="parola" style="width:150px;text-align:left;text-transform:uppercase" autocomplete="off" value="${fatto ? PAROLA3 : S.parola}"${fatto ? " disabled" : ""}></label>
+    <div class="domanda${S.dom3.has("m") ? " sbagliata" : ""}">Mutazione! Nel 2° codone dell'mRNA ${MRNA3[1]} diventa ${MUT3.nuovo}: ${["nessun effetto", "la proteina cambia", "la proteina si interrompe"].map(v => op(v, MUT3.tipo)).join("")}</div>
+    ${fatto ? `<div class="proteina" aria-label="La proteina ${PAROLA3}">${[...PAROLA3].map((l, i) => `<span class="perla" style="animation-delay:${i * .25}s">${l}</span>`).join("")}</div>` + premioHtml(2, `La proteina ${PAROLA3} ha ${PAROLA3.length} lettere: lo stop non conta. `) : `
+    <div class="azioni"><button class="btn blu" type="button" id="controlla3">Controlla il messaggio</button><p class="esito" id="esito2"></p></div>`}`;
+  if(fatto) return;
+  sez.querySelectorAll("[data-c]").forEach(inp => inp.addEventListener("input", () => { avvia(); inp.value = inp.value.toUpperCase().replace(/[^ACGTU]/g, ""); S.mrna[+inp.dataset.c] = inp.value; }));
+  $("#parola").addEventListener("input", e => { avvia(); S.parola = e.target.value; });
+  sez.querySelectorAll("[data-mut]").forEach(b => b.addEventListener("click", () => { avvia(); S.mut = b.dataset.mut; S.dom3.delete("m"); suona("bip"); disegna3(); }));
+  $("#controlla3").addEventListener("click", controlla3);
+}
+function controlla3(){
+  if(S.mrna.some(c => c.length !== 3) || !S.parola.trim() || !S.mut){ esito(2, "Completa tutti i codoni (3 basi ciascuno), la parola e la domanda sulla mutazione.", "no"); suona("no"); return; }
+  S.sbagliati3 = new Set(MRNA3.map((c, k) => S.mrna[k] === c ? -1 : k).filter(k => k >= 0));
+  S.dom3 = new Set();
+  if(S.parola.trim().toUpperCase() !== PAROLA3) S.dom3.add("p");
+  if(S.mut !== MUT3.tipo) S.dom3.add("m");
+  if(S.sbagliati3.size || S.dom3.size){
+    const conT = S.mrna.some(c => c.includes("T"));
+    disegna3();
+    esito(2, (S.sbagliati3.size ? `${S.sbagliati3.size === 1 ? "1 codone non è giusto" : S.sbagliati3.size + " codoni non sono giusti"}${conT ? ": nell'RNA non c'è la T, c'è la U" : ": A→U, T→A, C→G, G→C"}. ` : "") + (S.dom3.has("p") ? "La parola non torna: traduci ogni codone con il codice (lo stop non dà lettere). " : "") + (S.dom3.has("m") ? "Cerca il nuovo codone nel codice: dà la stessa lettera, un'altra lettera o lo stop?" : ""), "no"); suona("no"); return;
+  }
+  risolvi(2);
+  setTimeout(() => suona("ribosoma"), 300);
+}
+
+/* ===== il lucchetto ===== */
+function disegna4(){
+  const sez = $("#e4"), pronto = S.risolto.every(Boolean);
+  if(S.libero){
+    sez.innerHTML = `<div class="libero"><b>Complimenti, hai superato tutte le prove!</b><p>La porta della serra si apre e la ricercatrice torna con le fragole: ce l'hai fatta in ${mmss(S.fine - S.inizio)}.</p><p>Hai ripassato le leggi di Mendel e il quadrato di Punnett, la doppia elica e le basi complementari, la trascrizione, la traduzione e le mutazioni.</p><p>${fraseSegreti()}</p>${OggettoSegreto.bottone("genetica")}<button class="btn blu" type="button" id="ricomincia">Gioca di nuovo</button></div>`;
+    $("#ricomincia").addEventListener("click", () => location.reload());
+    $("#os-cade").addEventListener("click", () => OggettoSegreto.apri("genetica"));
+    return;
+  }
+  sez.innerHTML = `<div class="uscita"><div class="luce"></div><div class="porta${pronto ? "" : " chiuso"}">
+    <h2 id="t4">La porta della serra</h2>
+    <div class="lucchetto" role="group" aria-label="Lucchetto a 3 cifre"><svg class="arco" viewBox="0 0 84 50" aria-hidden="true"><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--ink)" stroke-width="14"/><path d="M13 50V32a29 29 0 0158 0v18" fill="none" stroke="var(--metallo)" stroke-width="8"/></svg>${S.rotelle.map((v,i) => `<div class="rotella">
+      <button type="button" data-r="${i}" data-d="1" aria-label="Cifra ${i+1} più uno"${pronto ? "" : " disabled"}>▲</button>
+      <output aria-label="Cifra ${i+1}">${v}</output>
+      <button type="button" data-r="${i}" data-d="-1" aria-label="Cifra ${i+1} meno uno"${pronto ? "" : " disabled"}>▼</button></div>`).join("")}</div>
+    ${pronto ? `<button class="btn" type="button" id="apri">Apri la porta</button>` : `<p class="esito">Trova prima tutte e 3 le cifre.</p>`}
+    <p class="esito" id="esito3"></p></div></div>`;
+  sez.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.r; S.rotelle[i] = (S.rotelle[i] + +b.dataset.d + 10) % 10;
+    b.parentElement.querySelector("output").textContent = S.rotelle[i];
+  }));
+  $("#apri")?.addEventListener("click", () => {
+    if(S.rotelle.every((v,i) => v === CODICE[i])){ apriPorta(); }
+    else { suona("no"); const l = $(".lucchetto"); l.classList.remove("scuoti"); void l.offsetWidth; l.classList.add("scuoti"); esito(3, "Il lucchetto non si apre: controlla le cifre e il loro ordine.", "no"); }
+  });
+}
+/* sequenza finale: rotelle, lucchetto, porta che si apre, poi i complimenti */
+function apriPorta(){
+  const sez = $("#e4"), uscita = sez.querySelector(".uscita");
+  S.fine = Date.now();
+  sez.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  sez.scrollIntoView({behavior:"smooth", block:"center"});
+  const fine = () => {
+    S.libero = true; disegna4();
+    sez.querySelector(".libero")?.classList.add("appare");
+    coriandoli(); suona("porta"); annuncia("Complimenti, hai superato tutte le prove!");
+  };
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ fine(); return; }
+  const rotelle = sez.querySelectorAll(".rotella output");
+  rotelle.forEach((o, i) => setTimeout(() => { o.classList.add("giusta"); suona("clic"); }, 300 * i));
+  const t = 300 * rotelle.length;
+  setTimeout(() => { sez.querySelector(".lucchetto").classList.add("aperto"); suona("sblocco"); }, t + 200);
+  setTimeout(() => { uscita.classList.add("aperta"); suona("cigolio"); }, t + 900);
+  setTimeout(fine, t + 2400);
+}
+
+function disegnaIndizi(){
+  $("#indizi").innerHTML = CODICE.map((c,i) => `<span class="cifra-mini${S.risolto[i] ? "" : " vuota"}" title="${INDIZI[i]}">${S.risolto[i] ? c : "?"}</span>`).join("");
+}
+function risolvi(i){
+  S.risolto[i] = true; suona("si");
+  annuncia(`Enigma ${i+1} risolto! La cifra numero ${i+1} è ${CODICE[i]}.`);
+  tutto();
+  const prossimo = document.querySelector(i < 2 ? `#e${i+2}` : "#e4");
+  setTimeout(() => prossimo.scrollIntoView({behavior:"smooth", block:"start"}), i === 0 ? 2200 : i === 1 ? 3800 : 2800);
+}
+function tutto(){ disegnaIndizi(); disegna1(); disegna2(); disegna3(); disegna4(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-aiuto]"); if(!b) return;
+  const i = +b.dataset.aiuto; S.aiuto[i] = !S.aiuto[i];
+  [disegna1, disegna2, disegna3][i]();
+});
+
+
+
+/* segreti: toccare 3 volte le piante, costruire l'elica giusta al primo tentativo, scrivere "fragola" */
+const SEGRETI = 3;
+const PAROLE_SEGRETE = [["fragola", () => segreto("fragola", "Le fragole sono perfette per estrarre il DNA: ogni loro cellula ha 8 copie di ogni cromosoma, così il DNA si vede a occhio nudo come una nuvoletta bianca!")]];
+tutto();
+aggiornaSuoni();
+</script>
+</body>
+</html>
